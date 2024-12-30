@@ -35,8 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import Badge from "@/components/ui/badge/Badge.vue";
-
 const technologies: { label: string; icon: string }[] = [
   { label: "Tailwind CSS", icon: "tailwind.svg" },
   { label: "HTML", icon: "HTML5.svg" },
