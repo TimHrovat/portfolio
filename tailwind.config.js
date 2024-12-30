@@ -7,6 +7,9 @@ module.exports = {
   prefix: "",
 
   theme: {
+    fontFamily: {
+      sans: ['"Poppins"', "serif"],
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -31,32 +34,30 @@ module.exports = {
     },
     extend: {
       colors: {
-        background: "#1A2730",
-        foreground: "#B0CEE2",
+        foreground: {
+          DEFAULT: "#ffffff",
+          muted: "#a3a3a3",
+          primary: "#01cdd9",
+        },
 
         surface: {
           primary: {
             default: {
-              text: "#ffffff",
-              border: "#E95D2C",
-              bg: "#E95D2C",
+              text: "#0a0a0a",
+              border: "#01cdd9",
+              bg: "#01cdd9",
             },
             hover: {
               text: "#ffffff",
-              border: "#136877",
-              bg: "#136877",
+              border: "#04a4b6",
+              bg: "#04a4b6",
             },
           },
           primaryLight: {
             default: {
               text: "#ffffff",
-              border: "#45586C",
-              bg: "#45586C",
-            },
-            hover: {
-              text: "#ffffff",
-              border: "#145665",
-              bg: "#145665",
+              border: "#262626",
+              bg: "#262626",
             },
           },
         },
