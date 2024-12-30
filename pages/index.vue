@@ -6,7 +6,7 @@
         'h-screen text-center gap-7',
       ]"
     >
-      <Badge class="w-fit text-lg">Welcome to my portfolio</Badge>
+      <span class="w-fit text-lg">Welcome to my portfolio</span>
       <h1 class="text-6xl md:text-8xl font-bold">Tim Hrovat</h1>
       <h2 class="text-muted-foreground text-2xl md:text-3xl font-semibold">
         Full Stack Developer
@@ -21,13 +21,13 @@
       <div
         class="flex flex-wrap gap-4 items-center justify-center max-w-[700px]"
       >
-        <Badge
+        <TechnologyBadge
           v-for="technology in technologies"
           variant="secondary"
           class="cursor-default flex gap-2.5"
         >
           <NuxtImg :src="`/images/technology-icons/${technology.icon}`" width="32"/>
-          {{ technology.label }}</Badge
+          {{ technology.label }}</TechnologyBadge
         >
       </div>
     </section>
@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+import TechnologyBadge from '~/components/TechnologyBadge.vue';
+
 const technologies: { label: string; icon: string }[] = [
   { label: "Tailwind CSS", icon: "tailwind.svg" },
   { label: "HTML", icon: "HTML5.svg" },

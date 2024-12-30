@@ -3,90 +3,11 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 0%;
-    --foreground: 188.18 42.31% 89.8%;
-
-    --primary: 187.55 88.82% 31.57%;
-    --primary-foreground: 188 42.86% 93.14%;
-
-    --card: 190 23.08% 5.1%;
-    --card-foreground: 188.18 42.31% 89.8%;
-
-    --popover: 0 0% 0%;
-    --popover-foreground: 188.18 42.31% 89.8%;
-
-    --secondary: 187.2 89.29% 10.98%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 0 0% 9.8%;
-    --muted-foreground: 0 0% 50.2%;
-
-    --accent: 187.2 89.29% 10.98%;
-    --accent-foreground: 188.18 42.31% 89.8%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 186.43 87.5% 6.27%;
-    --input: 184.29 15.22% 18.04%;
-    --ring: 187.55 88.82% 31.57%;
-
-    --chart-1: 187.55 88.82% 31.57%;
-    --chart-2: 187.44 88.32% 26.86%;
-    --chart-3: 187.74 88.57% 20.59%;
-    --chart-4: 187.59 88.76% 17.45%;
-    --chart-5: 187.5 88.89% 14.12%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 0 0% 0%;
-    --foreground: 188.18 42.31% 89.8%;
-
-    --primary: 187.55 88.82% 31.57%;
-    --primary-foreground: 188 42.86% 93.14%;
-
-    --card: 190 23.08% 5.1%;
-    --card-foreground: 188.18 42.31% 89.8%;
-
-    --popover: 0 0% 0%;
-    --popover-foreground: 188.18 42.31% 89.8%;
-
-    --secondary: 187.2 89.29% 10.98%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 0 0% 9.8%;
-    --muted-foreground: 0 0% 50.2%;
-
-    --accent: 187.2 89.29% 10.98%;
-    --accent-foreground: 188.18 42.31% 89.8%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 186.43 87.5% 6.27%;
-    --input: 184.29 15.22% 18.04%;
-    --ring: 187.55 88.82% 31.57%;
-
-    --chart-1: 187.55 88.82% 31.57%;
-    --chart-2: 187.44 88.32% 26.86%;
-    --chart-3: 187.74 88.57% 20.59%;
-    --chart-4: 187.59 88.76% 17.45%;
-    --chart-5: 187.5 88.89% 14.12%;
-
-    --radius: 0.5rem;
-  }
-}
-
-@layer base {
   * {
-    @apply border-border;
+    @apply box-border p-0 m-0;
   }
 
   body {
     @apply bg-background text-foreground;
   }
 }
-
