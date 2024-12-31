@@ -59,6 +59,7 @@
       <div class="flex flex-wrap gap-4 items-center justify-center">
         <TechnologyBadge
           v-for="technology in technologies"
+          :key="technology.icon"
           variant="secondary"
           class="cursor-default flex gap-2.5"
         >
@@ -77,7 +78,7 @@
 import TechnologyBadge from "~/components/TechnologyBadge.vue";
 import Section from "~/components/Section.vue";
 
-const technologies: { label: string; icon: string }[] = [
+const initialTechnologies: { label: string; icon: string }[] = [
   { label: "Tailwind CSS", icon: "tailwind.svg" },
   { label: "HTML", icon: "HTML5.svg" },
   { label: "CSS", icon: "css3.svg" },
@@ -95,5 +96,16 @@ const technologies: { label: string; icon: string }[] = [
   { label: "Laravel", icon: "laravel.png" },
   { label: "Wordpress", icon: "wordpress.svg" },
   { label: "Embedded systems", icon: "embedded.png" },
+  { label: "MariaDB", icon: "mariadb.svg" },
+  { label: "MongoDB", icon: "mongo.png" },
+  { label: "MySQL", icon: "mysql.png" },
+  { label: "Postgres", icon: "postgres.png" },
+  { label: "Prisma ORM", icon: "prisma.png" },
 ];
+
+const technologies = ref<{ label: string; icon: string }[]>([]);
+
+onMounted(() => {
+  technologies.value = [...initialTechnologies].sort(() => Math.random() - 0.5);
+});
 </script>
