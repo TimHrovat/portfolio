@@ -120,9 +120,62 @@ Every icon is copied as `original` unless told otherwise. Devicon also ships
 All of it is defined in `app/globals.css`. Change it there, not per-component.
 
 **Colour — one place, no exceptions in CSS.** Every colour resolves to a token
-in the two palette blocks of `app/globals.css` (`:root` and the
-`prefers-color-scheme: dark` override). Nothing in `components/` or `app/`
+in the palette blocks of `app/globals.css`. Nothing in `components/` or `app/`
 hardcodes a colour; change a token and it propagates everywhere.
+
+**Two accent roles, not one.** `primary` carries action and attention;
+`highlight` is the palette's second colour and carries supporting emphasis.
+Reach for the right one — using `primary` everywhere is what made the page read
+as single-accent before.
+
+| Role        | Used for                                                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `primary`   | buttons, hero caret, trailing periods, active nav, card hover, availability dot, hero glow                               |
+| `highlight` | section eyebrow rules, the `Badge accent` "Now" marker, chip proximity, contact icons and closing wash, project numerals |
+
+`--highlight` / `--highlight-foreground` are ours, alongside `surface` and
+`hairline`. shadcn's `--accent` / `--accent-foreground` stay what shadcn means
+by them — the subtle hover-background pair — but are tinted from the highlight
+hue so generated components feel like the palette.
+
+**Three palettes are live while the final one is being chosen.**
+
+| `data-palette` | Paper      | Ink                 | Primary    | Highlight           |
+| -------------- | ---------- | ------------------- | ---------- | ------------------- |
+| `ember`        | warm paper | warm near-black     | terracotta | olive               |
+| `milk`         | cream      | gray blue `#2b323f` | blue       | deep denim          |
+| `mirage`       | wild sand  | mirage `#16232A`    | `#FF5804`  | sea green `#075056` |
+
+`milk` contains **no orange at all** — that pin was two colours, and the
+`#EC5E27` printed on it was a mislabel. Its primary is a saturated blue drawn
+from the gray-blue hue, because the ink itself sits too close to `--foreground`
+to read as an accent.
+
+Each palette declares a full light block plus a full dark block inside
+`prefers-color-scheme: dark` — every token in both, since a partial block would
+inherit across schemes. `ember` is declared on bare `:root` as well as by name,
+so a browser with no JS and no stored choice still gets a complete theme.
+Selectors are `:root[data-palette='x']`, which outranks bare `:root` — anything
+that overrides a token globally (the `prefers-contrast` block) must match that
+specificity, which is why it is written `:root, :root[data-palette]`.
+
+**This is temporary.** When the palette is chosen, delete the two losers, fold
+the winner onto plain `:root`, and remove `components/palette-switcher.tsx`,
+`lib/palettes.ts`, its mount in `app/page.tsx` and the bootstrap script in
+`app/layout.tsx`. Then update `themeColor` to match.
+
+The switcher writes `data-palette` on `<html>` and mirrors it to
+`localStorage`; a `next/script` with `strategy="beforeInteractive"` replays it
+before first paint so there is no flash. It has to be `next/script` — React 19
+errors on a bare `<script>` rendered inside a component — and `<html>` carries
+`suppressHydrationWarning`, since that attribute is set before React hydrates
+and legitimately differs from the server markup. `<html data-palette>` is the source of truth and the
+component subscribes to it with `useSyncExternalStore` rather than holding its
+own copy — React Compiler rejects mutating a global from a component body, so
+the DOM write lives in a module-scope function.
+
+**The switcher picks a palette, never light vs dark.** That still follows the
+OS with no override, which is the rule the site is built on.
 
 shadcn's semantic tokens (`background`, `foreground`, `card`, `primary`,
 `muted`, `border`, ...) plus ours: `surface`, `surface-strong`, `hairline`,

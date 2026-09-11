@@ -37,7 +37,7 @@ export default function Projects() {
                             <CardHeader>
                                 <span className="eyebrow">{project.year}</span>
                                 <CardAction>
-                                    <span className="text-hairline font-display text-4xl leading-none">
+                                    <span className="text-highlight/30 font-display text-4xl leading-none">
                                         {String(index + 1).padStart(2, '0')}
                                     </span>
                                 </CardAction>

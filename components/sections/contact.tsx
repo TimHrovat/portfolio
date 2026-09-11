@@ -29,14 +29,14 @@ export default function Contact() {
                 className="pointer-events-none absolute inset-0 -z-10"
                 style={{
                     background:
-                        'radial-gradient(50rem 30rem at 50% 100%, color-mix(in oklab, var(--primary) calc(var(--glow-strength) * 110%), transparent), transparent 70%)',
+                        'radial-gradient(50rem 30rem at 50% 100%, color-mix(in oklab, var(--highlight) calc(var(--glow-strength) * 140%), transparent), transparent 70%)',
                 }}
             />
 
             <div className="mx-auto w-full max-w-5xl">
                 <Reveal>
                     <p className="eyebrow flex items-center gap-3">
-                        <span className="bg-primary h-px w-8" aria-hidden />
+                        <span className="bg-highlight h-px w-8" aria-hidden />
                         Contact
                     </p>
                 </Reveal>
@@ -75,7 +75,7 @@ export default function Contact() {
                             const content = (
                                 <>
                                     <span className="eyebrow flex items-center gap-2">
-                                        <Icon className="text-primary size-3.5" />
+                                        <Icon className="text-highlight size-3.5" />
                                         {social.label}
                                     </span>
                                     <span className="mt-1.5 block text-sm break-all">

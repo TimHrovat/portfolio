@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import { Geist, JetBrains_Mono } from 'next/font/google';
 
 import './globals.css';
@@ -57,9 +58,9 @@ export const metadata: Metadata = {
 };
 
 // THE ONE COLOUR THAT CANNOT LIVE IN CSS. Next needs a literal here to emit
-// <meta name="theme-color">, and a meta tag cannot read a custom property.
-// These two values mirror --background in app/globals.css — if you change the
-// palette, change them here too. Nothing else in the app hardcodes a colour.
+// <meta name="theme-color">, and a meta tag cannot read a custom property, so
+// it cannot follow the selected palette either. These mirror `ember` and only
+// tint mobile browser chrome; set them to the winner once it is chosen.
 export const viewport: Viewport = {
     themeColor: [
         { media: '(prefers-color-scheme: light)', color: '#fdfbf9' },
@@ -72,8 +73,20 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <html
             lang="en"
             className={`${geist.variable} ${jetBrainsMono.variable}`}
+            // The palette bootstrap writes data-palette here before hydration,
+            // so this element is expected to differ from the server markup.
+            suppressHydrationWarning
         >
             <head>
+                {/* Applies the stored palette before first paint, so switching
+                    does not flash the default one on reload. next/script with
+                    `beforeInteractive` rather than a bare <script>, which React
+                    19 warns about inside a component. Temporary — it goes away
+                    with components/palette-switcher.tsx once the final palette
+                    is chosen. */}
+                <Script id="palette-bootstrap" strategy="beforeInteractive">
+                    {`try{var p=localStorage.getItem('palette');if(p==='milk'||p==='mirage')document.documentElement.dataset.palette=p}catch(e){}`}
+                </Script>
                 {/* Scroll reveals start hidden; without JS they must not stay
                     that way. */}
                 <noscript>

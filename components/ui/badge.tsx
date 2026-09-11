@@ -20,8 +20,9 @@ const badgeVariants = cva(
                 link: 'text-primary underline-offset-4 hover:underline',
                 // Technology chip: reads as a raised surface, not a coloured tag.
                 tech: 'border-hairline bg-surface text-foreground',
-                // Soft accent tint, for "current" markers.
-                accent: 'bg-primary/15 text-primary',
+                // Soft tint of the palette's second colour, for
+                // "current" markers.
+                accent: 'bg-highlight/15 text-highlight',
                 // Mono metadata: statuses, stack labels.
                 meta: 'border-hairline text-muted-foreground font-mono uppercase tracking-wider',
             },

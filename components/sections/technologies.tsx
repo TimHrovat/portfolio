@@ -66,7 +66,7 @@ export default function Technologies() {
                 chip.style.transform = `translateY(${
                     -proximity * MAX_LIFT
                 }px) scale(${1 + proximity * (MAX_SCALE - 1)})`;
-                chip.style.borderColor = `color-mix(in oklab, var(--primary) ${Math.round(
+                chip.style.borderColor = `color-mix(in oklab, var(--highlight) ${Math.round(
                     proximity * 100,
                 )}%, var(--hairline))`;
             });

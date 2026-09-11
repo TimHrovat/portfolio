@@ -26,7 +26,7 @@ export default function Section({
         >
             <Reveal className="mb-12 md:mb-16">
                 <p className="eyebrow flex items-center gap-3">
-                    <span className="bg-primary h-px w-8" aria-hidden />
+                    <span className="bg-highlight h-px w-8" aria-hidden />
                     {eyebrow}
                 </p>
                 {title ? (
