@@ -19,9 +19,9 @@ export default function Hero() {
                 }}
             />
 
-            <div className="mx-auto w-full max-w-5xl">
+            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
                 <p
-                    className="eyebrow animate-in fade-in slide-in-from-bottom-4 fill-mode-both flex flex-wrap items-center gap-x-3 gap-y-1 duration-700"
+                    className="eyebrow animate-in fade-in slide-in-from-bottom-4 fill-mode-both flex flex-wrap items-center justify-center gap-x-3 gap-y-1 duration-700"
                     style={{ animationDelay: '80ms' }}
                 >
                     <span>{person.role}</span>
@@ -53,20 +53,16 @@ export default function Hero() {
                 </p>
 
                 <div
-                    className="animate-in fade-in slide-in-from-bottom-6 fill-mode-both mt-10 flex flex-wrap items-center gap-3 duration-700"
+                    className="animate-in fade-in slide-in-from-bottom-6 fill-mode-both mt-10 flex flex-wrap items-center justify-center gap-3 duration-700"
                     style={{ animationDelay: '380ms' }}
                 >
-                    <Button asChild size="xl" shape="pill">
-                        <a href={`mailto:${person.email}`}>
-                            <Mail />
-                            Get in touch
-                        </a>
+                    <Button href={`mailto:${person.email}`} size="xl">
+                        <Mail />
+                        Get in touch
                     </Button>
-                    <Button asChild variant="outline" size="xl" shape="pill">
-                        <a href={person.cv}>
-                            <ArrowDownToLine />
-                            Download CV
-                        </a>
+                    <Button href={person.cv} variant="secondary" size="xl">
+                        <ArrowDownToLine />
+                        Download CV
                     </Button>
                     {person.available ? (
                         <span className="text-muted-foreground ml-1 flex items-center gap-2 font-mono text-xs">

@@ -1,22 +1,21 @@
-'use client';
+import type { ComponentProps } from 'react';
 
-import * as React from 'react';
-import { cn } from 'cn';
-import { Separator as SeparatorPrimitive } from 'radix-ui';
+import { cn } from '@/lib/utils';
 
+/** A hairline rule. Decorative by default, so it is hidden from the a11y tree. */
 function Separator({
     className,
     orientation = 'horizontal',
-    decorative = true,
     ...props
-}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+}: ComponentProps<'div'> & { orientation?: 'horizontal' | 'vertical' }) {
     return (
-        <SeparatorPrimitive.Root
-            data-slot="separator"
-            decorative={decorative}
-            orientation={orientation}
+        <div
+            role="separator"
+            aria-orientation={orientation}
+            aria-hidden
             className={cn(
-                'shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch',
+                'bg-hairline shrink-0',
+                orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
                 className,
             )}
             {...props}

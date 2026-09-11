@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 
 /*
  * Theme follows the operating system. There is no toggle, so every token is
@@ -80,59 +79,153 @@
 }
 
 /*
- * THE PALETTES. Every colour in the app resolves to a token below — change a
+ * THE PALETTE. Every colour in the app resolves to a token below — change a
  * value here and it propagates everywhere.
  *
  * Two accent roles, not one. `primary` carries action and attention (buttons,
- * the caret, active state, the trailing period). `highlight` is the palette's
- * second colour and carries supporting emphasis (section rules, the "Now"
- * marker, chip proximity, contact icons, the closing wash). A palette that
- * only had one colour to give still defines both — they just sit closer
- * together.
+ * the caret, active state, the trailing period). `highlight` is the second
+ * colour and carries supporting emphasis (section rules, the "Now" marker,
+ * chip proximity, contact icons, the closing wash).
  *
- * Three palettes are live while the final one is being chosen. `ember` is the
- * default and is what a browser with no JS (or no stored choice) gets, because
- * it is declared on bare `:root` as well as by name. `components/palette-
- * switcher.tsx` writes `data-palette` on <html>; light and dark still follow
- * the OS within whichever palette is selected.
- *
- * When the choice is made, delete the two losing palettes, the switcher and
- * the bootstrap script in app/layout.tsx, and fold the winner back onto plain
- * `:root`.
+ * APPLE — apple.com's own grey/black/white, systemBlue primary, systemIndigo
+ * highlight. The brand palette, not an invented one.
  *
  * One exception lives outside this file: `themeColor` in app/layout.tsx needs
- * literal hex for the browser-chrome meta tag, so it cannot follow the
- * selected palette. It mirrors ember and is only visible on mobile chrome.
+ * literal hex for the browser-chrome meta tag, since a meta tag cannot read a
+ * custom property. It mirrors --background by hand.
  */
 
-/* 1. EMBER — warm paper, terracotta primary, olive highlight. */
-:root,
-:root[data-palette='ember'] {
+:root {
     --radius: 0.875rem;
     color-scheme: light;
-    --background: oklch(0.99 0.004 75);
-    --foreground: oklch(0.22 0.015 55);
+    --background: oklch(0.9707 0.0027 286.4);
+    --foreground: oklch(0.2316 0.0038 286.1);
 
     --surface: oklch(1 0 0);
-    --surface-strong: oklch(0.975 0.006 72);
-    --hairline: oklch(0.91 0.01 68);
+    --surface-strong: oklch(0.955 0.003 286.3);
+    --hairline: oklch(0.8652 0.0068 286.3);
 
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.22 0.015 55);
+    --card-foreground: oklch(0.2316 0.0038 286.1);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.22 0.015 55);
+    --popover-foreground: oklch(0.2316 0.0038 286.1);
 
-    --primary: oklch(0.63 0.2 40);
-    --primary-foreground: oklch(0.99 0.005 80);
+    --primary: oklch(0.6028 0.2177 257.4);
+    --primary-foreground: oklch(1 0 0);
 
-    --highlight: oklch(0.47 0.07 135);
-    --highlight-foreground: oklch(0.99 0.005 80);
+    --highlight: oklch(0.5295 0.191 278.3);
+    --highlight-foreground: oklch(1 0 0);
 
-    --secondary: oklch(0.96 0.008 70);
-    --secondary-foreground: oklch(0.28 0.015 55);
+    --secondary: oklch(0.955 0.003 286.3);
+    --secondary-foreground: oklch(0.2316 0.0038 286.1);
 
-    --muted: oklch(0.965 0.007 70);
-    --muted-foreground: oklch(0.52 0.02 55);
+    --muted: oklch(0.96 0.003 286.3);
+    --muted-foreground: oklch(0.5399 0.0077 286.1);
+
+    --accent: oklch(0.93 0.02 278);
+    --accent-foreground: oklch(0.4 0.14 278);
+
+    --destructive: oklch(0.6542 0.2321 28.7);
+    --border: oklch(0.8652 0.0068 286.3);
+    --input: oklch(0.8652 0.0068 286.3);
+    --ring: oklch(0.6028 0.2177 257.4);
+
+    --logo-plate: #ffffff;
+    --glass-highlight: oklch(1 0 0 / 55%);
+    --glass-shadow: oklch(0 0 0 / 45%);
+
+    --grain-opacity: 0.035;
+    --glow-strength: 0.1;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --background: oklch(0 0 0);
+        --foreground: oklch(0.97 0.002 286);
+
+        --surface: oklch(0.2316 0.0038 286.1);
+        --surface-strong: oklch(0.2939 0.0036 286.2);
+        --hairline: oklch(0.3802 0.005 286.2);
+
+        --card: oklch(0.2316 0.0038 286.1);
+        --card-foreground: oklch(0.97 0.002 286);
+        --popover: oklch(0.2316 0.0038 286.1);
+        --popover-foreground: oklch(0.97 0.002 286);
+
+        --primary: oklch(0.669 0.1808 251.8);
+        --primary-foreground: oklch(0.15 0.02 255);
+
+        --highlight: oklch(0.5564 0.2032 278.1);
+        --highlight-foreground: oklch(1 0 0);
+
+        --secondary: oklch(0.2939 0.0036 286.2);
+        --secondary-foreground: oklch(0.97 0.002 286);
+
+        --muted: oklch(0.27 0.004 286);
+        --muted-foreground: oklch(0.6217 0.0074 286.2);
+
+        --accent: oklch(0.3 0.07 278);
+        --accent-foreground: oklch(0.9 0.06 278);
+
+        --destructive: oklch(0.6633 0.2236 28.3);
+        --border: oklch(0.3802 0.005 286.2);
+        --input: oklch(0.3802 0.005 286.2);
+        --ring: oklch(0.669 0.1808 251.8);
+
+        --logo-plate: #ffffff;
+        --glass-highlight: oklch(1 0 0 / 12%);
+        --glass-shadow: oklch(0 0 0 / 80%);
+
+        --grain-opacity: 0.06;
+        --glow-strength: 0.16;
+    }
+}
+
+/*
+ * Manual scheme override for the dev-only preview switcher
+ * (components/scheme-switcher.tsx). Absent `data-scheme`, everything above
+ * still drives light/dark purely from `prefers-color-scheme` — untouched.
+ * The switcher writes `data-scheme` ('light' | 'dark') on <html> when set to
+ * anything but System; System removes the attribute and control reverts to
+ * the OS. A one-attribute selector here still outranks the bare `:root`
+ * light block by source order, and outranks the `@media
+ * (prefers-color-scheme: dark)` block above by specificity regardless of the
+ * real OS setting.
+ *
+ * Known gap, acceptable because this is dev-only: it does not compose with
+ * `prefers-contrast: more` below, which raises --hairline / --muted-foreground
+ * at lower specificity and would lose to a forced scheme. Never an issue in
+ * the shipped site, which will not carry `data-scheme` at all.
+ */
+
+/* Force light, regardless of the OS setting. */
+:root[data-scheme='light'] {
+    --radius: 0.875rem;
+    color-scheme: light;
+    --background: oklch(0.9707 0.0027 286.4);
+    --foreground: oklch(0.2316 0.0038 286.1);
+
+    --surface: oklch(1 0 0);
+    --surface-strong: oklch(0.955 0.003 286.3);
+    --hairline: oklch(0.8652 0.0068 286.3);
+
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.2316 0.0038 286.1);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.2316 0.0038 286.1);
+
+    --primary: oklch(0.6028 0.2177 257.4);
+    --primary-foreground: oklch(1 0 0);
+
+    --highlight: oklch(0.5295 0.191 278.3);
+    --highlight-foreground: oklch(1 0 0);
+
+    --secondary: oklch(0.955 0.003 286.3);
+    --secondary-foreground: oklch(0.2316 0.0038 286.1);
+
+    --muted: oklch(0.96 0.003 286.3);
+    --muted-foreground: oklch(0.5399 0.0077 286.1);
 
     --accent: oklch(0.95 0.025 130);
     --accent-foreground: oklch(0.34 0.06 135);
@@ -150,223 +243,47 @@
     --glow-strength: 0.1;
 }
 
-/* 2. MILK — cream against gray-blue ink. Deliberately no orange: the pin
-   was two colours, so this is a cool two-tone theme. */
-:root[data-palette='milk'] {
-    --radius: 0.875rem;
-    color-scheme: light;
-    --background: oklch(0.987 0.012 96.4);
-    --foreground: oklch(0.3 0.026 262.7);
+/* Force dark, regardless of the OS setting. */
+:root[data-scheme='dark'] {
+    color-scheme: dark;
+    --background: oklch(0 0 0);
+    --foreground: oklch(0.97 0.002 286);
 
-    --surface: oklch(1 0 0);
-    --surface-strong: oklch(0.967 0.014 96);
-    --hairline: oklch(0.89 0.012 255);
+    --surface: oklch(0.2316 0.0038 286.1);
+    --surface-strong: oklch(0.2939 0.0036 286.2);
+    --hairline: oklch(0.3802 0.005 286.2);
 
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.3 0.026 262.7);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.3 0.026 262.7);
+    --card: oklch(0.2316 0.0038 286.1);
+    --card-foreground: oklch(0.97 0.002 286);
+    --popover: oklch(0.2316 0.0038 286.1);
+    --popover-foreground: oklch(0.97 0.002 286);
 
-    --primary: oklch(0.5 0.115 260);
-    --primary-foreground: oklch(0.99 0.008 96);
+    --primary: oklch(0.669 0.1808 251.8);
+    --primary-foreground: oklch(0.15 0.02 255);
 
-    --highlight: oklch(0.38 0.055 265);
-    --highlight-foreground: oklch(0.99 0.008 96);
+    --highlight: oklch(0.5564 0.2032 278.1);
+    --highlight-foreground: oklch(1 0 0);
 
-    --secondary: oklch(0.955 0.011 250);
-    --secondary-foreground: oklch(0.33 0.026 262);
+    --secondary: oklch(0.2939 0.0036 286.2);
+    --secondary-foreground: oklch(0.97 0.002 286);
 
-    --muted: oklch(0.958 0.01 250);
-    --muted-foreground: oklch(0.51 0.026 260);
+    --muted: oklch(0.27 0.004 286);
+    --muted-foreground: oklch(0.6217 0.0074 286.2);
 
-    --accent: oklch(0.95 0.018 260);
-    --accent-foreground: oklch(0.35 0.06 262);
+    --accent: oklch(0.3 0.07 278);
+    --accent-foreground: oklch(0.9 0.06 278);
 
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.89 0.012 255);
-    --input: oklch(0.89 0.012 255);
-    --ring: oklch(0.5 0.115 260);
+    --destructive: oklch(0.6633 0.2236 28.3);
+    --border: oklch(0.3802 0.005 286.2);
+    --input: oklch(0.3802 0.005 286.2);
+    --ring: oklch(0.669 0.1808 251.8);
 
     --logo-plate: #ffffff;
-    --glass-highlight: oklch(1 0 0 / 55%);
-    --glass-shadow: oklch(0 0 0 / 45%);
+    --glass-highlight: oklch(1 0 0 / 12%);
+    --glass-shadow: oklch(0 0 0 / 80%);
 
-    --grain-opacity: 0.035;
-    --glow-strength: 0.1;
-}
-
-/* 3. MIRAGE — wild sand and deep blue-teal. Blaze orange #FF5804 acts,
-   deep sea green #075056 highlights. */
-:root[data-palette='mirage'] {
-    --radius: 0.875rem;
-    color-scheme: light;
-    --background: oklch(0.967 0.003 84.6);
-    --foreground: oklch(0.2474 0.0224 232.4);
-
-    --surface: oklch(1 0 0);
-    --surface-strong: oklch(0.945 0.005 225);
-    --hairline: oklch(0.88 0.009 225);
-
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.2474 0.0224 232.4);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.2474 0.0224 232.4);
-
-    --primary: oklch(0.679 0.215 39.3);
-    --primary-foreground: oklch(0.99 0.01 80);
-
-    --highlight: oklch(0.3943 0.0647 203.9);
-    --highlight-foreground: oklch(0.98 0.01 200);
-
-    --secondary: oklch(0.945 0.008 220);
-    --secondary-foreground: oklch(0.28 0.024 232);
-
-    --muted: oklch(0.948 0.007 220);
-    --muted-foreground: oklch(0.5 0.025 228);
-
-    --accent: oklch(0.93 0.035 200);
-    --accent-foreground: oklch(0.33 0.06 204);
-
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.88 0.009 225);
-    --input: oklch(0.88 0.009 225);
-    --ring: oklch(0.679 0.215 39.3);
-
-    --logo-plate: #ffffff;
-    --glass-highlight: oklch(1 0 0 / 55%);
-    --glass-shadow: oklch(0 0 0 / 45%);
-
-    --grain-opacity: 0.035;
-    --glow-strength: 0.1;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root,
-    :root[data-palette='ember'] {
-        color-scheme: dark;
-        --background: oklch(0.16 0.012 55);
-        --foreground: oklch(0.96 0.008 80);
-
-        --surface: oklch(0.2 0.014 55);
-        --surface-strong: oklch(0.235 0.015 55);
-        --hairline: oklch(0.29 0.016 55);
-
-        --card: oklch(0.2 0.014 55);
-        --card-foreground: oklch(0.96 0.008 80);
-        --popover: oklch(0.2 0.014 55);
-        --popover-foreground: oklch(0.96 0.008 80);
-
-        --primary: oklch(0.72 0.185 45);
-        --primary-foreground: oklch(0.17 0.018 50);
-
-        --highlight: oklch(0.72 0.08 138);
-        --highlight-foreground: oklch(0.17 0.018 50);
-
-        --secondary: oklch(0.25 0.015 55);
-        --secondary-foreground: oklch(0.96 0.008 80);
-
-        --muted: oklch(0.24 0.014 55);
-        --muted-foreground: oklch(0.7 0.018 70);
-
-        --accent: oklch(0.3 0.04 135);
-        --accent-foreground: oklch(0.9 0.05 135);
-
-        --destructive: oklch(0.65 0.2 25);
-        --border: oklch(0.29 0.016 55);
-        --input: oklch(0.29 0.016 55);
-        --ring: oklch(0.72 0.185 45);
-
-        --logo-plate: #ffffff;
-        --glass-highlight: oklch(1 0 0 / 12%);
-        --glass-shadow: oklch(0 0 0 / 80%);
-
-        --grain-opacity: 0.06;
-        --glow-strength: 0.16;
-    }
-
-    :root[data-palette='milk'] {
-        color-scheme: dark;
-        --background: oklch(0.205 0.021 262.7);
-        --foreground: oklch(0.965 0.012 96);
-
-        --surface: oklch(0.2474 0.0245 262.7);
-        --surface-strong: oklch(0.29 0.026 262);
-        --hairline: oklch(0.35 0.026 262);
-
-        --card: oklch(0.2474 0.0245 262.7);
-        --card-foreground: oklch(0.965 0.012 96);
-        --popover: oklch(0.2474 0.0245 262.7);
-        --popover-foreground: oklch(0.965 0.012 96);
-
-        --primary: oklch(0.72 0.11 258);
-        --primary-foreground: oklch(0.2 0.024 262);
-
-        --highlight: oklch(0.75 0.065 262);
-        --highlight-foreground: oklch(0.2 0.024 262);
-
-        --secondary: oklch(0.285 0.025 262);
-        --secondary-foreground: oklch(0.965 0.012 96);
-
-        --muted: oklch(0.27 0.024 262);
-        --muted-foreground: oklch(0.72 0.02 255);
-
-        --accent: oklch(0.3 0.04 262);
-        --accent-foreground: oklch(0.9 0.04 262);
-
-        --destructive: oklch(0.65 0.2 25);
-        --border: oklch(0.35 0.026 262);
-        --input: oklch(0.35 0.026 262);
-        --ring: oklch(0.72 0.11 258);
-
-        --logo-plate: #ffffff;
-        --glass-highlight: oklch(1 0 0 / 12%);
-        --glass-shadow: oklch(0 0 0 / 80%);
-
-        --grain-opacity: 0.06;
-        --glow-strength: 0.16;
-    }
-
-    :root[data-palette='mirage'] {
-        color-scheme: dark;
-        --background: oklch(0.2474 0.0224 232.4);
-        --foreground: oklch(0.952 0.005 220);
-
-        --surface: oklch(0.295 0.024 232);
-        --surface-strong: oklch(0.335 0.026 232);
-        --hairline: oklch(0.39 0.028 232);
-
-        --card: oklch(0.295 0.024 232);
-        --card-foreground: oklch(0.952 0.005 220);
-        --popover: oklch(0.295 0.024 232);
-        --popover-foreground: oklch(0.952 0.005 220);
-
-        --primary: oklch(0.72 0.2 40);
-        --primary-foreground: oklch(0.2 0.025 232);
-
-        --highlight: oklch(0.66 0.085 195);
-        --highlight-foreground: oklch(0.18 0.025 210);
-
-        --secondary: oklch(0.33 0.026 232);
-        --secondary-foreground: oklch(0.952 0.005 220);
-
-        --muted: oklch(0.315 0.024 232);
-        --muted-foreground: oklch(0.73 0.022 220);
-
-        --accent: oklch(0.32 0.05 203);
-        --accent-foreground: oklch(0.9 0.05 195);
-
-        --destructive: oklch(0.65 0.2 25);
-        --border: oklch(0.39 0.028 232);
-        --input: oklch(0.39 0.028 232);
-        --ring: oklch(0.72 0.2 40);
-
-        --logo-plate: #ffffff;
-        --glass-highlight: oklch(1 0 0 / 12%);
-        --glass-shadow: oklch(0 0 0 / 80%);
-
-        --grain-opacity: 0.06;
-        --glow-strength: 0.16;
-    }
+    --grain-opacity: 0.06;
+    --glow-strength: 0.16;
 }
 
 @layer base {
@@ -620,6 +537,72 @@
         opacity: 1;
     }
 
+    /* An engagement that has not ended fades out rather than stopping at a
+       hard edge. Declared here so Lightning CSS owns the vendor prefix. */
+    .bar-ongoing {
+        mask-image: linear-gradient(to right, #000 68%, transparent 100%);
+    }
+
+    /*
+     * Drawer. Hand-written rather than tw-animate-css's slide utilities for
+     * one reason: the exit keyframes declare only a `to`, so the implicit
+     * `from` is the panel's current transform — wherever the drag handle left
+     * it. A flick down therefore continues into the close instead of snapping
+     * back to rest and sliding out from there.
+     *
+     * Radix needs an animation on the closing panel to know when it may
+     * unmount, so every state below declares one.
+     */
+    .drawer {
+        transition: transform 300ms var(--ease-settle);
+    }
+
+    /* While a finger is on the handle the panel tracks it exactly — a
+       transition here would lag the gesture. */
+    .drawer[data-dragging='true'] {
+        transition: none;
+    }
+
+    .drawer[data-side='bottom'][data-state='open'] {
+        animation: drawer-in-bottom 300ms var(--ease-settle);
+    }
+
+    .drawer[data-side='bottom'][data-state='closed'] {
+        animation: drawer-out-bottom 250ms var(--ease-settle) forwards;
+    }
+
+    .drawer[data-side='right'][data-state='open'] {
+        animation: drawer-in-right 300ms var(--ease-settle);
+    }
+
+    .drawer[data-side='right'][data-state='closed'] {
+        animation: drawer-out-right 250ms var(--ease-settle) forwards;
+    }
+
+    @keyframes drawer-in-bottom {
+        from {
+            transform: translateY(100%);
+        }
+    }
+
+    @keyframes drawer-out-bottom {
+        to {
+            transform: translateY(100%);
+        }
+    }
+
+    @keyframes drawer-in-right {
+        from {
+            transform: translateX(100%);
+        }
+    }
+
+    @keyframes drawer-out-right {
+        to {
+            transform: translateX(100%);
+        }
+    }
+
     /* Scroll reveal. Starts hidden only once JS has claimed the element, so
        the content stays visible if the script never runs. */
     .reveal {
@@ -698,12 +681,11 @@
 @media (prefers-contrast: more) {
     /*
      * Mixed from the palette's own tokens rather than written as literals, so
-     * this holds for every palette and stays correct in both schemes. The
-     * `[data-palette]` selector is here to match the specificity of the
-     * palette blocks above — a bare `:root` would lose to them.
+     * this stays correct in both schemes. Does not outrank the dev-only
+     * `[data-scheme]` override blocks above (same known gap documented
+     * there) — never an issue in the shipped site.
      */
-    :root,
-    :root[data-palette] {
+    :root {
         --hairline: color-mix(
             in oklab,
             var(--foreground) 45%,
@@ -714,8 +696,9 @@
             var(--foreground) 88%,
             var(--background)
         );
-        /* --border and --input are literals in the palette blocks, so raising
-           --hairline alone would leave every bordered element untouched. */
+        /* --border and --input are literals in the palette block above, so
+           raising --hairline alone would leave every bordered element
+           untouched. */
         --border: var(--hairline);
         --input: var(--hairline);
     }

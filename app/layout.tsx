@@ -22,7 +22,7 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
     metadataBase: new URL('https://timhrovat.com'),
     title: {
-        default: 'Tim Hrovat — Full Stack Developer',
+        default: 'Tim Hrovat · Full Stack Developer',
         template: '%s · Tim Hrovat',
     },
     description:
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     authors: [{ name: 'Tim Hrovat', url: 'https://timhrovat.com' }],
     creator: 'Tim Hrovat',
     openGraph: {
-        title: 'Tim Hrovat — Full Stack Developer',
+        title: 'Tim Hrovat · Full Stack Developer',
         description:
             'Full stack developer in Ljubljana, Slovenia. Building efficient, scalable products at eŠola (eAsistent).',
         url: 'https://timhrovat.com',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Tim Hrovat — Full Stack Developer',
+        title: 'Tim Hrovat · Full Stack Developer',
         description: 'Full stack developer in Ljubljana, Slovenia.',
         images: ['/images/portrait.png'],
     },
@@ -59,12 +59,11 @@ export const metadata: Metadata = {
 
 // THE ONE COLOUR THAT CANNOT LIVE IN CSS. Next needs a literal here to emit
 // <meta name="theme-color">, and a meta tag cannot read a custom property, so
-// it cannot follow the selected palette either. These mirror `ember` and only
-// tint mobile browser chrome; set them to the winner once it is chosen.
+// these mirror --background by hand. Change them together.
 export const viewport: Viewport = {
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#fdfbf9' },
-        { media: '(prefers-color-scheme: dark)', color: '#1a1613' },
+        { media: '(prefers-color-scheme: light)', color: '#f5f5f7' },
+        { media: '(prefers-color-scheme: dark)', color: '#000000' },
     ],
 };
 
@@ -73,19 +72,18 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <html
             lang="en"
             className={`${geist.variable} ${jetBrainsMono.variable}`}
-            // The palette bootstrap writes data-palette here before hydration,
+            // The scheme bootstrap writes data-scheme here before hydration,
             // so this element is expected to differ from the server markup.
             suppressHydrationWarning
         >
             <head>
-                {/* Applies the stored palette before first paint, so switching
-                    does not flash the default one on reload. next/script with
-                    `beforeInteractive` rather than a bare <script>, which React
-                    19 warns about inside a component. Temporary — it goes away
-                    with components/palette-switcher.tsx once the final palette
-                    is chosen. */}
-                <Script id="palette-bootstrap" strategy="beforeInteractive">
-                    {`try{var p=localStorage.getItem('palette');if(p==='milk'||p==='mirage')document.documentElement.dataset.palette=p}catch(e){}`}
+                {/* Applies a stored dev scheme override before first paint,
+                    so switching does not flash the default on reload.
+                    next/script with `beforeInteractive` rather than a bare
+                    <script>, which React 19 warns about inside a component.
+                    Dev-only — see components/scheme-switcher.tsx. */}
+                <Script id="scheme-bootstrap" strategy="beforeInteractive">
+                    {`try{var s=localStorage.getItem('scheme');if(s==='light'||s==='dark')document.documentElement.dataset.scheme=s}catch(e){}`}
                 </Script>
                 {/* Scroll reveals start hidden; without JS they must not stay
                     that way. */}

@@ -1,42 +1,39 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'cn';
-import { Slot } from 'radix-ui';
+import type { ComponentProps } from 'react';
 
-const cardVariants = cva('', {
-    variants: {
-        variant: {
-            default: '',
-            // Warm wash arrives on hover rather than a hard colour swap, and the
-            // ring warms toward the accent. The press lands on pointer-down —
-            // a large surface only needs a hint of scale to read as pressed.
-            interactive:
-                "relative transition-[box-shadow,scale] duration-200 ease-[var(--ease-settle)] hover:ring-primary/40 active:scale-[0.99] before:pointer-events-none before:absolute before:inset-0 before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] hover:before:opacity-100 before:bg-[radial-gradient(24rem_16rem_at_100%_0%,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_70%)]",
-        },
-    },
-    defaultVariants: { variant: 'default' },
-});
+import { cn } from '@/lib/utils';
 
+/*
+ * A surface. Deliberately thin: one container with padding and a hairline, and
+ * the sections compose their own content inside it. The generated version had
+ * seven sub-components and a slot system for a page with four cards on it.
+ *
+ * `glass` swaps the opaque fill for the same material the floating nav uses —
+ * the page ground and the pointer glow blur through it instead of being hidden
+ * by it. It carries its own border and shadow, so the hairline ring comes off.
+ */
 function Card({
     className,
-    size = 'default',
-    variant = 'default',
-    asChild = false,
+    interactive = false,
+    glass = false,
     ...props
-}: React.ComponentProps<'div'> &
-    VariantProps<typeof cardVariants> & {
-        size?: 'default' | 'sm';
-        asChild?: boolean;
-    }) {
-    const Comp = asChild ? Slot.Root : 'div';
-
+}: ComponentProps<'div'> & { interactive?: boolean; glass?: boolean }) {
     return (
-        <Comp
-            data-slot="card"
-            data-size={size}
+        <div
+            // Cards always have content passing behind them, so the material
+            // is at its elevated weight rather than the nav's thin resting one.
+            data-elevated={glass ? 'true' : undefined}
             className={cn(
-                cardVariants({ variant }),
-                'group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl',
+                'text-card-foreground relative flex flex-col overflow-hidden rounded-2xl p-6',
+                glass ? 'glass' : 'bg-card ring-hairline ring-1',
+                interactive && [
+                    'transition-[box-shadow,scale,border-color] duration-200 ease-[var(--ease-settle)]',
+                    'active:scale-[0.99]',
+                    glass ? 'hover:border-primary/40' : 'hover:ring-primary/40',
+                    // Warm wash arrives on hover rather than a hard swap.
+                    "before:pointer-events-none before:absolute before:inset-0 before:opacity-0 before:transition-opacity before:duration-500 before:content-['']",
+                    'before:bg-[radial-gradient(24rem_16rem_at_100%_0%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_70%)]',
+                    'hover:before:opacity-100',
+                ],
                 className,
             )}
             {...props}
@@ -44,84 +41,4 @@ function Card({
     );
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-header"
-            className={cn(
-                'group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)',
-                className,
-            )}
-            {...props}
-        />
-    );
-}
-
-function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-title"
-            className={cn(
-                'text-base leading-snug font-medium group-data-[size=sm]/card:text-sm',
-                className,
-            )}
-            {...props}
-        />
-    );
-}
-
-function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-description"
-            className={cn('text-sm text-muted-foreground', className)}
-            {...props}
-        />
-    );
-}
-
-function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-action"
-            className={cn(
-                'col-start-2 row-span-2 row-start-1 self-start justify-self-end',
-                className,
-            )}
-            {...props}
-        />
-    );
-}
-
-function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-content"
-            className={cn('px-(--card-spacing)', className)}
-            {...props}
-        />
-    );
-}
-
-function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
-    return (
-        <div
-            data-slot="card-footer"
-            className={cn(
-                'flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing)',
-                className,
-            )}
-            {...props}
-        />
-    );
-}
-
-export {
-    Card,
-    CardHeader,
-    CardFooter,
-    CardTitle,
-    CardAction,
-    CardDescription,
-    CardContent,
-};
+export { Card };

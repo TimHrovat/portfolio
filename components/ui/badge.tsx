@@ -1,59 +1,51 @@
-import * as React from 'react';
+import type { ComponentProps, ElementType } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'cn';
-import { Slot } from 'radix-ui';
+
+import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-    'group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!',
+    'inline-flex w-fit shrink-0 items-center justify-center gap-2 rounded-full border border-transparent whitespace-nowrap',
     {
         variants: {
             variant: {
-                default:
-                    'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
-                secondary:
-                    'bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80',
-                destructive:
-                    'bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20',
-                outline:
-                    'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground',
-                ghost: 'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
-                link: 'text-primary underline-offset-4 hover:underline',
-                // Technology chip: reads as a raised surface, not a coloured tag.
-                tech: 'border-hairline bg-surface text-foreground',
-                // Soft tint of the palette's second colour, for
-                // "current" markers.
+                // Technology chip: the same material as the nav and the
+                // cards, at a smaller blur — there are twenty-seven of these
+                // and a 20px backdrop blur on a 36px pill costs the same as
+                // one on a card without looking any different. The border is
+                // restated because the base `border-transparent` above sits
+                // in the utilities layer and would otherwise win over the
+                // one `.glass` sets.
+                tech: 'glass border-foreground/10 text-foreground [--glass-blur:12px]',
+                // Soft tint of the palette's second colour, for "current".
                 accent: 'bg-highlight/15 text-highlight',
                 // Mono metadata: statuses, stack labels.
-                meta: 'border-hairline text-muted-foreground font-mono uppercase tracking-wider',
+                meta: 'border-hairline text-muted-foreground font-mono tracking-wider uppercase',
+                solid: 'bg-primary text-primary-foreground',
             },
             size: {
-                default: 'h-5 px-2 text-xs',
-                md: 'h-7 gap-2 px-3 text-xs',
+                sm: 'h-6 px-2.5 text-[0.6875rem]',
+                md: 'h-7 px-3 text-xs',
                 lg: 'h-9 gap-2.5 py-2 pr-4 pl-2.5 text-sm',
             },
         },
-        defaultVariants: {
-            variant: 'default',
-            size: 'default',
-        },
+        defaultVariants: { variant: 'meta', size: 'md' },
     },
 );
 
+type BadgeProps = VariantProps<typeof badgeVariants> & {
+    /** `li` inside a list, `span` anywhere else. */
+    as?: ElementType;
+} & ComponentProps<'span'>;
+
 function Badge({
     className,
-    variant = 'default',
-    size = 'default',
-    asChild = false,
+    variant,
+    size,
+    as: Tag = 'span',
     ...props
-}: React.ComponentProps<'span'> &
-    VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
-    const Comp = asChild ? Slot.Root : 'span';
-
+}: BadgeProps) {
     return (
-        <Comp
-            data-slot="badge"
-            data-variant={variant}
-            data-size={size}
+        <Tag
             className={cn(badgeVariants({ variant, size }), className)}
             {...props}
         />

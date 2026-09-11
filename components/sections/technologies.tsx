@@ -7,6 +7,7 @@ import Reveal from '@/components/reveal';
 import Section from '@/components/section';
 import { Badge } from '@/components/ui/badge';
 import { technologies } from '@/lib/site';
+import { cn } from '@/lib/utils';
 
 const MAX_DISTANCE = 220;
 const MAX_SCALE = 1.14;
@@ -116,12 +117,12 @@ export default function Technologies() {
             <Reveal>
                 <ul
                     ref={grid}
-                    className="flex flex-wrap gap-2.5"
+                    className="flex flex-wrap justify-center gap-2.5"
                     aria-label="Technologies"
                 >
-                    {technologies.map(({ label, icon }) => (
+                    {technologies.map(({ label, icon, plate }) => (
                         <Badge
-                            asChild
+                            as="li"
                             key={icon}
                             variant="tech"
                             size="lg"
@@ -131,17 +132,18 @@ export default function Technologies() {
                                     'transform 350ms var(--ease-settle), border-color 350ms linear',
                             }}
                         >
-                            <li>
-                                <Image
-                                    src={`/images/technology-icons/${icon}`}
-                                    alt=""
-                                    width={20}
-                                    height={20}
-                                    className="h-5 w-5 object-contain"
-                                    unoptimized
-                                />
-                                {label}
-                            </li>
+                            <Image
+                                src={`/images/technology-icons/${icon}`}
+                                alt=""
+                                width={20}
+                                height={20}
+                                className={cn(
+                                    'h-5 w-5 object-contain',
+                                    plate && 'bg-logo-plate rounded-full p-0.5',
+                                )}
+                                unoptimized
+                            />
+                            {label}
                         </Badge>
                     ))}
                 </ul>

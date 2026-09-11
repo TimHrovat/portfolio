@@ -33,11 +33,12 @@ export default function Contact() {
                 }}
             />
 
-            <div className="mx-auto w-full max-w-5xl">
+            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
                 <Reveal>
                     <p className="eyebrow flex items-center gap-3">
                         <span className="bg-highlight h-px w-8" aria-hidden />
                         Contact
+                        <span className="bg-highlight h-px w-8" aria-hidden />
                     </p>
                 </Reveal>
 
@@ -50,31 +51,29 @@ export default function Contact() {
 
                 <Reveal delay={140}>
                     <Button
-                        asChild
+                        href={`mailto:${person.email}`}
                         variant="link"
                         size="xl"
                         className="group mt-12 h-auto px-0 text-lg md:text-2xl"
                     >
-                        <a href={`mailto:${person.email}`}>
-                            <span className="border-hairline group-hover:border-primary border-b pb-1 transition-colors duration-200">
-                                {person.email}
-                            </span>
-                            <ArrowUpRight
-                                aria-hidden
-                                className="text-primary size-6! shrink-0 transition-transform duration-200 ease-[var(--ease-settle)] group-hover:translate-x-1 group-hover:-translate-y-1"
-                            />
-                        </a>
+                        <span className="border-hairline group-hover:border-primary border-b pb-1 transition-colors duration-200">
+                            {person.email}
+                        </span>
+                        <ArrowUpRight
+                            aria-hidden
+                            className="text-primary size-6! shrink-0 transition-transform duration-200 ease-[var(--ease-settle)] group-hover:translate-x-1 group-hover:-translate-y-1"
+                        />
                     </Button>
                 </Reveal>
 
                 <Reveal delay={200}>
                     <Separator className="mt-16" />
-                    <ul className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <ul className="mt-10 grid w-full gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
                         {socials.map((social) => {
                             const Icon = icons[social.icon];
                             const content = (
                                 <>
-                                    <span className="eyebrow flex items-center gap-2">
+                                    <span className="eyebrow flex items-center justify-center gap-2">
                                         <Icon className="text-highlight size-3.5" />
                                         {social.label}
                                     </span>

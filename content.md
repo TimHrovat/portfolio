@@ -68,16 +68,21 @@ Built (`components/sections/about.tsx`). Current copy:
 
 ## 5. Education
 
-Built, as two cards at the end of the Work section.
+Built **into the timeline only**. The separate logo cards were removed — they
+repeated what the School band already says.
 
-- **FRI UNI Ljubljana** — Computer Science. Currently finishing the bachelor's
-  degree; the thesis is the only remaining requirement.
+- **FRI UNI Ljubljana** — 2023 – present. Computer Science. Currently finishing
+  the bachelor's degree; the thesis is the only remaining requirement.
   <https://fri.uni-lj.si/sl>
-- **Vegova Ljubljana** — 4 years, software engineering programme.
+- **Vegova Ljubljana** — 2019 – 2023, software engineering programme.
   <https://www.vegova.si/>
 
-**TODO:** years attended for each, and the exact wording you want for the
-degree title.
+**Assumption to confirm:** the timeline places these on the Slovenian academic
+year (October start, June end) because only the years were given. The labels
+show years only, so this affects bar position by a month or two and nothing
+else. `start`/`end` in `lib/site.ts`.
+
+**TODO:** the exact wording you want for the degree title.
 
 ---
 
@@ -111,55 +116,50 @@ and run `pnpm icons:sync`.
 
 ## 7. Work experience
 
-Seven roles. Built as an index list: the three engineering roles get full rows,
-the other four are collapsed into a compact "Before engineering" grid — which is
-how the overlapping dates are handled.
+Five roles plus a one-week internship, built as a **timeline**
+(`components/timeline.tsx`): every role, both schools and the certificate as
+bars on one shared axis, so the overlaps are visible. Hovering a row on desktop
+shows a popover at the cursor; tapping one on mobile opens a drawer.
 
-Dates, titles and companies are confirmed. **Descriptions are all still TODO**
-— none have ever been written. The row design reads as complete without one, so
-adding a `description` to any role in `lib/site.ts` is optional and safe.
+**Descriptions are now written** and live in `lib/site.ts` as `description` on
+each role. They were drafted from what is known about each job and **need your
+sign-off** — especially eŠola, Simpliservers and P&P InterSearch, where the
+specifics are inferred rather than told to me.
 
-### 1. Software Developer — eŠola d.o.o. (eAsistent)
+### Engineering
 
-6 Dec 2022 – present · <https://www.easistent.com/stran/>
-**TODO:** description. This is the headline role — it deserves 2–3 sentences on
-what you build, the stack, and the scale of the product.
+1. **Software Developer — eŠola d.o.o. (eAsistent)** · Dec 2022 – present ·
+   <https://www.easistent.com/stran/>
+2. **Software Development Intern — Phosphorland** · May 2022 – Jun 2022 ·
+   <https://www.phosphorland.pt/>
+3. **Engineering Intern — Hella Saturnus Slovenia** · one week ·
+   <https://www.hella.com/hella-si/sl/HELLA-Saturnus-Slovenija-61.html>
+   Quality-checking system for car headlight assembly.
+   **DATE UNCONFIRMED** — placed at Aug 2021 because that is when you were
+   otherwise at Hella. Correct `start`/`end` in `lib/site.ts` if it was
+   another year; a one-week bar is a dot either way, but the year is a factual
+   claim.
 
-### 2. Software development intern — Phosphorland
+### Other work
 
-30 May 2022 – 24 Jun 2022 · <https://www.phosphorland.pt/>
-**TODO:** description. Ties directly to the Phosphorland website project below.
+4. **Assistant & Community Support — Simpliservers** · Jan 2022 – Jul 2022 ·
+   <https://simpliservers.com/> (site is gone; the row falls back to initials)
+5. **Data Analyst — P&P InterSearch Slovenia** · Jun 2019 – Sep 2019 ·
+   <https://www.pp-intersearch.si/>
+6. **Online Store Admin & Digital Print Operator — Printboutiq** ·
+   Apr 2017 – Mar 2022 · <https://www.printboutiq.com/>
 
-### 3. Assistant & Community support — Simpliservers
+**Removed on request:** Hella Saturnus _maintenance worker_ (Aug–Sep 2021) and
+Emona Plus d.o.o. (Feb 2018 – Jan 2023). Kept here only as a record.
 
-1 Jan 2022 – 6 Jul 2022 · <https://simpliservers.com/>
-**TODO:** description.
+**Design note:** several of these overlap in time, and most run alongside
+school. That is the whole reason the section is a timeline — it is the one
+layout where the overlap is information rather than a problem to hide.
 
-### 4. Maintenance worker — Hella Saturnus Slovenia d.o.o.
+### Certifications
 
-1 Aug 2021 – 1 Sep 2021 ·
-<https://www.hella.com/hella-si/sl/HELLA-Saturnus-Slovenija-61.html>
-**TODO:** description, or consider cutting — a one-month non-technical summer
-job may not earn its space.
-
-### 5. Data analyst — P&P InterSearch Slovenia
-
-1 Jun 2019 – 1 Sep 2019 · <https://www.pp-intersearch.si/>
-**TODO:** description.
-
-### 6. Cost analyst & Documentation editor — Emona Plus d.o.o.
-
-1 Feb 2018 – 1 Jan 2023 · <https://www.emonaplus.si/>
-**TODO:** description. Ran ~5 years, overlapping several other roles —
-presumably part-time. Worth labelling as such so the timeline reads correctly.
-
-### 7. Online store administrator & Digital print operator — Printboutiq
-
-1 Apr 2017 – 1 Mar 2022 · <https://www.printboutiq.com/>
-**TODO:** description. Also long-running and overlapping.
-
-**Design note:** four of these overlap in time, which is why the non-engineering
-roles are a separate grid rather than points on one timeline.
+- **CCNA: Introduction to Networks** — Cisco, issued May 2023. On the timeline
+  as a diamond marker rather than a bar.
 
 ### CV
 
@@ -173,27 +173,34 @@ up to date.
 
 ## 8. Projects
 
-Built, as two cards.
+Built, as four cards. No index numbers and no "Coursework"/"Internship" labels
+— both were removed as noise.
 
-### Phosphorland website
+1. **Phosphorland** — React · Firebase · i18next ·
+   <https://github.com/TimHrovat/phosphorland-website> ·
+   live at <https://www.phosphorland.pt/>
+2. **Save the Animals** — C++ · SDL2 ·
+   <https://github.com/TimHrovat/sdl-game>
+3. **Wordle Engine** — Java ·
+   <https://github.com/TimHrovat/wordle-engine>
+4. **Image Editor** — JavaScript · Canvas ·
+   <https://github.com/TimHrovat/image-editor>
 
-React · Firebase (auth, file storage, realtime database) · i18next
-Source: <https://github.com/TimHrovat/phosphorland-website>
-Live site: <https://www.phosphorland.pt/>
-**TODO:** one-line description of what the site actually does.
+Summaries are written and live in `lib/site.ts`. **They need your sign-off** —
+3 and 4 were described from reading the repositories, not from your account of
+them.
 
-### Save the Animals
+**UpLearn is not here.** There is no public `uplearn` repository under
+`TimHrovat`, and the account belongs to no organisations, so it is either
+private or under another account. Send me the link (or the stack and a
+sentence) and I will add it.
 
-C++ · SDL2
-Source: <https://github.com/TimHrovat/sdl-game>
-**TODO:** one-line description of the game.
+**Skipped deliberately:** `fri-uni` is a notes dump, `portfolio-website` is the
+old site, `neovim-config` is dotfiles, `vegova` is school work. Say the word if
+you want any of them in.
 
-**TODO:**
-
-- No screenshots or thumbnails exist for either — a project card grid will look
-  empty without them.
-- Both are old and student-level. Anything newer worth showing (work at eŠola,
-  side projects, this portfolio itself)?
+**Still open:** no screenshots or thumbnails for any project — the cards are
+designed to work without them, so this is optional.
 
 ---
 
@@ -214,13 +221,12 @@ Source: <https://github.com/TimHrovat/sdl-game>
 
 Every section is built. What remains is content, not design:
 
-1. **Job descriptions** (§7) — seven roles, none written. The eŠola one matters
+1. **Job descriptions** (§7) — five roles, none written. The eŠola one matters
    most.
 2. **The CV PDF** (§7) — the button links to `/documents/Tim_Hrovat_CV.pdf`,
    which is not in the repo yet.
 3. **Project descriptions** (§8) — placeholder prose is in `lib/site.ts` and
    needs your sign-off.
-4. **Education years** (§5).
-5. **Project screenshots** (§8) — the cards are designed to work without them,
+4. **Project screenshots** (§8) — the cards are designed to work without them,
    so this is optional.
-6. **Confirm the public email** (§9).
+5. **Confirm the public email** (§9).

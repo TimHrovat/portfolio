@@ -4,7 +4,7 @@ Personal portfolio site for Tim Hrovat. A single static page, no backend.
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui · pnpm
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · pnpm
 
 ## Commands
 
@@ -39,11 +39,12 @@ Perf: consolidate badge mousemove listeners
 
 - Tailwind v4 — the theme lives in `app/globals.css` as `@theme` variables.
   There is no `tailwind.config.js`.
-- **Theme follows the OS and there is no toggle.** Tokens are declared on
-  `:root` and re-declared inside `@media (prefers-color-scheme: dark)`. No
-  `.dark` class, no theme provider, no JS — so there is nothing to hydrate and
-  no flash. Do not add a `dark:` variant to a component: add the token to both
-  blocks instead.
+- **Theme follows the OS and there is no toggle in the shipped site.** Tokens
+  are declared on `:root` and re-declared inside
+  `@media (prefers-color-scheme: dark)`. No `.dark` class, no theme provider.
+  Do not add a `dark:` variant to a component: add the token to both blocks
+  instead. The one piece of JS is the dev-only scheme switcher — see the design
+  system below.
 - Copy and data live in `lib/site.ts`. Sections are presentational; edit
   content there, not in JSX.
 - pnpm blocks postinstall scripts by default. A new dependency with a native
@@ -63,6 +64,11 @@ so never edit them by hand or drop a file in manually.
 
 `devicon` is a devDependency. The SVGs are committed, so it is only needed when
 adding or refreshing an icon.
+
+A logo devicon does not carry goes in `scripts/icon-extras/` and is listed in
+the `extras` array of the sync script with its source noted. That keeps
+`public/images/technology-icons/` entirely generated — it can always be rebuilt
+from scratch — while still allowing a one-off. Claude is the only one today.
 
 ### Adding one
 
@@ -110,8 +116,14 @@ Every icon is copied as `original` unless told otherwise. Devicon also ships
   case-insensitive and will hide a casing typo that 404s on Linux in
   production.
 - Several logos are a single dark colour (MariaDB, Prisma, MySQL, WordPress)
-  and a few are light-on-dark (Next.js). Check both when changing the page
-  background rather than assuming a logo is visible.
+  and a few are light-on-dark (Next.js). Check both schemes when adding one
+  rather than assuming it is visible. Where a mark is a single _near-black_ —
+  GitHub is the case that forced it — set `plate: true` on the entry in
+  `technologies` and it renders on the `--logo-plate` ground instead of
+  straight onto the chip, where it would vanish in dark mode.
+- Not everything has a devicon. PHPUnit has none, and "CI/CD" is a practice
+  rather than a product — the nearest concrete marks are `githubactions`,
+  `jenkins` and `circleci`.
 - Icons render through `next/image` with `unoptimized`, since Next will not
   optimise SVG without `dangerouslyAllowSVG`.
 
@@ -138,51 +150,44 @@ as single-accent before.
 by them — the subtle hover-background pair — but are tinted from the highlight
 hue so generated components feel like the palette.
 
-**Three palettes are live while the final one is being chosen.**
+**The palette is Apple's**, chosen out of four candidates that were live for a
+while. It uses Apple's own published values rather than invented ones:
+apple.com's page grey and ink for the neutrals (`#F5F5F7` / `#1D1D1F`), true
+black (`#000000`) for the dark background exactly as apple.com's own dark mode
+uses it, `systemBlue` for `primary` and `systemIndigo` for `highlight`. Light
+and dark each use Apple's own light/dark variant of each colour (`#007AFF` →
+`#2997FF`, `#5856D6` → `#5E5CE6`) rather than one value re-lit
+programmatically.
 
-| `data-palette` | Paper      | Ink                 | Primary    | Highlight           |
-| -------------- | ---------- | ------------------- | ---------- | ------------------- |
-| `ember`        | warm paper | warm near-black     | terracotta | olive               |
-| `milk`         | cream      | gray blue `#2b323f` | blue       | deep denim          |
-| `mirage`       | wild sand  | mirage `#16232A`    | `#FF5804`  | sea green `#075056` |
+It is declared as a full light block on bare `:root` plus a full dark block
+inside `prefers-color-scheme: dark` — every token in both, since a partial
+block would inherit across schemes.
 
-`milk` contains **no orange at all** — that pin was two colours, and the
-`#EC5E27` printed on it was a mislabel. Its primary is a saturated blue drawn
-from the gray-blue hue, because the ink itself sits too close to `--foreground`
-to read as an accent.
-
-Each palette declares a full light block plus a full dark block inside
-`prefers-color-scheme: dark` — every token in both, since a partial block would
-inherit across schemes. `ember` is declared on bare `:root` as well as by name,
-so a browser with no JS and no stored choice still gets a complete theme.
-Selectors are `:root[data-palette='x']`, which outranks bare `:root` — anything
-that overrides a token globally (the `prefers-contrast` block) must match that
-specificity, which is why it is written `:root, :root[data-palette]`.
-
-**This is temporary.** When the palette is chosen, delete the two losers, fold
-the winner onto plain `:root`, and remove `components/palette-switcher.tsx`,
-`lib/palettes.ts`, its mount in `app/page.tsx` and the bootstrap script in
-`app/layout.tsx`. Then update `themeColor` to match.
-
-The switcher writes `data-palette` on `<html>` and mirrors it to
-`localStorage`; a `next/script` with `strategy="beforeInteractive"` replays it
-before first paint so there is no flash. It has to be `next/script` — React 19
-errors on a bare `<script>` rendered inside a component — and `<html>` carries
-`suppressHydrationWarning`, since that attribute is set before React hydrates
-and legitimately differs from the server markup. `<html data-palette>` is the source of truth and the
+**Dev-only: `data-scheme` pins light or dark.** `components/scheme-switcher.tsx`
+is a floating three-way control (System / Light / Dark) that writes
+`data-scheme` on `<html>` and mirrors it to `localStorage`; a `next/script`
+with `strategy="beforeInteractive"` replays it before first paint so there is
+no flash. It has to be `next/script` — React 19 errors on a bare `<script>`
+rendered inside a component — and `<html>` carries `suppressHydrationWarning`,
+since that attribute is set before React hydrates and legitimately differs from
+the server markup. `<html data-scheme>` is the source of truth and the
 component subscribes to it with `useSyncExternalStore` rather than holding its
 own copy — React Compiler rejects mutating a global from a component body, so
 the DOM write lives in a module-scope function.
 
-**The switcher picks a palette, never light vs dark.** That still follows the
-OS with no override, which is the rule the site is built on.
+**System is what ships**, and it removes the attribute entirely rather than
+pinning the OS's current value — so the shipped site still follows the OS with
+no toggle, which is the rule everything here is built on. The two
+`:root[data-scheme='…']` blocks at the bottom of `globals.css` exist purely so
+a change can be checked in both schemes without touching the OS setting; they
+outrank the `prefers-color-scheme` block by specificity, and they knowingly
+also outrank the `prefers-contrast: more` block, which is fine because they
+never reach production.
 
 shadcn's semantic tokens (`background`, `foreground`, `card`, `primary`,
 `muted`, `border`, ...) plus ours: `surface`, `surface-strong`, `hairline`,
 `logo-plate` (light ground for dark third-party logos), `glass-highlight` and
-`glass-shadow`. Everything is OKLCH and warm — neutrals carry a slight orange
-cast so they sit with the accent rather than fighting it. Primary is orange in
-both schemes, lifted in dark so it holds up against a dark ground.
+`glass-shadow`. Everything is OKLCH.
 
 **The one unavoidable exception** is `themeColor` in `app/layout.tsx`. Next
 emits it as a `<meta>` tag and a meta tag cannot read a custom property, so the
@@ -213,8 +218,9 @@ explicitly rather than derived from one base.
 as `--pointer-x` / `--pointer-y` on `<html>`; the `.pointer-glow` layer reads
 them. It is mounted once in `app/page.tsx` and covers the whole site. It sits at
 `z-index: -1`, which is why the page background lives on `html` rather than
-`body` — the layer has to paint between the ground and the content, so opaque
-cards occlude it. Skipped on coarse pointers and under reduced motion.
+`body` — the layer has to paint between the ground and the content. Opaque
+surfaces occlude it; the glass ones blur it, which is most of what gives them
+something to refract. Skipped on coarse pointers and under reduced motion.
 
 The layer is a fixed 60rem square whose gradient is painted **once** and then
 moved with `translate3d`. Driving the gradient's own position instead would
@@ -226,6 +232,20 @@ path, move things with `transform`, never with a paint-triggering property.
 While the nav floats over open space it stays thin and casts no shadow; once
 page content is passing underneath, it thickens and drops a real one, so the two
 layers stay separate. `SiteNav` sets the attribute from `scrollY`.
+
+**Every card-like surface is that same material.** `Card glass`, which the
+project and education cards use, and `Badge variant="tech"` for the technology
+chips. Cards pin `data-elevated` on, since there is always something passing
+behind them; the chips turn `--glass-blur` down to 12px, because there are
+twenty-seven of them and a 20px blur on a 36px pill costs the same as one on a
+card without looking any different.
+
+Two traps when putting `.glass` on a component. Its `border` lives in the
+components layer, so any `border-transparent` in a utility class beats it —
+`Badge` has one in its base, which is why the `tech` variant restates
+`border-foreground/10` (the same value `.glass` sets). And `Card`'s hover
+accent has to move from `ring` to `border` when it is glass, since the material
+supplies the border and the ring would sit outside it.
 
 Paired with it is `.scroll-edge`, a masked strip at the top of the viewport that
 blurs and fades content out under the floating nav instead of meeting it at a
@@ -252,42 +272,172 @@ layer already handles globally.
 `prefers-contrast` all have handling in `globals.css`. Anything new that blurs,
 translates or animates has to work under all three.
 
-## shadcn/ui
+## Work and Education
 
-The UI is built from shadcn components in `components/ui/`, not hand-rolled
-ones. **Extend the cva variants rather than reaching for a custom component** —
-if a section needs a new look, add a variant.
+`components/timeline.tsx` is the Work section: a vertical timeline, newest role
+at the top, one rail down the page's **centre** with the organisation's mark as
+each node and every entry centred on the same axis as the section headers and
+the About prose. A left-hand rail put the whole section off-axis against a page
+that is centred everywhere else.
 
-Variants added on top of the stock generators:
+The rail is a segment rendered above each node rather than one line behind the
+list, so it spans whatever height the entry above it needs without anything
+being measured.
 
-| Component | Axis      | Added                                                                               |
-| --------- | --------- | ----------------------------------------------------------------------------------- |
-| `Button`  | `variant` | `glass` — the translucent material button                                           |
-| `Button`  | `size`    | `xl` — hero-scale call to action                                                    |
-| `Button`  | `shape`   | `default` \| `pill` (new axis)                                                      |
-| `Badge`   | `variant` | `tech` (technology chip), `accent` (current marker), `meta` (mono status/stack tag) |
-| `Badge`   | `size`    | `default` \| `md` \| `lg` (new axis)                                                |
-| `Card`    | `variant` | `default` \| `interactive` — hover ring warms and a radial wash fades in (new axis) |
-| `Card`    | prop      | `asChild`, so a whole card can be a link                                            |
+**The job title leads.** It is the `h3`, in the display face; the employer is
+the smaller line under it, and the dates are mono metadata beside that. What
+the work was is the thing worth reading — who paid for it is context. The lane
+chart this replaced had that the other way round, and hid every description
+behind a hover popover.
 
-Two base-class edits: `Button` presses with `active:scale-[0.97]` instead of
-shadcn's 1px nudge, and `Badge`'s base no longer pins `h-5 px-2 text-xs` so the
-new size axis can take effect.
+It is a plain server component. The previous version needed a client half for
+the follow-the-cursor popover and a mobile drawer; a vertical layout has room
+for the description inline, so all of that went.
 
-**What stays custom, and why.** These are page-level compositions or CSS
-effects, not reusable UI primitives — shadcn has no equivalent:
+**Ordering is by `start`, descending.** `Role.start` / `Role.end` are still
+`YYYY-MM` strings, so a string sort is a date sort and no `Date` is constructed
+anywhere. `end: null` means ongoing and is what draws the `Badge accent` "Now"
+marker — on this CV the ongoing role also has the most recent start, so it
+lands on top without a special case. The order of the array in `lib/site.ts` is
+only for reading the file.
 
-- `.glass`, `.grain`, `.pointer-glow`, `.reveal`, `.caret-blink`, `.eyebrow` in
-  `globals.css`
-- `components/reveal.tsx` (scroll reveal), `components/section.tsx` (section
-  shell), `components/pointer-glow.tsx`, `components/brand-icons.tsx`
-- The experience index rows and the hero — editorial layouts, not components
+`Role.kind` is down to a single cue now: `engineering` tints the node's ring
+with `primary`, `other` leaves it on the hairline. There is no legend, because
+with every title spelled out there is nothing left to decode.
 
-**The portrait deliberately does not use `Avatar`.** Radix's `Avatar.Image`
-derives its load state from its own `src`, so wrapping `next/image` with
-`asChild` leaves it stuck on the fallback, and passing `src` to both makes Radix
-fetch the unoptimised original a second time. At 469KB that is not worth it, so
-the portrait is a plain `next/image`.
+**`Role.highlights` marks the featured role**, and eAsistent is the only one
+that carries it. Every other role is a paragraph of `description` and nothing
+else.
+
+It is grouped, not flat: `{ label, items }`, rendered as a label column with
+its lines beside it, a spec sheet rather than a bullet list. Nine equal bullets
+are something to skim past; three named groups (_Built alone_, _Across the
+stack_, _Beyond the code_) are three things to remember. The labels use the
+`.eyebrow` style, and the lines sit left-aligned inside the centred panel,
+since they are too long to centre without the ragged edges reading as a
+mistake. Below `sm` the label stacks above its items.
+
+**It is folded away by default.** `components/role-highlights.tsx` is the one
+client component here: shut, it is a pill on the same glass; open, it is the
+panel. Two details carry it.
+
+- **One radius, not two.** The container is `rounded-3xl` in both states. CSS
+  clamps a corner radius to half the shorter side, so at the shut height of
+  3rem it paints as a true pill and unrolls into a 3rem box as the panel grows.
+  Transitioning from an explicit `rounded-full` instead spends almost the whole
+  duration at a radius still large enough to clamp, then snaps at the end.
+- **Height comes from a `0fr` to `1fr` grid row,** not a transitioned
+  `height`. A height transition needs a measured pixel value, which means
+  reading layout on open and again whenever the content reflows; a grid row
+  interpolates to the content's own height with nothing measured.
+
+It stays one surface throughout rather than a button that swaps for a box:
+stacking a second translucent surface on the first muddies both, which the
+material rules above already warn about.
+
+**The featured role is scaled up in the dimensions that already exist** — a
+`size-14` mark instead of `size-12`, a `text-3xl` title instead of `text-2xl`,
+and its detail on the house glass material via `Card glass`. Weight of material
+is how this design system says "this one first", so there is no new colour, no
+ribbon and no badge beyond the "Now" marker every ongoing role gets. If a
+second role ever earns the treatment, it inherits all of it by gaining
+`highlights` — nothing here is keyed to the array position.
+
+Keep each line to a sentence or two. The moment one needs a paragraph it
+belongs in `description`, or in Projects as its own card — which is where the
+landing page went.
+
+**Education is its own section**, `components/sections/education.tsx`, between
+Work and Stack: the two schools as glass cards in a two-column grid, the
+certificate as a slimmer row underneath — a certificate is a point in time, not
+a programme, and should not be a third card pretending to be a school. School
+used to share the Work section's time axis, which made the point that most of
+the jobs ran alongside it, at the cost of a chart nobody needed to read that
+precisely.
+
+Each of those cards is **one link stretched over the whole surface** with
+`after:absolute after:inset-0` on the heading's anchor, rather than an overlay
+element with no accessible name of its own.
+
+**Logos.** `components/org-mark.tsx` renders the mark — the timeline's rail
+nodes and the education cards both use it — on a `--logo-plate` ground, because
+the logos are arbitrary colours and several are dark-on-transparent. It falls
+back to initials when an organisation has no usable logo — Simpliservers is the
+case that forced it, its site is gone — so a missing file degrades to something
+deliberate rather than a hole.
+
+**The nav collapses at `md`, not `sm`.** Five links plus the wordmark and the
+"Get in touch" button stopped fitting at `sm` when Education was added; below
+`md` they go into the drawer.
+
+**Projects: the first entry is the headline** and spans the full width of the
+grid; the rest pair up underneath. `Project.source` is optional — where the
+work is not public the card says "Closed source" rather than quietly dropping
+the button, so the absence reads as a fact about the work.
+
+## UI components
+
+`components/ui/` is hand-written, but **behaviour comes from Radix**. The split
+is the point: shadcn's _generated components_ were removed — a `data-slot`
+system, seven card sub-components and a polymorphic slot for a page with four
+cards on it — while Radix's _headless primitives_ stayed for anything with real
+interaction and state. Styling is ours; focus management is not.
+
+Write presentation by hand. Reach for a Radix primitive the moment something
+needs a focus trap, dismissal, collision positioning or `aria-*` wiring.
+
+| Component   | Notes                                                                               |
+| ----------- | ----------------------------------------------------------------------------------- |
+| `Button`    | `variant` primary / secondary / ghost / outline / link / glass, `size` sm–xl + icon |
+| `Badge`     | `variant` tech / accent / meta / solid, `size` sm / md / lg, `as` for `li`          |
+| `Card`      | one container, `interactive` for the hover accent and wash, `glass` for the material |
+| `Separator` | a hairline rule                                                                     |
+| `Drawer`    | Radix `Dialog`, dismissed by dragging its handle                                    |
+
+Two conventions worth keeping:
+
+- **`href` instead of `asChild`.** `Button` renders an `<a>` when given `href`
+  and a `<button>` otherwise. Every call site wanted exactly one of those, so
+  there is no slot machinery and no cloned children.
+- **`Drawer` wraps Radix `Dialog`.** A native `<dialog>` covers the easy parts
+  (focus trap, Escape, top layer) but Radix also gets scroll locking without
+  layout shift, `aria-hidden` on the rest of the tree, and pointer-down-outside
+  vs click-outside. Because it is opened from external state rather than a
+  `Dialog.Trigger`, pass `restoreFocusTo` so focus returns to the control that
+  opened it. Give it a `subtitle` rather than rendering a meta line in the body
+  _and_ a hidden `Dialog.Description` — that announces the same words twice.
+
+**The grab handle is the close control**; there is no X. It drags the panel
+down and dismisses past a quarter of its height or on a flick, and it is a real
+`<button>`, so a tap, Enter or Space closes it too — which is what keeps the
+panel dismissable without a pointer.
+
+Two things make that work, both easy to break:
+
+- The exit keyframes in `globals.css` declare only a `to`, so the implicit
+  `from` is the panel's current transform — wherever the drag left it. Give
+  them an explicit `from` and every drag-close snaps back to rest before
+  sliding out. Radix also needs _some_ animation on the closing panel to know
+  when it may unmount, which is why every `[data-state]` below declares one.
+- A drag must not also register as a tap, so the handler tracks whether the
+  pointer moved. That flag is reset when the drawer opens rather than only on
+  `pointerdown`: a keyboard activation arrives as a click with no `pointerdown`
+  to reset it, so a drag-close would otherwise swallow the next Enter.
+
+`class-variance-authority` stays: it is not shadcn, and it is the tidiest way
+to express a variant table.
+
+## Organisation logos
+
+`public/images/logos/` holds the marks for workplaces, schools and the
+certificate issuer, used by `components/org-mark.tsx`. They were taken from
+each organisation's own site (Wikimedia for Cisco and Hella, LinkedIn for
+Simpliservers, whose own site is gone), which is ordinary nominative use — the
+same as a logo on a CV. They are **not** generated, unlike the technology
+icons, so they are safe to edit by hand.
+
+`OrgMark` still falls back to initials for anything without a `logo`, so a
+missing file degrades rather than leaving a hole.
 
 ## Icons
 

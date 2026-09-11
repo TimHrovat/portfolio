@@ -3,15 +3,8 @@
 import { Mail, Menu } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Drawer from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
 import { navigation, person } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
@@ -135,96 +128,80 @@ export default function SiteNav() {
 
                     <ul
                         ref={list}
-                        className="relative mx-auto hidden items-center gap-1 sm:flex"
+                        className="relative mx-auto hidden items-center gap-1 md:flex"
                     >
                         <span ref={indicator} className="nav-indicator" />
                         {navigation.map(({ label, href }) => (
                             <li key={href} className="relative">
                                 <Button
-                                    asChild
+                                    href={href}
                                     variant="ghost"
                                     size="sm"
-                                    shape="pill"
                                     data-active={
                                         active === href ? 'true' : 'false'
+                                    }
+                                    aria-current={
+                                        active === href ? 'true' : undefined
                                     }
                                     className={cn(
                                         // Vibrancy: text over a translucent
                                         // surface needs more contrast and a
                                         // touch more tracking than it would on
-                                        // a solid one — flat grey dissolves
-                                        // into whatever scrolls past.
+                                        // a solid one.
                                         'px-3.5 tracking-[0.01em] hover:bg-transparent',
                                         active === href
                                             ? 'text-foreground'
                                             : 'text-foreground/65 hover:text-foreground',
                                     )}
                                 >
-                                    <a
-                                        href={href}
-                                        aria-current={
-                                            active === href ? 'true' : undefined
-                                        }
-                                    >
-                                        {label}
-                                    </a>
+                                    {label}
                                 </Button>
                             </li>
                         ))}
                     </ul>
 
                     <Button
-                        asChild
+                        href={`mailto:${person.email}`}
                         size="sm"
-                        shape="pill"
-                        className="ml-auto px-4 sm:ml-0"
+                        className="ml-auto px-4 md:ml-0"
                     >
-                        <a href={`mailto:${person.email}`}>
-                            <Mail />
-                            Get in touch
-                        </a>
+                        <Mail />
+                        Get in touch
                     </Button>
 
-                    {/* Below `sm` the links collapse into a sheet rather than
-                        disappearing entirely. */}
-                    <Sheet open={open} onOpenChange={setOpen}>
-                        <SheetTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                shape="pill"
-                                className="sm:hidden"
-                                aria-label="Open menu"
-                            >
-                                <Menu />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="w-72">
-                            <SheetHeader>
-                                <SheetTitle className="font-mono text-sm">
-                                    Navigation
-                                </SheetTitle>
-                            </SheetHeader>
-                            <Separator />
-                            <ul className="flex flex-col gap-1 px-4">
-                                {navigation.map(({ label, href }) => (
-                                    <li key={href}>
-                                        <Button
-                                            asChild
-                                            variant="ghost"
-                                            size="lg"
-                                            className="w-full justify-start"
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            <a href={href}>{label}</a>
-                                        </Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </SheetContent>
-                    </Sheet>
+                    {/* Below `md` the links collapse into a drawer rather than
+                        disappearing entirely — five of them no longer fit
+                        beside the logo and the button at `sm`. */}
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="md:hidden"
+                        aria-label="Open menu"
+                        aria-haspopup="dialog"
+                        onClick={() => setOpen(true)}
+                    >
+                        <Menu />
+                    </Button>
                 </nav>
             </header>
+
+            <Drawer open={open} onOpenChange={setOpen} title="Navigation">
+                <ul className="mt-4 flex flex-col gap-1">
+                    {navigation.map(({ label, href }) => (
+                        <li key={href}>
+                            <Button
+                                href={href}
+                                variant="ghost"
+                                size="lg"
+                                className="w-full justify-start rounded-xl"
+                                onClick={() => setOpen(false)}
+                            >
+                                {label}
+                            </Button>
+                        </li>
+                    ))}
+                </ul>
+            </Drawer>
         </>
     );
 }
