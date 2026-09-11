@@ -1,75 +1,36 @@
-# Nuxt Minimal Starter
+# Portfolio
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Personal portfolio site for Tim Hrovat, built with Next.js 16 (App Router),
+React 19, TypeScript, Tailwind CSS v4 and shadcn/ui.
 
 ## Setup
 
-Make sure to install dependencies:
+This project uses pnpm. Build scripts are allowlisted in `pnpm-workspace.yaml` —
+pnpm blocks them by default, and Tailwind's native `@tailwindcss/oxide` binary
+will be missing without it.
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Development
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
 pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+
+The site runs on `http://localhost:3000`.
 
 ## Production
 
-Build the application for production:
-
 ```bash
-# npm
-npm run build
-
-# pnpm
 pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+pnpm start
 ```
 
-Locally preview production build:
+## Other commands
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+pnpm lint
+pnpm format
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

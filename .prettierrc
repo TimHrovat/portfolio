@@ -4,6 +4,5 @@
     "printWidth": 80,
     "singleQuote": true,
     "trailingComma": "all",
-    "endOfLine": "auto",
-    "vueIndentScriptAndStyle": false
+    "endOfLine": "auto"
 }
