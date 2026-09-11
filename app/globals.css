@@ -2,152 +2,523 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * Theme follows the operating system. There is no toggle, so every token is
+ * declared once on :root and re-declared under prefers-color-scheme: dark.
+ * Nothing in the app uses a `dark:` variant.
+ */
+
+@theme {
+    /* Type ------------------------------------------------------------- */
+    --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+    /* Display and metadata share one mono. The two roles stay distinct through
+       weight, size and tracking rather than through a second typeface. */
+    --font-display: var(--font-jetbrains-mono), ui-monospace, monospace;
+    --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+    /* Tracking tightens as type grows; body sits near zero. */
+    --text-xs--letter-spacing: 0.01em;
+    --text-sm--letter-spacing: 0.005em;
+    --text-base--line-height: 1.65;
+    --text-lg--line-height: 1.6;
+    --text-xl--line-height: 1.5;
+    --text-2xl--letter-spacing: -0.01em;
+    --text-3xl--letter-spacing: -0.015em;
+    --text-4xl--line-height: 1.05;
+    --text-4xl--letter-spacing: -0.02em;
+    --text-5xl--line-height: 1;
+    --text-5xl--letter-spacing: -0.025em;
+    --text-6xl--line-height: 0.98;
+    --text-6xl--letter-spacing: -0.03em;
+    --text-7xl--line-height: 0.95;
+    --text-7xl--letter-spacing: -0.03em;
+    --text-8xl--line-height: 0.92;
+    --text-8xl--letter-spacing: -0.05em;
+    --text-9xl--line-height: 0.9;
+    --text-9xl--letter-spacing: -0.055em;
+
+    /* Radii ------------------------------------------------------------ */
+    --radius-xs: 0.375rem;
+    --radius-sm: 0.625rem;
+    --radius-md: 0.875rem;
+    --radius-lg: 1.25rem;
+    --radius-xl: 1.75rem;
+    --radius-2xl: 2.25rem;
+    --radius-3xl: 3rem;
+
+    /* Motion ----------------------------------------------------------- */
+    /* Critically damped: no overshoot, used for everything non-momentum. */
+    --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-sans);
-    --font-mono: var(--font-geist-mono);
-    --font-heading: var(--font-sans);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-surface: var(--surface);
+    --color-surface-strong: var(--surface-strong);
+    --color-hairline: var(--hairline);
+    --color-logo-plate: var(--logo-plate);
 }
 
-@theme {
-    --text-4xl--line-height: 1;
+/*
+ * THE PALETTE. Every colour in the app resolves to a token below — change a
+ * value here and it propagates everywhere.
+ *
+ * One exception: `themeColor` in app/layout.tsx needs literal hex for the
+ * browser-chrome meta tag. Keep it in step with --background.
+ */
 
-    --color-foreground-muted: #a3a3a3;
-    --color-foreground-primary: #01cdd9;
-
-    --color-surface-primary-default-text: #0a0a0a;
-    --color-surface-primary-default-border: #01cdd9;
-    --color-surface-primary-default-bg: #01cdd9;
-    --color-surface-primary-hover-text: #ffffff;
-    --color-surface-primary-hover-border: #04a4b6;
-    --color-surface-primary-hover-bg: #04a4b6;
-    --color-surface-secondary-default-text: #ffffff;
-    --color-surface-secondary-default-border: #262626;
-    --color-surface-secondary-default-bg: #262626;
-}
-
+/* Light — warm paper, never a cold grey. */
 :root {
-    --font-sans: var(--font-poppins), serif;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    color-scheme: light;
+
+    --background: oklch(0.99 0.004 75);
+    --foreground: oklch(0.22 0.015 55);
+
+    --surface: oklch(1 0 0);
+    --surface-strong: oklch(0.975 0.006 72);
+    --hairline: oklch(0.91 0.01 68);
+
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.22 0.015 55);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --popover-foreground: oklch(0.22 0.015 55);
+
+    --primary: oklch(0.63 0.2 40);
+    --primary-foreground: oklch(0.99 0.005 80);
+
+    --secondary: oklch(0.96 0.008 70);
+    --secondary-foreground: oklch(0.28 0.015 55);
+
+    --muted: oklch(0.965 0.007 70);
+    --muted-foreground: oklch(0.52 0.02 55);
+
+    --accent: oklch(0.95 0.03 60);
+    --accent-foreground: oklch(0.32 0.06 45);
+
+    --destructive: oklch(0.58 0.22 27);
+    --border: oklch(0.91 0.01 68);
+    --input: oklch(0.91 0.01 68);
+    --ring: oklch(0.63 0.2 40);
+
+    --radius: 0.875rem;
+
+    /* Plate behind third-party logos. Those wordmarks are dark and cannot
+       follow currentColor, so they always need a light ground. */
+    --logo-plate: #ffffff;
+
+    /* Glass edge highlight and drop shadow. */
+    --glass-highlight: oklch(1 0 0 / 55%);
+    --glass-shadow: oklch(0 0 0 / 45%);
+
+    /* Strength of the grain overlay and the ambient/pointer glow. */
+    --grain-opacity: 0.035;
+    --glow-strength: 0.1;
 }
 
-.dark {
-    --background: #0a0a0a;
-    --foreground: #ffffff;
-    --card: #262626;
-    --card-foreground: #ffffff;
-    --popover: #262626;
-    --popover-foreground: #ffffff;
-    --primary: #01cdd9;
-    --primary-foreground: #0a0a0a;
-    --secondary: #262626;
-    --secondary-foreground: #ffffff;
-    --muted: #262626;
-    --muted-foreground: #a3a3a3;
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        --background: oklch(0.16 0.012 55);
+        --foreground: oklch(0.96 0.008 80);
+
+        --surface: oklch(0.2 0.014 55);
+        --surface-strong: oklch(0.235 0.015 55);
+        --hairline: oklch(0.29 0.016 55);
+
+        --card: oklch(0.2 0.014 55);
+        --card-foreground: oklch(0.96 0.008 80);
+        --popover: oklch(0.2 0.014 55);
+        --popover-foreground: oklch(0.96 0.008 80);
+
+        --primary: oklch(0.72 0.185 45);
+        --primary-foreground: oklch(0.17 0.018 50);
+
+        --secondary: oklch(0.25 0.015 55);
+        --secondary-foreground: oklch(0.96 0.008 80);
+
+        --muted: oklch(0.24 0.014 55);
+        --muted-foreground: oklch(0.7 0.018 70);
+
+        --accent: oklch(0.3 0.05 45);
+        --accent-foreground: oklch(0.92 0.04 70);
+
+        --destructive: oklch(0.65 0.2 25);
+        --border: oklch(0.29 0.016 55);
+        --input: oklch(0.29 0.016 55);
+        --ring: oklch(0.72 0.185 45);
+
+        --logo-plate: #ffffff;
+        --glass-highlight: oklch(1 0 0 / 12%);
+        --glass-shadow: oklch(0 0 0 / 80%);
+
+        --grain-opacity: 0.06;
+        --glow-strength: 0.16;
+    }
 }
 
 @layer base {
     * {
-        @apply border-border outline-ring/50;
+        @apply border-border;
     }
-    body {
-        @apply bg-background text-foreground;
-        background-image: radial-gradient(#737373 1px, #0a0a0a 0.5px);
-        background-size: 50px 50px;
-    }
+
     html {
         @apply font-sans;
+        scroll-behavior: smooth;
+        /* Clears the floating nav when jumping to an anchor. */
+        scroll-padding-top: 6rem;
+        -webkit-tap-highlight-color: transparent;
     }
-    a {
-        @apply text-foreground-primary;
+
+    html {
+        /* The background lives here, not on body, so .pointer-glow can paint
+           at z-index -1 between the page ground and the content. */
+        background-color: var(--background);
+    }
+
+    body {
+        @apply text-foreground antialiased;
+        background-color: transparent;
+        font-synthesis-weight: none;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background: color-mix(in oklab, var(--primary) 28%, transparent);
+        color: var(--foreground);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        border-radius: var(--radius-xs);
+    }
+
+    /* Headings carry the display face by default. */
+    h1,
+    h2,
+    h3 {
+        @apply font-display;
+        font-weight: 700;
+    }
+}
+
+@layer components {
+    /*
+     * Film grain. A single fixed overlay rather than per-section backgrounds,
+     * so it costs one composited layer for the whole page.
+     */
+    .grain::after {
+        content: '';
+        position: fixed;
+        inset: -50%;
+        z-index: 60;
+        pointer-events: none;
+        opacity: var(--grain-opacity);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /*
+     * Warm light that follows the cursor, for the whole page. Sits behind all
+     * content, so opaque cards correctly occlude it.
+     */
+    /*
+     * Warm light that follows the cursor, for the whole page. Sits behind all
+     * content, so opaque cards correctly occlude it.
+     *
+     * The gradient is painted once into a fixed-size layer which is then moved
+     * with a transform. Driving the gradient's own position instead would
+     * repaint a viewport-sized layer on every frame of the pointer.
+     */
+    .pointer-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 60rem;
+        height: 60rem;
+        z-index: -1;
+        pointer-events: none;
+        will-change: transform, opacity;
+        opacity: var(--pointer-active, 0);
+        transition: opacity 600ms var(--ease-out-soft);
+        transform: translate3d(
+            calc(var(--pointer-x, 50vw) - 30rem),
+            calc(var(--pointer-y, 50vh) - 30rem),
+            0
+        );
+        background: radial-gradient(
+            closest-side,
+            color-mix(
+                in oklab,
+                var(--primary) calc(var(--glow-strength) * 130%),
+                transparent
+            ),
+            transparent 70%
+        );
+    }
+
+    /* Terminal caret after the hero name. */
+    .caret-blink {
+        animation: caret 1.2s steps(1, end) infinite;
+    }
+
+    @keyframes caret {
+        0%,
+        49% {
+            opacity: 1;
+        }
+        50%,
+        99% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Small uppercase mono label used to title every section. */
+    .eyebrow {
+        @apply text-muted-foreground font-mono text-xs uppercase;
+        letter-spacing: 0.16em;
+    }
+
+    /*
+     * Translucent chrome: content scrolls underneath rather than being
+     * clipped by an opaque bar.
+     */
+    /*
+     * Translucent chrome: content scrolls underneath rather than being
+     * clipped by an opaque bar.
+     *
+     * The material's weight is context-aware. While it floats over open space
+     * it stays thin and casts almost no shadow; once page content is passing
+     * beneath it, `data-elevated` thickens the fill, deepens the blur and
+     * drops a real shadow so the two layers stay visually separate.
+     */
+    .glass {
+        --glass-fill: 42%;
+        --glass-blur: 20px;
+        --glass-depth: 0;
+
+        /* Anything above ~65% fill hides the blur entirely and the surface
+           just reads as a solid bar. */
+        background-color: color-mix(
+            in oklab,
+            var(--surface) var(--glass-fill),
+            transparent
+        );
+        backdrop-filter: blur(var(--glass-blur)) saturate(200%) contrast(1.08);
+        border: 1px solid
+            color-mix(in oklab, var(--foreground) 10%, transparent);
+        /* Bright top edge — light catching the lip of the material — over a
+           shadow that only exists once there is something to separate from. */
+        box-shadow:
+            inset 0 1px 0 0 var(--glass-highlight),
+            inset 0 -1px 0 0 color-mix(in oklab, var(--foreground) 4%, transparent),
+            0 calc(var(--glass-depth) * 18px) calc(var(--glass-depth) * 44px)
+                calc(var(--glass-depth) * -18px) var(--glass-shadow);
+        transition:
+            background-color 450ms var(--ease-settle),
+            backdrop-filter 450ms var(--ease-settle),
+            box-shadow 450ms var(--ease-settle);
+    }
+
+    .glass[data-elevated='true'] {
+        --glass-fill: 56%;
+        --glass-blur: 32px;
+        --glass-depth: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .glass {
+            --glass-fill: 36%;
+            box-shadow:
+                inset 0 1px 0 0 var(--glass-highlight),
+                0 calc(var(--glass-depth) * 18px)
+                    calc(var(--glass-depth) * 44px)
+                    calc(var(--glass-depth) * -18px) var(--glass-shadow);
+        }
+
+        .glass[data-elevated='true'] {
+            --glass-fill: 50%;
+        }
+    }
+
+    /*
+     * The active-section marker in the nav. One element that travels between
+     * links, rather than a highlight that cuts from one to the next, so a
+     * change of section reads as continuous movement and hints at direction.
+     */
+    .nav-indicator {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: var(--indicator-w, 0);
+        border-radius: 9999px;
+        background-color: var(--secondary);
+        opacity: 0;
+        transform: translate3d(var(--indicator-x, 0px), 0, 0);
+        pointer-events: none;
+        will-change: transform, width;
+    }
+
+    /* Only animates once it has been positioned, so the first paint does not
+       slide in from the left edge. */
+    .nav-indicator[data-ready='true'] {
+        transition:
+            transform 450ms var(--ease-settle),
+            width 450ms var(--ease-settle),
+            opacity 250ms linear;
+    }
+
+    .nav-indicator[data-shown='true'] {
+        opacity: 1;
+    }
+
+    /*
+     * Scroll edge effect. Where the floating nav overlaps content, the top
+     * strip of the viewport blurs and fades out instead of being cut off by a
+     * hard divider — and only once there is content up there to separate.
+     */
+    .scroll-edge {
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: 7rem;
+        z-index: 40;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 450ms var(--ease-settle);
+        backdrop-filter: blur(6px);
+        mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            #000 40%,
+            transparent 100%
+        );
+        background: linear-gradient(
+            to bottom,
+            color-mix(in oklab, var(--background) 72%, transparent),
+            transparent
+        );
+    }
+
+    .scroll-edge[data-shown='true'] {
+        opacity: 1;
+    }
+
+    /* Scroll reveal. Starts hidden only once JS has claimed the element, so
+       the content stays visible if the script never runs. */
+    .reveal {
+        opacity: 0;
+        transform: translateY(1.25rem);
+        transition:
+            opacity 0.7s var(--ease-out-soft),
+            transform 0.7s var(--ease-out-soft);
+    }
+
+    .reveal[data-shown='true'] {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@utility text-gradient {
+    background: linear-gradient(
+        135deg,
+        var(--foreground) 0%,
+        var(--foreground) 45%,
+        var(--primary) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Accessibility ------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    /* Reduced motion still gets feedback — just a fade, never a translate. */
+    .reveal {
+        transform: none;
+        transition: opacity 0.3s ease;
+    }
+
+    /* The nav indicator is the one element whose whole job is to travel. With
+       reduced motion it cross-fades in place instead. */
+    .nav-indicator {
+        transition: opacity 0.2s ease;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.12s !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .glass {
+        background-color: var(--surface);
+        backdrop-filter: none;
+    }
+
+    /* A blurred edge is the one thing this setting exists to remove, so the
+       separation falls back to a plain solid fade. */
+    .scroll-edge {
+        backdrop-filter: none;
+        background: linear-gradient(to bottom, var(--background), transparent);
+    }
+
+    .grain::after {
+        display: none;
+    }
+}
+
+@media (prefers-contrast: more) {
+    :root {
+        --hairline: oklch(0.55 0.02 60);
+        --muted-foreground: oklch(0.38 0.02 55);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --hairline: oklch(0.62 0.02 60);
+            --muted-foreground: oklch(0.85 0.015 70);
+        }
+    }
+
+    .glass {
+        background-color: var(--surface);
+        backdrop-filter: none;
+    }
+
+    .scroll-edge {
+        display: none;
     }
 }

@@ -1,15 +1,27 @@
-import SectionAboutMe from '@/components/sections/section-about-me';
-import SectionHero from '@/components/sections/section-hero';
-import SectionProfessionalExperience from '@/components/sections/section-professional-experience';
-import SectionTechnologies from '@/components/sections/section-technologies';
+import About from '@/components/sections/about';
+import Contact from '@/components/sections/contact';
+import Experience from '@/components/sections/experience';
+import Hero from '@/components/sections/hero';
+import PointerGlow from '@/components/pointer-glow';
+import Projects from '@/components/sections/projects';
+import Technologies from '@/components/sections/technologies';
+import SiteFooter from '@/components/site-footer';
+import SiteNav from '@/components/site-nav';
 
 export default function Home() {
     return (
-        <main className="px-6">
-            <SectionHero />
-            <SectionAboutMe />
-            <SectionTechnologies />
-            <SectionProfessionalExperience />
-        </main>
+        <>
+            <PointerGlow />
+            <SiteNav />
+            <main>
+                <Hero />
+                <About />
+                <Technologies />
+                <Experience />
+                <Projects />
+                <Contact />
+            </main>
+            <SiteFooter />
+        </>
     );
 }

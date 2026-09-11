@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint",
-        "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,css}\""
+        "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,css}\"",
+        "icons:sync": "node scripts/sync-technology-icons.mjs"
     },
     "dependencies": {
         "class-variance-authority": "^0.7.1",
@@ -25,6 +26,7 @@
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "devicon": "^2.17.0",
         "eslint": "^9",
         "eslint-config-next": "16.3.4",
         "prettier": "^3",
