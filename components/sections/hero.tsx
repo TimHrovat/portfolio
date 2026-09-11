@@ -7,7 +7,7 @@ export default function Hero() {
     return (
         <section
             id="top"
-            className="relative flex min-h-[100svh] items-center overflow-hidden px-6 pt-32 pb-20"
+            className="relative flex min-h-[100svh] items-center overflow-hidden px-6 pt-[calc(8rem+env(safe-area-inset-top))] pb-20"
         >
             {/* Static ambient wash — present even without a pointer. */}
             <div

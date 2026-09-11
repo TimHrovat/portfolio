@@ -113,7 +113,7 @@ export default function SiteNav() {
                 data-shown={elevated ? 'true' : 'false'}
             />
 
-            <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
+            <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] pt-[calc(1rem+env(safe-area-inset-top))]">
                 <nav
                     aria-label="Primary"
                     data-elevated={elevated ? 'true' : 'false'}

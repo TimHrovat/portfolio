@@ -61,6 +61,13 @@ export const metadata: Metadata = {
 // <meta name="theme-color">, and a meta tag cannot read a custom property, so
 // these mirror --background by hand. Change them together.
 export const viewport: Viewport = {
+    // The layout viewport covers the whole screen, status bar and Dynamic
+    // Island included. Without it iOS stops the viewport at the safe area, so
+    // the fixed top strip starts below the island while the page still scrolls
+    // behind it — the island's row of content stayed unblurred. It is also
+    // what makes every `env(safe-area-inset-*)` below resolve to anything but
+    // zero, so the two go together.
+    viewportFit: 'cover',
     themeColor: [
         { media: '(prefers-color-scheme: light)', color: '#f5f5f7' },
         { media: '(prefers-color-scheme: dark)', color: '#000000' },

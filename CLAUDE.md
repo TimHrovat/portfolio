@@ -251,6 +251,18 @@ Paired with it is `.scroll-edge`, a masked strip at the top of the viewport that
 blurs and fades content out under the floating nav instead of meeting it at a
 hard divider. It only fades in once there is content up there to separate from.
 
+**`viewport-fit: cover`, so the top strip reaches the notch.** `app/layout.tsx`
+sets it in the `viewport` export. Without it iOS ends the layout viewport at the
+safe area while the page still scrolls behind the status bar, so on a Dynamic
+Island phone the blur stopped in a hard line below the island and that row of
+content stayed sharp. It is also the switch that makes every
+`env(safe-area-inset-*)` resolve to anything but zero, which is why the two
+always travel together: `.scroll-edge` adds the top inset to its height, the
+nav and the hero add it to their top padding, `body` takes the left and right
+insets for landscape, and the drawer and the dev switcher take the bottom one.
+On anything without insets every one of those resolves to the value it had
+before.
+
 **The nav's active marker travels.** `.nav-indicator` is one element positioned
 by `SiteNav` writing `--indicator-x` / `--indicator-w`, rather than a highlight
 class cutting from link to link. `data-ready` arms the transition after the

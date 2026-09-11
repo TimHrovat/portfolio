@@ -83,7 +83,7 @@ export default function SchemeSwitcher() {
             role="radiogroup"
             aria-label="Preview scheme"
             data-elevated="true"
-            className="glass fixed right-4 bottom-4 z-50 flex gap-1 rounded-full p-1 print:hidden"
+            className="glass fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex gap-1 rounded-full p-1 print:hidden"
         >
             {schemes.map(({ id, name }) => {
                 const Icon = schemeIcons[id];
