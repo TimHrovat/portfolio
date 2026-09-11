@@ -1,8 +1,8 @@
 <template>
-    <main class="px-6 py-[1000px]">
-        <!-- <SectionHero /> -->
-        <!-- <SectionAboutMe /> -->
-        <!-- <SectionTechnologies /> -->
+    <main class="px-6">
+        <SectionHero />
+        <SectionAboutMe />
+        <SectionTechnologies />
         <SectionProfessionalExperience />
     </main>
 </template>
