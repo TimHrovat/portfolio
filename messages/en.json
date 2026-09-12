@@ -276,6 +276,8 @@
         "source": "Source",
         "live": "Live",
         "closedSource": "Closed source",
+        "readMore": "Read more",
+        "readLess": "Show less",
         "items": {
             "easistentLanding": {
                 "name": "eAsistent landing page",

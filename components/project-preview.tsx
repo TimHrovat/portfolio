@@ -43,7 +43,7 @@ export default async function ProjectPreview({
     return (
         <InView
             className={cn(
-                'scene bg-foreground/[0.025] ring-foreground/10 relative flex h-36 items-center justify-center overflow-hidden rounded-xl ring-1',
+                'scene bg-foreground/[0.025] ring-foreground/10 relative flex h-28 items-center sm:h-36 justify-center overflow-hidden rounded-xl ring-1',
                 className,
             )}
         >
@@ -128,7 +128,10 @@ function AttentionScene() {
     const peaks = [7, 17].map((index) => points[index]);
 
     return (
-        <div className="absolute inset-x-5 top-6 bottom-5">
+        // Full bleed on three sides, like the side-scroller's ground: the line
+        // runs edge to edge and the area under it meets the bottom. Only the
+        // top keeps room, so the tallest peak and its marker are not clipped.
+        <div className="absolute inset-x-0 top-6 bottom-0">
             <svg
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"

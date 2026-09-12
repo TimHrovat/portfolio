@@ -555,6 +555,12 @@ under the row is a scroll-driven animation on the row's own horizontal scroll
 the element that scrolls, so the wrapper lifts it with `timeline-scope`.
 Engines without scroll timelines do not show the bar.
 
+In that row the summaries are clamped to four lines, with a "Read more" toggle
+(`components/project-summary.tsx`), and the cards take tighter padding, a
+smaller title and a shorter preview. A full summary made each card taller than
+most of the screen. The clamp is visual only, so a screen reader still gets the
+whole summary; from `md` up there is no clamp and no toggle.
+
 **Every card has a preview**, `components/project-preview.tsx`: a small loop of
 what the project does, drawn in markup and animated in CSS — Wordle tiles
 flipping, an attention line drawing with its peaks marked, a timetable filling

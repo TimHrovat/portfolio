@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ProjectPreview from '@/components/project-preview';
+import ProjectSummary from '@/components/project-summary';
 import { projects } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
@@ -38,7 +39,7 @@ export default async function Projects() {
                                 glass
                                 interactive
                                 className={cn(
-                                    'h-full gap-0',
+                                    'h-full gap-0 p-5 sm:p-6',
                                     // The headline puts its scene beside the copy,
                                     // so it gains no height; the rest lead with it.
                                     index === 0 &&
@@ -48,19 +49,21 @@ export default async function Projects() {
                                 <ProjectPreview
                                     id={project.id}
                                     className={cn(
-                                        'mb-6',
+                                        'mb-4 sm:mb-6',
                                         index === 0 &&
                                             'md:col-start-2 md:row-span-5 md:row-start-1 md:mb-0 md:h-auto md:min-h-40',
                                     )}
                                 />
-                                <h3 className="font-display text-2xl leading-tight font-bold tracking-tight">
+                                <h3 className="font-display text-xl leading-tight font-bold tracking-tight sm:text-2xl">
                                     {t(`items.${project.id}.name`)}
                                 </h3>
-                                <p className="text-muted-foreground mt-3 flex-1 text-sm text-pretty">
-                                    {t(`items.${project.id}.summary`)}
-                                </p>
+                                <ProjectSummary
+                                    text={t(`items.${project.id}.summary`)}
+                                    moreLabel={t('readMore')}
+                                    lessLabel={t('readLess')}
+                                />
 
-                                <ul className="mt-6 flex flex-wrap gap-2">
+                                <ul className="mt-4 flex flex-wrap gap-2 sm:mt-6">
                                     {(
                                         t.raw(
                                             `items.${project.id}.stack`,
@@ -77,7 +80,7 @@ export default async function Projects() {
                                     ))}
                                 </ul>
 
-                                <Separator className="mt-6" />
+                                <Separator className="mt-4 sm:mt-6" />
                                 <div className="-mb-1 flex items-center gap-1 pt-3">
                                     {/* Source and its absence occupy the same slot:
                                     the row reads the same whether the code is
