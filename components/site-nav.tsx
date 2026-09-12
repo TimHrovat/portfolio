@@ -129,10 +129,21 @@ export default function SiteNav() {
                 >
                     <a
                         href="#top"
-                        className="ml-2 shrink-0 font-mono text-sm font-medium tracking-tight"
+                        // The display treatment, because this is the same name
+                        // the hero sets in it — the monogram is a small
+                        // lockup of the h1, not a piece of metadata. No
+                        // `tracking-tight`: that is for the large display
+                        // sizes, and on three glyphs at this size it only
+                        // cramps them against the size token's own value.
+                        className="font-display ml-2 shrink-0 text-base font-bold"
                     >
                         {t('wordmark')}
-                        <span className="text-primary">.</span>
+                        {/* A mono period sits centred in a full advance, so
+                            after two capitals it floats. Pulled back by its
+                            side bearing rather than tightening the whole mark:
+                            the letters keep the tracking the size token gives
+                            them and only the punctuation moves. */}
+                        <span className="text-primary -ml-[0.2em]">.</span>
                     </a>
 
                     <ul

@@ -4,6 +4,9 @@ import { Geist, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
+import StructuredData from '@/components/structured-data';
+import { OG_IMAGE, SITE_URL } from '@/lib/seo';
+
 import './globals.css';
 
 const geist = Geist({
@@ -21,8 +24,6 @@ const jetBrainsMono = JetBrains_Mono({
     display: 'swap',
 });
 
-const SITE_URL = 'https://timhrovat.com';
-
 // Metadata is copy like any other, so it reads from messages too — which is
 // why this is `generateMetadata` rather than a static object.
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,6 +40,23 @@ export async function generateMetadata(): Promise<Metadata> {
         keywords: t.raw('meta.keywords'),
         authors: [{ name: t('person.name'), url: SITE_URL }],
         creator: t('person.name'),
+        // Every crawler that finds this page by any route should agree on
+        // which URL it is — a preview deployment included, which is why
+        // SITE_URL is env-aware rather than a constant.
+        alternates: { canonical: '/' },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                // Let Google use a full-size preview and an unclipped snippet
+                // rather than the conservative defaults.
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+                'max-video-preview': -1,
+            },
+        },
         openGraph: {
             title: t('meta.title'),
             description: t('meta.shareDescription'),
@@ -46,15 +64,15 @@ export async function generateMetadata(): Promise<Metadata> {
             siteName: t('meta.siteName'),
             locale,
             type: 'website',
-            images: [
-                { url: '/images/portrait.png', width: 1200, height: 1200 },
-            ],
+            // A real 1200x630 landscape card. The portrait that used to sit
+            // here is square and 600px, and every platform cropped it.
+            images: [{ ...OG_IMAGE, alt: t('meta.title') }],
         },
         twitter: {
             card: 'summary_large_image',
             title: t('meta.title'),
             description: t('meta.shortDescription'),
-            images: ['/images/portrait.png'],
+            images: [OG_IMAGE.url],
         },
     };
 }
@@ -108,6 +126,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
                 <NextIntlClientProvider messages={{ nav, person, stack, dev }}>
                     {children}
                 </NextIntlClientProvider>
+                <StructuredData />
             </body>
         </html>
     );

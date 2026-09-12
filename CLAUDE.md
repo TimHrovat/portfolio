@@ -254,9 +254,13 @@ shadcn's semantic tokens (`background`, `foreground`, `card`, `primary`,
 `logo-plate` (light ground for dark third-party logos), `glass-highlight` and
 `glass-shadow`. Everything is OKLCH.
 
-**The one unavoidable exception** is `themeColor` in `app/layout.tsx`. Next
-emits it as a `<meta>` tag and a meta tag cannot read a custom property, so the
-two hex values there mirror `--background` by hand. Change them together.
+**The unavoidable exceptions are metadata**, which is emitted as tags and JSON
+rather than CSS and so cannot read a custom property. Four hex literals mirror
+`--background` by hand and change together: the light and dark pair in
+`themeColor` in `app/layout.tsx`, and `background_color` / `theme_color` in
+`app/manifest.ts` (dark, since that is what a launcher shows behind the icon).
+The brand blue is written out a fifth time in `app/icon.svg` — see the icons
+section below.
 
 **Type.** Three faces, each with one job:
 
@@ -442,7 +446,7 @@ carry it.
 - **Two rather than one, and the grid is why.** The entries are two columns
   from `sm` up, so a preview of two fills a row exactly and the expansion
   starts on a fresh one with no seam to patch. The overflow rows carry their
-  top margin *inside* the clipped element, so the gap they need when open
+  top margin _inside_ the clipped element, so the gap they need when open
   collapses to nothing when shut.
 - **Height comes from a `0fr` to `1fr` grid row,** not a transitioned
   `height` — one per group, all driven by the single button. A height
@@ -508,13 +512,13 @@ interaction and state. Styling is ours; focus management is not.
 Write presentation by hand. Reach for a Radix primitive the moment something
 needs a focus trap, dismissal, collision positioning or `aria-*` wiring.
 
-| Component   | Notes                                                                               |
-| ----------- | ----------------------------------------------------------------------------------- |
-| `Button`    | `variant` primary / secondary / ghost / outline / link / glass, `size` sm–xl + icon |
-| `Badge`     | `variant` tech / accent / meta / solid, `size` sm / md / lg, `as` for `li`          |
+| Component   | Notes                                                                                |
+| ----------- | ------------------------------------------------------------------------------------ |
+| `Button`    | `variant` primary / secondary / ghost / outline / link / glass, `size` sm–xl + icon  |
+| `Badge`     | `variant` tech / accent / meta / solid, `size` sm / md / lg, `as` for `li`           |
 | `Card`      | one container, `interactive` for the hover accent and wash, `glass` for the material |
-| `Separator` | a hairline rule                                                                     |
-| `Drawer`    | Radix `Dialog`, dismissed by dragging its handle                                    |
+| `Separator` | a hairline rule                                                                      |
+| `Drawer`    | Radix `Dialog`, dismissed by dragging its handle                                     |
 
 Two conventions worth keeping:
 
@@ -578,6 +582,54 @@ Third-party logos that are **not** monochrome (the two school wordmarks) can't
 follow `currentColor`. Both are dark, so they render on a white plate — which
 is invisible against the white card in light mode and reads as a deliberate
 brand lockup in dark.
+
+## Brand icons and the share card
+
+`app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png`,
+`public/images/icons/icon-{192,512}.png` and `public/images/og.png` are one
+family, all drawn from the same two sources: the nav's `TH` monogram and the
+hero's layout. They replaced Next's default favicon and a leftover Nuxt one
+that was still sitting in `public/`.
+
+**The letterforms are real outlines, not text.** `app/icon.svg` carries the `T`
+and `H` of JetBrains Mono Bold as `<path>` data, extracted with `fontTools` from
+the installed font and transformed into a 512 box. A `<text>` element would have
+fallen back to whatever monospace the viewer happens to have, and an SVG favicon
+is rendered on their machine, not ours. The mark is centred on its **ink**
+rather than its advance widths — `T` and `H` have different side bearings, and
+advance-centring leaves it 5px left of true.
+
+Everything else is derived from that one file: `rsvg-convert` for the PNGs,
+`magick` for the multi-size `.ico`. The apple icon is the same art with the
+rounded rect removed, because iOS applies its own mask and would otherwise
+round an already-rounded corner.
+
+`public/images/og.png` is a real 1200×630 landscape card built the same way —
+outlines, not text — reproducing the hero: the eyebrow, the name in Bold with
+the accent caret beside it, the tagline, the domain. It replaced
+`portrait.png`, which is square, 600px, and was declared in the metadata as
+1200×1200; every platform cropped it.
+
+**A logo is not a favicon.** Check any change at 16px before keeping it —
+`magick montage` at 16/32/48 on a light ground is enough. Two letters is
+already the limit; the trailing period the nav wordmark carries was left off
+here because at 16px it is one grey pixel.
+
+## SEO surface
+
+`app/robots.ts`, `app/sitemap.ts` and `app/manifest.ts` are route handlers
+rather than files in `public/` — they read `SITE_URL` from `lib/seo.ts`, so
+there is one place the site's address is written down and a preview deployment
+can describe itself honestly through `NEXT_PUBLIC_SITE_URL`. A preview that
+canonicalises to the live domain is asking to be indexed in its place.
+
+`components/structured-data.tsx` emits a `Person` graph in JSON-LD — the half
+of the page a name search actually reads. It is built from the same messages
+and `lib/site.ts` the page renders from, so it cannot drift: `worksFor` follows
+whichever role has `end: null`, `alumniOf` follows `education`, `knowsAbout`
+follows `technologies`, and `sameAs` takes only the socials that are real
+links. Nothing is asserted there that is not on the page. Adding a role or a
+school needs no edit here.
 
 ## Gotcha: never hand-write `-webkit-backdrop-filter`
 

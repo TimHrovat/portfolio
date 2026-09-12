@@ -13,6 +13,15 @@ type Messages = typeof messages;
 export const person = {
     cv: '/assets/Tim_Hrovat_CV.pdf',
     available: true,
+    /**
+     * The address as a machine reads it, for the `Person` graph's
+     * `PostalAddress` — see components/structured-data.tsx. Not a duplicate of
+     * `person.location` in messages: that is the line a human sees, this is a
+     * locality and an ISO 3166-1 alpha-2 code, which are structure rather than
+     * copy and do not translate.
+     */
+    locality: 'Ljubljana',
+    country: 'SI',
 } as const;
 
 export type Social = {
