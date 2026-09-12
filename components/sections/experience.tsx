@@ -1,8 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 
+import OtherRoles from '@/components/other-roles';
 import Section from '@/components/section';
 import Timeline from '@/components/timeline';
-import { roles } from '@/lib/site';
+import { otherRoles, roles } from '@/lib/site';
 
 export default async function Experience() {
     const t = await getTranslations('work');
@@ -15,6 +16,7 @@ export default async function Experience() {
             lead={t('lead')}
         >
             <Timeline roles={roles} />
+            <OtherRoles roles={otherRoles} />
         </Section>
     );
 }

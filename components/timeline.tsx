@@ -21,6 +21,10 @@ import { cn } from '@/lib/utils';
  * the list, so it spans whatever height the entry above it happens to need
  * without anything being measured.
  *
+ * Only engineering roles are on the rail — the rest are a list underneath, in
+ * components/other-roles.tsx — so the accented ring is every node's now rather
+ * than a cue that distinguishes them.
+ *
  * One role carries `highlights`, and that is what makes it the anchor of the
  * section. It is scaled up in every dimension that already exists, a larger
  * mark and a larger title, and its detail sits on the house glass material,
@@ -65,10 +69,8 @@ export default async function Timeline({ roles }: { roles: Role[] }) {
                             name={copy.company}
                             logo={role.logo}
                             className={cn(
-                                'rounded-2xl',
+                                'ring-primary/35 rounded-2xl',
                                 featured ? 'size-14' : 'size-12',
-                                role.kind === 'engineering' &&
-                                    'ring-primary/35',
                             )}
                         />
 

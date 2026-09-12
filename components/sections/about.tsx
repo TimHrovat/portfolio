@@ -50,13 +50,21 @@ export default async function About() {
 
                 <Reveal delay={200}>
                     <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">
+                        {t('craft')}
+                    </p>
+                </Reveal>
+
+                {/* The job comes last and in the smaller face: it is where I
+                    am, not what the section is about. */}
+                <Reveal delay={260}>
+                    <p className="text-muted-foreground/80 mt-6 max-w-2xl text-base text-pretty">
                         {t('closing')}
                     </p>
                 </Reveal>
 
                 {/* One fact, not four. Focus, Studying and Since all repeated
                     something the prose or the timeline already says. */}
-                <Reveal delay={260}>
+                <Reveal delay={320}>
                     <p className="text-muted-foreground mt-10 flex items-center justify-center gap-2 font-mono text-xs tracking-wider uppercase">
                         <MapPin
                             className="text-highlight size-3.5"

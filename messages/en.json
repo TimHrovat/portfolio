@@ -57,8 +57,9 @@
     "about": {
         "eyebrow": "About",
         "portraitAlt": "Tim Hrovat",
-        "body": "Full stack developer at eŠola, the team behind eAsistent, a school platform used across Slovenia. I care about interfaces that feel immediate, code that stays readable a year later, and shipping things that hold up under real traffic.",
-        "closing": "Currently finishing my Computer Science degree at FRI UNI Ljubljana. The thesis is all that's left."
+        "body": "I care about how software feels to use. It has never been easier to produce something that works, and most of what gets made now stops there, at the first version that runs. What interests me is the version after it: the interaction that lands where you expected, the detail nobody is asked to notice, the code that still reads clearly a year later.",
+        "craft": "That matters more now, not less. Software has never been faster to generate, and generation pulls everything toward the average of what came before. Refinement is the part still left to choose, and people feel it even when they can’t say why.",
+        "closing": "Currently a full stack developer at eŠola, the team behind eAsistent, a school platform used across Slovenia. Alongside it I’m finishing a Computer Science degree at FRI UNI Ljubljana. The thesis is all that’s left."
     },
 
     "work": {
@@ -129,33 +130,30 @@
                 "description": [
                     "A week on the factory floor building a quality-checking system for car headlight assembly. It automated a step of the build process that had been done by hand."
                 ]
-            },
-            "simpliservers": {
-                "title": "Assistant & Community Support",
-                "company": "Simpliservers",
-                "from": "Jan 2022",
-                "to": "Jul 2022",
-                "description": [
-                    "Front-line support for a game server hosting provider: troubleshooting customer setups, answering the community, and escalating the problems that turned out to be real bugs."
-                ]
-            },
-            "ppIntersearch": {
-                "title": "Data Analyst",
-                "company": "P&P InterSearch Slovenia",
-                "from": "Jun 2019",
-                "to": "Sep 2019",
-                "description": [
-                    "A summer at an executive search firm, cleaning and structuring candidate and company data so it could actually be searched and reported on."
-                ]
-            },
-            "printboutiq": {
-                "title": "Online Store Admin & Digital Print Operator",
-                "company": "Printboutiq",
-                "from": "Apr 2017",
-                "to": "Mar 2022",
-                "description": [
-                    "Five years alongside school running the online store and the digital printing equipment. Product listings and orders on one side, operating and maintaining the machines on the other."
-                ]
+            }
+        },
+
+        "other": {
+            "eyebrow": "Other work",
+            "roles": {
+                "simpliservers": {
+                    "title": "Assistant & Community Support",
+                    "company": "Simpliservers",
+                    "from": "Jan 2022",
+                    "to": "Jul 2022"
+                },
+                "ppIntersearch": {
+                    "title": "Data Analyst",
+                    "company": "P&P InterSearch Slovenia",
+                    "from": "Jun 2019",
+                    "to": "Sep 2019"
+                },
+                "printboutiq": {
+                    "title": "Online Store Admin & Digital Print Operator",
+                    "company": "Printboutiq",
+                    "from": "Apr 2017",
+                    "to": "Mar 2022"
+                }
             }
         }
     },

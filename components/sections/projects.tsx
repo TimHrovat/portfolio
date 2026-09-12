@@ -51,7 +51,7 @@ export default async function Projects() {
                             </ul>
 
                             <Separator className="mt-6" />
-                            <div className="-mb-1 flex items-center gap-2 pt-3">
+                            <div className="-mb-1 flex items-center gap-1 pt-3">
                                 {/* Source and its absence occupy the same slot:
                                     the row reads the same whether the code is
                                     public or not, and a closed-source project
@@ -73,14 +73,12 @@ export default async function Projects() {
                                         {t('closedSource')}
                                     </Badge>
                                 )}
-                                {/* The one thing on the card a reader can go
-                                    and use, so it carries the accent. */}
                                 {project.live ? (
                                     <Button
                                         href={project.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        variant="primary"
+                                        variant="ghost"
                                         size="sm"
                                     >
                                         <ExternalLink />

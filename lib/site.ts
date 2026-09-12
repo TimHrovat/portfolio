@@ -48,8 +48,6 @@ export type Role = {
      *  what draws the "Now" marker. */
     start: string;
     end: string | null;
-    /** Engineering roles get the accented mark; the rest read plain. */
-    kind: 'engineering' | 'other';
     /** Square-ish mark in public/images/logos/. Omitted where the company has
      *  no usable logo — the rail falls back to a monogram. */
     logo?: string;
@@ -78,8 +76,8 @@ export type RoleCopy = {
 };
 
 /**
- * Every role. The timeline sorts by `start`, so the order here is only for
- * reading the file.
+ * The engineering roles — the ones the timeline is for. It sorts by `start`,
+ * so the order here is only for reading the file.
  */
 export const roles: Role[] = [
     {
@@ -87,7 +85,6 @@ export const roles: Role[] = [
         href: 'https://www.easistent.com/stran/',
         start: '2022-12',
         end: null,
-        kind: 'engineering',
         logo: '/images/logos/easistent.webp',
     },
     {
@@ -95,7 +92,6 @@ export const roles: Role[] = [
         href: 'https://www.phosphorland.pt/',
         start: '2022-05',
         end: '2022-06',
-        kind: 'engineering',
         logo: '/images/logos/phosphorland.png',
     },
     {
@@ -103,32 +99,45 @@ export const roles: Role[] = [
         href: 'https://www.hella.com/hella-si/sl/HELLA-Saturnus-Slovenija-61.html',
         start: '2021-08',
         end: '2021-08',
-        kind: 'engineering',
         logo: '/images/logos/hella.svg',
     },
+];
+
+/**
+ * Everything else that paid for the years around them. A line each rather than
+ * a node on the rail — see components/other-roles.tsx.
+ */
+export type OtherRole = {
+    /** Keys `work.other.roles` in messages. */
+    id: keyof Messages['work']['other']['roles'];
+    href?: string;
+    /** `YYYY-MM`, newest first, on the timeline's own rule. */
+    start: string;
+};
+
+/** A line in that list: no description, because none is shown. */
+export type OtherRoleCopy = {
+    title: string;
+    company: string;
+    from: string;
+    to: string;
+};
+
+export const otherRoles: OtherRole[] = [
     {
         id: 'simpliservers',
         href: 'https://simpliservers.com/',
         start: '2022-01',
-        end: '2022-07',
-        kind: 'other',
-        logo: '/images/logos/simpliservers.png',
     },
     {
         id: 'ppIntersearch',
         href: 'https://www.pp-intersearch.si/',
         start: '2019-06',
-        end: '2019-09',
-        kind: 'other',
-        logo: '/images/logos/pp-intersearch.png',
     },
     {
         id: 'printboutiq',
         href: 'https://www.printboutiq.com/',
         start: '2017-04',
-        end: '2022-03',
-        kind: 'other',
-        logo: '/images/logos/printboutiq.png',
     },
 ];
 

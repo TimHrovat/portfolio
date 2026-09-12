@@ -93,8 +93,9 @@ client ones, `t.raw` for the arrays (a role's paragraphs, a project's stack).
 Three habits are worth keeping:
 
 - **Read a whole object when its fields are optional.** `Timeline` takes each
-  role's copy from `getMessages()` as a `RoleCopy`, because `highlights` and
-  `stack` are there for some roles and not others — and a per-key lookup cannot
+  role's copy from `getMessages()` as a `RoleCopy` (and `OtherRoles` its own
+  `OtherRoleCopy`), because `highlights` and `stack` are there for some roles
+  and not others — and a per-key lookup cannot
   express that. `RoleCopy` is declared in `lib/site.ts` rather than inferred,
   since an inferred union of six different shapes cannot be read uniformly.
 - **Markup inside a sentence is a tag, not a split string.** Contact's heading
@@ -394,9 +395,21 @@ marker — on this CV the ongoing role also has the most recent start, so it
 lands on top without a special case. The order of the array in `lib/site.ts` is
 only for reading the file.
 
-`Role.kind` is down to a single cue now: `engineering` tints the node's ring
-with `primary`, `other` leaves it on the hairline. There is no legend, because
-with every title spelled out there is nothing left to decode.
+**Only engineering roles are on the rail.** `roles` and `otherRoles` in
+`lib/site.ts` are two lists rather than one list with a `kind` on it — the
+split is the whole distinction, so there is nothing left to decode and no
+legend to read. Every node's ring is accented now that they are all the same
+kind of thing.
+
+**The rest are a line each**, in `components/other-roles.tsx`: a hairline, the
+"Other work" eyebrow, then the title, the employer and the dates per row.
+Newest first, on the timeline's own `start` rule. No mark, no card and no
+description — a print shop and a support desk are part of the record, but a
+node each gave three side jobs the weight of three years of engineering.
+
+Their messages live under `work.other.roles` and carry four fields, not six:
+`OtherRoleCopy` has no `description`, because none is shown. The section lead
+still counts all six roles, which is what the section holds between the two.
 
 **Highlights mark the featured role**, and eAsistent is the only one that
 carries them. Every other role is a paragraph of `description` and nothing
@@ -469,10 +482,6 @@ grid; the rest pair up underneath. `Project.source` is optional, and where the
 work is not public a "Closed source" badge takes the Source button's slot —
 the same position, the leading one — so every card's footer reads the same and
 the absence is a stated fact rather than one button fewer.
-
-**Live is the only primary button outside the hero and the nav.** It is the one
-thing on a card a reader can go and use, so it carries the accent while Source
-stays a ghost beside it.
 
 ## UI components
 
