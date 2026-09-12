@@ -87,7 +87,7 @@
  * colour and carries supporting emphasis (section rules, the "Now" marker,
  * contact icons, the closing wash, the previews' second colour).
  *
- * THEMES. There are four, each a full palette for both schemes, and SIGNAL
+ * THEMES. There are five, each a full palette for both schemes, and SIGNAL
  * is the one that ships — it sits on bare `:root`, so the site needs no
  * attribute to have it. The others are `[data-theme]` blocks the switcher in
  * components/scheme-switcher.tsx can put on <html>:
@@ -100,6 +100,9 @@
  *   greys, systemBlue and systemIndigo, true black in dark.
  * - MONO: no hue at all. Ink on paper, and the accent is simply the strongest
  *   contrast there is.
+ * - MONO ORANGE: Mono, except that `primary` is a vibrant orange — the
+ *   buttons, the caret and dots, "Present", the accent words and the
+ *   previews. Its label text is ink, since white on that orange reads poorly.
  *
  * Every colour is written once, as `light-dark(light, dark)`. Which half
  * applies is decided by `color-scheme`, so the scheme is a single property
@@ -159,6 +162,9 @@
     --border: var(--hairline);
     --input: var(--hairline);
     --ring: var(--primary);
+    /* The page's halos: the wash at the top and the one under the cursor.
+       The accent by default; a theme can keep them neutral. */
+    --glow: var(--primary);
 }
 
 /* SIGNAL — the default. */
@@ -278,6 +284,33 @@
     --glass-shadow: light-dark(oklch(0 0 0 / 30%), oklch(0 0 0 / 60%));
 }
 
+/* MONO ORANGE — Mono, with one vibrant orange for everything that is primary. */
+[data-theme='mono-orange'] {
+    --background: light-dark(oklch(0.97 0 0), oklch(0.15 0 0));
+    --foreground: light-dark(oklch(0.16 0 0), oklch(0.96 0 0));
+
+    --surface: light-dark(oklch(1 0 0), oklch(0.2 0 0));
+    --surface-strong: light-dark(oklch(0.93 0 0), oklch(0.25 0 0));
+    --hairline: light-dark(oklch(0.86 0 0), oklch(0.33 0 0));
+    --muted-foreground: light-dark(oklch(0.48 0 0), oklch(0.7 0 0));
+
+    --primary: light-dark(oklch(0.66 0.21 42), oklch(0.72 0.2 48));
+    --primary-foreground: light-dark(oklch(0.16 0 0), oklch(0.15 0 0));
+
+    --highlight: light-dark(oklch(0.45 0 0), oklch(0.72 0 0));
+    --highlight-foreground: light-dark(oklch(0.98 0 0), oklch(0.15 0 0));
+
+    --accent: light-dark(oklch(0.93 0 0), oklch(0.27 0 0));
+    --accent-foreground: light-dark(oklch(0.25 0 0), oklch(0.92 0 0));
+
+    --glass-highlight: light-dark(oklch(1 0 0 / 60%), oklch(1 0 0 / 10%));
+    --glass-shadow: light-dark(oklch(0 0 0 / 30%), oklch(0 0 0 / 60%));
+
+    /* The halos stay monochrome: the orange is for the things that point
+       somewhere, not for the light on the page. */
+    --glow: var(--foreground);
+}
+
 @layer base {
     * {
         @apply border-border;
@@ -376,7 +409,7 @@
             closest-side,
             color-mix(
                 in oklab,
-                var(--primary) calc(var(--glow-strength) * 130%),
+                var(--glow) calc(var(--glow-strength) * 130%),
                 transparent
             ),
             transparent 70%

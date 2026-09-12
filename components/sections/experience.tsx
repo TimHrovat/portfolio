@@ -46,12 +46,11 @@ export default async function Experience() {
 
             return {
                 id: role.id,
-                tab: <RoleTab role={role} copy={copy} ongoing={t('ongoing')} />,
+                tab: <RoleTab role={role} copy={copy} />,
                 panel: (
                     <RolePanel
                         role={role}
                         copy={copy}
-                        ongoing={t('ongoing')}
                         expandLabel={t('highlightsExpand', {
                             count: (copy.highlights ?? []).reduce(
                                 (total, group) =>
@@ -101,33 +100,34 @@ export default async function Experience() {
     );
 }
 
-function RoleTab({
-    role,
-    copy,
-    ongoing,
-}: {
-    role: Role;
-    copy: RoleCopy;
-    ongoing: string;
-}) {
+function RoleTab({ role, copy }: { role: Role; copy: RoleCopy }) {
     return (
         <TabBody
             mark={<OrgMark name={copy.company} logo={role.logo} />}
             title={copy.title}
-            meta={`${copy.from} – ${copy.to}`}
-            badge={
-                role.end === null ? (
-                    <Badge
-                        variant="accent"
-                        size="sm"
-                        className="hidden md:inline-flex"
-                    >
-                        {ongoing}
-                    </Badge>
-                ) : null
-            }
+            meta={<RoleDates role={role} copy={copy} />}
             short={copy.short}
         />
+    );
+}
+
+/**
+ * A role's dates as they read. The ongoing role's end — "Present" — takes the
+ * accent: that is the whole "this one is current" marker, where there used to
+ * be a separate "Now" badge saying the same thing twice.
+ */
+function RoleDates({ role, copy }: { role: Role; copy: RoleCopy }) {
+    return (
+        <>
+            {copy.from} –{' '}
+            <span
+                className={
+                    role.end === null ? 'text-primary font-semibold' : undefined
+                }
+            >
+                {copy.to}
+            </span>
+        </>
     );
 }
 
@@ -140,13 +140,11 @@ function TabBody({
     mark,
     title,
     meta,
-    badge,
     short,
 }: {
     mark: ReactNode;
     title: string;
-    meta: string;
-    badge?: ReactNode;
+    meta: ReactNode;
     short?: string;
 }) {
     return (
@@ -156,11 +154,8 @@ function TabBody({
                 <span className="block text-sm leading-snug font-semibold text-balance">
                     {title}
                 </span>
-                <span className="mt-1 flex items-center gap-2">
-                    <span className="text-muted-foreground truncate font-mono text-[0.6875rem] tracking-wider">
-                        {meta}
-                    </span>
-                    {badge}
+                <span className="text-muted-foreground mt-1 block truncate font-mono text-[0.6875rem] tracking-wider">
+                    {meta}
                 </span>
             </span>
             <span className="min-w-0 truncate text-sm font-medium md:hidden">
@@ -173,28 +168,19 @@ function TabBody({
 function RolePanel({
     role,
     copy,
-    ongoing,
     expandLabel,
     collapseLabel,
 }: {
     role: Role;
     copy: RoleCopy;
-    ongoing: string;
     expandLabel: string;
     collapseLabel: string;
 }) {
     return (
         <div>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <h3 className="font-display text-2xl leading-tight font-bold tracking-tight md:text-3xl">
-                    {copy.title}
-                </h3>
-                {role.end === null ? (
-                    <Badge variant="accent" size="sm">
-                        {ongoing}
-                    </Badge>
-                ) : null}
-            </div>
+            <h3 className="font-display text-2xl leading-tight font-bold tracking-tight md:text-3xl">
+                {copy.title}
+            </h3>
 
             <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                 {role.href ? (
@@ -217,7 +203,7 @@ function RolePanel({
                 )}
                 <span aria-hidden className="bg-hairline h-3 w-px" />
                 <span className="text-muted-foreground font-mono text-[0.6875rem] tracking-wider">
-                    {copy.from} – {copy.to}
+                    <RoleDates role={role} copy={copy} />
                 </span>
             </div>
 

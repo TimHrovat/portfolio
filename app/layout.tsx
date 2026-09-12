@@ -114,7 +114,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
                     <script>, which React 19 warns about inside a component.
                     Dev-only — see components/scheme-switcher.tsx. */}
                 <Script id="scheme-bootstrap" strategy="beforeInteractive">
-                    {`try{var d=document.documentElement,s=localStorage.getItem('scheme'),t=localStorage.getItem('theme');if(s==='light'||s==='dark')d.dataset.scheme=s;if(['tide','apple','mono'].indexOf(t)>-1)d.dataset.theme=t}catch(e){}`}
+                    {`try{var d=document.documentElement,s=localStorage.getItem('scheme'),t=localStorage.getItem('theme');if(s==='light'||s==='dark')d.dataset.scheme=s;if(['tide','apple','mono','mono-orange'].indexOf(t)>-1)d.dataset.theme=t}catch(e){}`}
                 </Script>
                 {/* Scroll reveals start hidden; without JS they must not stay
                     that way. */}

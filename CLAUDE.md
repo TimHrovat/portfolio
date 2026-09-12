@@ -43,7 +43,7 @@ Perf: consolidate badge mousemove listeners
 - **Light and dark follow the OS by default.** Every colour token is a
   `light-dark()` pair, chosen by `color-scheme`. No `.dark` class, no theme
   provider. Do not add a `dark:` variant to a component: give the token both
-  values instead. Four colour themes exist, Signal is the default, and the
+  values instead. Five colour themes exist, Signal is the default, and the
   floating switcher can pin a theme and a scheme — see the design system
   below.
 - **Every displayed string lives in `messages/en.json`**, and `lib/site.ts`
@@ -212,15 +212,15 @@ as single-accent before.
 
 | Role        | Used for                                                                                                                 |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `primary`   | buttons, hero caret, trailing periods, active nav, card hover, availability dot, hero glow                               |
-| `highlight` | section eyebrow rules, the `Badge accent` "Now" marker, contact icons and closing wash, preview accents |
+| `primary`   | buttons, hero caret, trailing periods, the ongoing role's "Present", active nav, card hover, availability dot, and the halos through `--glow` |
+| `highlight` | section eyebrow rules, the `Badge accent` "In progress" marker, contact icons and closing wash, preview accents |
 
 `--highlight` / `--highlight-foreground` are ours, alongside `surface` and
 `hairline`. shadcn's `--accent` / `--accent-foreground` stay what shadcn means
 by them — the subtle hover-background pair — but are tinted from the highlight
 hue so generated components feel like the palette.
 
-**Four themes, and Signal ships.** Each is a full palette for both schemes:
+**Five themes, and Signal ships.** Each is a full palette for both schemes:
 
 | Theme    | Character                                                                          |
 | -------- | ---------------------------------------------------------------------------------- |
@@ -228,6 +228,7 @@ hue so generated components feel like the palette.
 | `tide`   | deep petrol teal `primary` against copper and sand                                 |
 | `apple`  | the palette the site had before: apple.com's greys, systemBlue, systemIndigo       |
 | `mono`   | no hue: ink on paper, and `primary` is simply the strongest contrast there is      |
+| `mono-orange` | Mono, with a vibrant orange as `primary` and ink as its label colour          |
 
 Signal replaced Apple as the shipped palette because blue and indigo on white
 or true black read as the default of every generated site. Apple stays as a
@@ -257,7 +258,10 @@ Two things are easy to get wrong here:
   `-foreground`, `glass-highlight` and `glass-shadow`. The shadcn roles that are
   the same in every theme (`card`, `popover`, `secondary`, `muted`, `border`,
   `input`, `ring`) are derived from those in one shared `:root, [data-theme]`
-  rule. Adding a token means adding it to every theme block.
+  rule. Adding a token means adding it to every theme block. The same rule sets
+  `--glow` — the colour of the halo at the top of the hero and the one under
+  the cursor — to `primary`; Mono Orange overrides it with `foreground`, so its
+  halos stay monochrome and the orange is kept for things that point somewhere.
 - **Lightning CSS rewrites `light-dark()`** into a `--lightningcss-light` /
   `--lightningcss-dark` fallback for older Safari, driven by the `color-scheme`
   declarations in the same file. That works — but it means `color-scheme` has
@@ -499,8 +503,10 @@ thing worth reading — who paid for it is context.
 **Ordering is by `start`, descending.** `Role.start` / `Role.end` stay in
 `lib/site.ts` as `YYYY-MM` strings, so a string sort is a date sort and no
 `Date` is constructed anywhere. The dates as they _read_ (`from` / `to`) are
-copy. `end: null` means ongoing and is what draws the `Badge accent` "Now"
-marker — on this CV the ongoing role also has the most recent start, so it is
+copy. `end: null` means ongoing, and that role's "Present" is set in `primary`
+(`RoleDates`, in the tab and in the panel) — that is the whole "current"
+marker. There used to be a "Now" badge as well, which said the same thing
+twice. On this CV the ongoing role also has the most recent start, so it is
 the first tab and the one open on load without a special case.
 
 **Side jobs share the last tab.** `roles` and `otherRoles` in `lib/site.ts` are

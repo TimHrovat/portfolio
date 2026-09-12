@@ -63,7 +63,6 @@
         "eyebrow": "Experience",
         "switcherLabel": "Roles",
         "title": "Where I’ve worked",
-        "ongoing": "Now",
         "highlightsExpand": "Show {count} more",
         "highlightsCollapse": "Show less",
         "roles": {
@@ -335,7 +334,8 @@
             "signal": "Signal",
             "tide": "Tide",
             "apple": "Apple",
-            "mono": "Mono"
+            "mono": "Mono",
+            "mono-orange": "Mono Orange"
         },
         "schemes": {
             "system": "System",

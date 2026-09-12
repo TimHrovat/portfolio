@@ -19,7 +19,7 @@ export default async function Hero() {
                 className="pointer-events-none absolute inset-0 -z-10"
                 style={{
                     background:
-                        'radial-gradient(60rem 40rem at 50% -10%, color-mix(in oklab, var(--primary) calc(var(--glow-strength) * 100%), transparent), transparent 70%)',
+                        'radial-gradient(60rem 40rem at 50% -10%, color-mix(in oklab, var(--glow) calc(var(--glow-strength) * 100%), transparent), transparent 70%)',
                 }}
             />
 

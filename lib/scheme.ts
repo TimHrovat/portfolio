@@ -26,12 +26,18 @@ export function isSchemeOverride(
  * 'system' above, means no attribute at all: its palette sits on bare `:root`
  * in app/globals.css. The others are `[data-theme]` blocks there.
  */
-export type ThemeId = 'signal' | 'tide' | 'apple' | 'mono';
+export type ThemeId = 'signal' | 'tide' | 'apple' | 'mono' | 'mono-orange';
 
 export const THEME_STORAGE_KEY = 'theme';
 
 /** Keys `dev.themes` in messages. The first is the default. */
-export const themes: ThemeId[] = ['signal', 'tide', 'apple', 'mono'];
+export const themes: ThemeId[] = [
+    'signal',
+    'tide',
+    'apple',
+    'mono',
+    'mono-orange',
+];
 
 export function isTheme(value: string | undefined): value is ThemeId {
     return themes.some((theme) => theme === value);
