@@ -64,20 +64,35 @@ export default async function Hero() {
                         <Mail />
                         {t('emailCta')}
                     </Button>
-                    <Button href={person.cv} variant="secondary" size="xl">
+                    {/* `download` so the label is the truth: without it the
+                        browser opens the PDF in a tab instead. */}
+                    <Button
+                        href={person.cv}
+                        download
+                        variant="secondary"
+                        size="xl"
+                    >
                         <ArrowDownToLine />
                         {t('cvCta')}
                     </Button>
-                    {/* {person.available ? ( */}
-                    {/*     <span className="text-muted-foreground ml-1 flex items-center gap-2 font-mono text-xs"> */}
-                    {/*         <span className="relative flex h-2 w-2"> */}
-                    {/*             <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" /> */}
-                    {/*             <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" /> */}
-                    {/*         </span> */}
-                    {/*         {t('availability')} */}
-                    {/*     </span> */}
-                    {/* ) : null} */}
                 </div>
+
+                {/* The one thing a recruiter is looking for before they read
+                    anything else. Its own row rather than a third item beside
+                    the buttons, so it is not the first thing to wrap away on a
+                    narrow screen. */}
+                {person.available ? (
+                    <p
+                        className="text-muted-foreground animate-in fade-in fill-mode-both mt-6 flex items-center gap-2 font-mono text-xs duration-700"
+                        style={{ animationDelay: '520ms' }}
+                    >
+                        <span className="relative flex h-2 w-2" aria-hidden>
+                            <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" />
+                            <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" />
+                        </span>
+                        {t('availability')}
+                    </p>
+                ) : null}
             </div>
 
             <a

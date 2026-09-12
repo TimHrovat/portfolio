@@ -227,6 +227,26 @@ export default function Technologies() {
                             {t(`technologies.${id}`)}
                         </Badge>
                     ))}
+
+                    {/* Pinned after the shuffle rather than shuffled with the
+                        rest: it is the sentence the wall ends on, not another
+                        chip. Same material and geometry so it belongs to the
+                        grid — and it answers to pointer proximity like the
+                        others, since it is `node.children` too — but no mark
+                        and muted text, because there is no logo for "the rest
+                        of them". */}
+                    <Badge
+                        as="li"
+                        variant="tech"
+                        size="lg"
+                        className="text-muted-foreground px-4 will-change-transform"
+                        style={{
+                            transition:
+                                'transform 350ms var(--ease-settle), border-color 350ms linear',
+                        }}
+                    >
+                        {t('more')}
+                    </Badge>
                 </ul>
             </Reveal>
         </Section>

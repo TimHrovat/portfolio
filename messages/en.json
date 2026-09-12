@@ -65,7 +65,8 @@
         "eyebrow": "Experience",
         "title": "Where I’ve worked",
         "ongoing": "Now",
-        "highlightsToggle": "What the work involved",
+        "highlightsExpand": "Show {count} more",
+        "highlightsCollapse": "Show less",
         "roles": {
             "easistent": {
                 "title": "Software Developer",
@@ -236,6 +237,7 @@
         "eyebrow": "Stack",
         "title": "Tools I reach for",
         "listLabel": "Technologies",
+        "more": "and more…",
         "technologies": {
             "typescript": "TypeScript",
             "javascript": "JavaScript",
@@ -245,17 +247,13 @@
             "nuxtjs": "Nuxt",
             "nestjs": "NestJS",
             "tailwindcss": "Tailwind CSS",
-            "html5": "HTML",
-            "css3": "CSS",
             "php": "PHP",
             "laravel": "Laravel",
-            "wordpress": "WordPress",
             "java": "Java",
             "c": "C",
             "cplusplus": "C++",
             "postgresql": "PostgreSQL",
             "mysql": "MySQL",
-            "mariadb": "MariaDB",
             "mongodb": "MongoDB",
             "prisma": "Prisma",
             "redis": "Redis",
@@ -264,18 +262,12 @@
             "kubernetes": "Kubernetes",
             "argocd": "Argo CD",
             "rancher": "Rancher",
-            "netlify": "Netlify",
             "go": "Go",
             "jest": "Jest",
             "github": "GitHub",
             "gitlab": "GitLab",
-            "npm": "npm",
-            "pnpm": "pnpm",
             "figma": "Figma",
-            "claude": "Claude",
-            "ssh": "SSH",
-            "vim": "Vim",
-            "neovim": "Neovim"
+            "claude": "Claude"
         }
     },
 

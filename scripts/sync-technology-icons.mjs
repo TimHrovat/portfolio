@@ -17,8 +17,6 @@ const extrasFrom = resolve(root, 'scripts/icon-extras');
 /** @type {{ icon: string, variant?: string }[]} */
 const icons = [
     { icon: 'tailwindcss' },
-    { icon: 'html5' },
-    { icon: 'css3' },
     { icon: 'javascript' },
     { icon: 'typescript' },
     { icon: 'vuejs' },
@@ -31,8 +29,6 @@ const icons = [
     { icon: 'java' },
     { icon: 'php' },
     { icon: 'laravel' },
-    { icon: 'wordpress' },
-    { icon: 'mariadb' },
     { icon: 'mongodb' },
     { icon: 'mysql' },
     { icon: 'postgresql' },
@@ -45,16 +41,10 @@ const icons = [
     { icon: 'argocd' },
     { icon: 'rancher' },
     { icon: 'figma' },
-    { icon: 'netlify' },
     { icon: 'github' },
     { icon: 'gitlab' },
-    { icon: 'npm' },
-    { icon: 'pnpm' },
     // devicon only ships `plain` for Jest.
     { icon: 'jest', variant: 'plain' },
-    { icon: 'ssh' },
-    { icon: 'vim' },
-    { icon: 'neovim' },
 ];
 
 /**

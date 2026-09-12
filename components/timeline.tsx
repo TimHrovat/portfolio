@@ -5,6 +5,7 @@ import OrgMark from '@/components/org-mark';
 import Reveal from '@/components/reveal';
 import RoleHighlights from '@/components/role-highlights';
 import { Badge } from '@/components/ui/badge';
+import { PREVIEW_PER_GROUP } from '@/lib/highlights';
 import type { Role, RoleCopy } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
@@ -131,8 +132,23 @@ export default async function Timeline({ roles }: { roles: Role[] }) {
 
                         {copy.highlights ? (
                             <RoleHighlights
-                                label={t('highlightsToggle')}
                                 groups={copy.highlights}
+                                // Counted here rather than in the component:
+                                // the label is copy, and building it on the
+                                // server keeps the messages off the client.
+                                expandLabel={t('highlightsExpand', {
+                                    count: copy.highlights.reduce(
+                                        (total, group) =>
+                                            total +
+                                            Math.max(
+                                                0,
+                                                group.items.length -
+                                                    PREVIEW_PER_GROUP,
+                                            ),
+                                        0,
+                                    ),
+                                })}
+                                collapseLabel={t('highlightsCollapse')}
                             />
                         ) : null}
 

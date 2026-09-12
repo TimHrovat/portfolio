@@ -11,7 +11,7 @@ import type messages from '@/messages/en.json';
 type Messages = typeof messages;
 
 export const person = {
-    cv: '/documents/Tim_Hrovat_CV.pdf',
+    cv: '/assets/Tim_Hrovat_CV.pdf',
     available: true,
 } as const;
 
@@ -233,17 +233,13 @@ export const technologies: Technology[] = [
     { id: 'nuxtjs' },
     { id: 'nestjs' },
     { id: 'tailwindcss' },
-    { id: 'html5' },
-    { id: 'css3' },
     { id: 'php' },
     { id: 'laravel' },
-    { id: 'wordpress' },
     { id: 'java' },
     { id: 'c' },
     { id: 'cplusplus' },
     { id: 'postgresql' },
     { id: 'mysql' },
-    { id: 'mariadb' },
     { id: 'mongodb' },
     { id: 'prisma' },
     { id: 'redis' },
@@ -252,20 +248,12 @@ export const technologies: Technology[] = [
     { id: 'kubernetes' },
     { id: 'argocd' },
     { id: 'rancher' },
-    { id: 'netlify' },
     { id: 'go' },
     { id: 'jest' },
     { id: 'github', plate: true },
     { id: 'gitlab' },
-    { id: 'npm' },
-    { id: 'pnpm' },
     { id: 'figma' },
     { id: 'claude' },
-    // devicon ships the SSH mark as a single near-black, same as
-    // GitHub's — it needs the plate to survive dark mode.
-    { id: 'ssh', plate: true },
-    { id: 'vim' },
-    { id: 'neovim' },
 ];
 
 export type NavigationItem = {

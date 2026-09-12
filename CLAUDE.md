@@ -424,23 +424,37 @@ stack_, _Beyond the code_) are three things to remember. The labels use the
 since they are too long to centre without the ragged edges reading as a
 mistake. Below `sm` the label stacks above its items.
 
-**It is folded away by default.** `components/role-highlights.tsx` is the one
-client component here: shut, it is a pill on the same glass; open, it is the
-panel. Two details carry it.
+**Every group is named from the start, and most of it is folded away.**
+`components/role-highlights.tsx` is the one client component here. It shows the
+first `PREVIEW_PER_GROUP` entries of each group — two — so all three headings
+and a sample of each are on the page without a click, and a footer button
+reveals the remaining eight. A reader who skims still leaves knowing the shape
+of the role; fourteen entries at once is a wall nobody finishes, and hiding all
+fourteen behind a shut pill meant nobody saw the best of it. Three details
+carry it.
 
-- **One radius, not two.** The container is `rounded-3xl` in both states. CSS
-  clamps a corner radius to half the shorter side, so at the shut height of
-  3rem it paints as a true pill and unrolls into a 3rem box as the panel grows.
-  Transitioning from an explicit `rounded-full` instead spends almost the whole
-  duration at a radius still large enough to clamp, then snaps at the end.
+- **The preview count lives in `lib/highlights.ts`, not in the component.**
+  `Timeline` needs it too — the expand label carries how many entries are still
+  folded away, and that string is built on the server so the CV copy stays out
+  of the client bundle. A `'use client'` module cannot supply it: the server
+  gets a client reference in place of every export, so the constant arrives as
+  an object and the arithmetic yields `NaN` **without failing the build**.
+- **Two rather than one, and the grid is why.** The entries are two columns
+  from `sm` up, so a preview of two fills a row exactly and the expansion
+  starts on a fresh one with no seam to patch. The overflow rows carry their
+  top margin *inside* the clipped element, so the gap they need when open
+  collapses to nothing when shut.
 - **Height comes from a `0fr` to `1fr` grid row,** not a transitioned
-  `height`. A height transition needs a measured pixel value, which means
-  reading layout on open and again whenever the content reflows; a grid row
-  interpolates to the content's own height with nothing measured.
+  `height` — one per group, all driven by the single button. A height
+  transition needs a measured pixel value, which means reading layout on open
+  and again whenever the content reflows; a grid row interpolates to the
+  content's own height with nothing measured. Clipped content stays in the
+  accessibility tree, so each overflow region is `inert` while it is shut.
 
-It stays one surface throughout rather than a button that swaps for a box:
+It stays one surface throughout rather than a panel with a control beneath it:
 stacking a second translucent surface on the first muddies both, which the
-material rules above already warn about.
+material rules above already warn about. The button is a footer row on the
+panel's own glass, separated by a hairline.
 
 **The featured role is scaled up in the dimensions that already exist** — a
 `size-14` mark instead of `size-12`, a `text-3xl` title instead of `text-2xl`,
