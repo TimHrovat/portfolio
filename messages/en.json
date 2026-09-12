@@ -174,7 +174,7 @@
                 "from": "Aug 2021",
                 "to": "Aug 2021",
                 "description": [
-                    "A week on the factory floor building a quality-checking system for car headlight assembly. It automated a step of the build process that had been done by hand."
+                    "A week on the factory floor building a workbench that guides a line worker through assembling a car headlight, one step at a time. A vision model checks each step as it is completed: screws seated, parts aligned. A fault surfaces at the step that caused it rather than at the end of the line."
                 ]
             }
         },

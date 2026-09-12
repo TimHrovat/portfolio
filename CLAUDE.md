@@ -98,6 +98,11 @@ Three habits are worth keeping:
   and not others — and a per-key lookup cannot
   express that. `RoleCopy` is declared in `lib/site.ts` rather than inferred,
   since an inferred union of six different shapes cannot be read uniformly.
+- **No em dashes in displayed copy.** Not one reaches a reader: break the
+  sentence, or use a colon where it introduces a list, the way Phosphorland's
+  entry does. Comments and this file are prose for whoever is working on the
+  site and are not covered. An en dash stays where it is a range, which is
+  what `{copy.from} – {copy.to}` is in `Timeline` and `OtherRoles`.
 - **Markup inside a sentence is a tag, not a split string.** Contact's heading
   is `"Let’s build something <accent>together</accent>."` and `t.rich` supplies
   the span. Never cut a sentence into fragments around JSX.

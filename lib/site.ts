@@ -211,15 +211,15 @@ export const projects: Project[] = [
         id: 'mediaAttention',
         source: 'https://github.com/TimHrovat/media-attention-analyzer',
     },
-    {
-        id: 'sideScrollerEngine',
-        source: 'https://github.com/TimHrovat/sdl-game',
-    },
+    { id: 'uplearn', source: 'https://github.com/UpLearnOrg' },
     {
         id: 'wordleEngine',
         source: 'https://github.com/TimHrovat/wordle-engine',
     },
-    { id: 'uplearn', source: 'https://github.com/UpLearnOrg' },
+    {
+        id: 'sideScrollerEngine',
+        source: 'https://github.com/TimHrovat/sdl-game',
+    },
 ];
 
 export type Technology = {
