@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
 
 import Reveal from '@/components/reveal';
@@ -14,6 +15,7 @@ const MAX_SCALE = 1.14;
 const MAX_LIFT = 6;
 
 export default function Technologies() {
+    const t = useTranslations('stack');
     const grid = useRef<HTMLUListElement>(null);
 
     useEffect(() => {
@@ -104,26 +106,17 @@ export default function Technologies() {
     }, []);
 
     return (
-        <Section
-            id="stack"
-            eyebrow="Stack"
-            title={
-                <>
-                    Tools I reach for
-                    <span className="text-primary">.</span>
-                </>
-            }
-        >
+        <Section id="stack" eyebrow={t('eyebrow')} title={t('title')}>
             <Reveal>
                 <ul
                     ref={grid}
                     className="flex flex-wrap justify-center gap-2.5"
-                    aria-label="Technologies"
+                    aria-label={t('listLabel')}
                 >
-                    {technologies.map(({ label, icon, plate }) => (
+                    {technologies.map(({ id, plate }) => (
                         <Badge
                             as="li"
-                            key={icon}
+                            key={id}
                             variant="tech"
                             size="lg"
                             className="will-change-transform"
@@ -133,7 +126,7 @@ export default function Technologies() {
                             }}
                         >
                             <Image
-                                src={`/images/technology-icons/${icon}`}
+                                src={`/images/technology-icons/${id}.svg`}
                                 alt=""
                                 width={20}
                                 height={20}
@@ -143,7 +136,7 @@ export default function Technologies() {
                                 )}
                                 unoptimized
                             />
-                            {label}
+                            {t(`technologies.${id}`)}
                         </Badge>
                     ))}
                 </ul>

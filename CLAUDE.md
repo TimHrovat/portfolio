@@ -4,7 +4,8 @@ Personal portfolio site for Tim Hrovat. A single static page, no backend.
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · pnpm
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
+next-intl · pnpm
 
 ## Commands
 
@@ -45,8 +46,9 @@ Perf: consolidate badge mousemove listeners
   Do not add a `dark:` variant to a component: add the token to both blocks
   instead. The one piece of JS is the dev-only scheme switcher — see the design
   system below.
-- Copy and data live in `lib/site.ts`. Sections are presentational; edit
-  content there, not in JSX.
+- **Every displayed string lives in `messages/en.json`**, and `lib/site.ts`
+  holds the structure it hangs off — see below. Sections are presentational;
+  edit copy in the messages file, not in JSX.
 - pnpm blocks postinstall scripts by default. A new dependency with a native
   binary must be added to `allowBuilds` in `pnpm-workspace.yaml`, or it will
   install without building and fail at runtime.
@@ -55,9 +57,64 @@ Perf: consolidate badge mousemove listeners
 - Technology logos come from `devicon` — see below. Never hand-place files
   in `public/images/technology-icons/`.
 
+## Copy and i18n
+
+**Not one displayed string is written in a component.** Everything a reader or
+a screen reader meets — headings, buttons, the CV copy, `aria-label`s, image
+alt text, the page metadata — comes from `messages/en.json` through `next-intl`.
+
+It is set up for one locale with **no routing**: `i18n/request.ts` names the
+locale and hands over the messages, `next.config.ts` wires the plugin in, and
+`app/layout.tsx` reads them. There is no `[locale]` segment, no middleware and
+no switcher. A second language is `sl.json` beside `en.json` and a locale to
+choose between them in `i18n/request.ts` — no call site moves.
+
+**`messages/en.json` is segmented by where the words appear**: `meta`,
+`person`, `nav`, `hero`, `about`, `work`, `education`, `stack`, `projects`,
+`contact`, `footer`, and `dev` for the scheme switcher. `person` is the one
+cross-cutting section — the name, role, location, email and tagline are used by
+several sections, and the tagline deliberately renders in both the hero and
+About from that single key.
+
+**`lib/site.ts` is the structure, not the words**: ids, hrefs, logo paths, the
+`YYYY-MM` sort keys, `kind`, `plate`, `available`. Its ids are typed straight
+off the messages file —
+
+```ts
+id: keyof Messages['work']['roles'];
+```
+
+— so an entry without copy behind it, or a key renamed on one side only, fails
+`pnpm build` rather than rendering blank. Adding a role, project or school is
+therefore two edits: the copy in `en.json`, the links and assets in `site.ts`.
+
+**Reading it.** `getTranslations` in server components, `useTranslations` in
+client ones, `t.raw` for the arrays (a role's paragraphs, a project's stack).
+Three habits are worth keeping:
+
+- **Read a whole object when its fields are optional.** `Timeline` takes each
+  role's copy from `getMessages()` as a `RoleCopy`, because `highlights` and
+  `stack` are there for some roles and not others — and a per-key lookup cannot
+  express that. `RoleCopy` is declared in `lib/site.ts` rather than inferred,
+  since an inferred union of six different shapes cannot be read uniformly.
+- **Markup inside a sentence is a tag, not a split string.** Contact's heading
+  is `"Let’s build something <accent>together</accent>."` and `t.rich` supplies
+  the span. Never cut a sentence into fragments around JSX.
+- **Decoration is not copy.** The trailing period on every section title is
+  drawn by `Section` in the accent colour, so it is not in the messages. The
+  full stop at the end of Contact's sentence _is_, because there it is
+  punctuation.
+
+**What stays on the client.** `app/layout.tsx` hands `NextIntlClientProvider`
+only the namespaces the client components read — `nav`, `person`, `stack`,
+`dev`. The CV copy never reaches the browser as messages. That is also why
+`RoleHighlights` takes its toggle label as a prop and `Drawer` takes a
+`closeLabel`: both are client components, and a prop keeps a whole namespace
+out of the bundle.
+
 ## Technology icons
 
-The badges in `components/sections/section-technologies.tsx` are driven by SVGs
+The badges in `components/sections/technologies.tsx` are driven by SVGs
 in `public/images/technology-icons/`. Those files are **generated** — they are
 byte-for-byte copies of the `devicon` package and are overwritten on every sync,
 so never edit them by hand or drop a file in manually.
@@ -93,11 +150,18 @@ from scratch — while still allowing a one-off. Claude is the only one today.
     pnpm icons:sync
     ```
 
-4. Add the badge in `section-technologies.tsx`. The `icon` field is the devicon
-   name plus `.svg`; `label` is what the badge displays:
+4. Add the badge to `technologies` in `lib/site.ts`. The `id` is the devicon
+   name, and it names the file as `<id>.svg`:
 
     ```ts
-    { label: 'Docker', icon: 'docker.svg' },
+    { id: 'docker' },
+    ```
+
+5. Add its label under `stack.technologies` in `messages/en.json`, keyed by the
+   same id — the `id` field will not typecheck until you do:
+
+    ```json
+    "docker": "Docker"
     ```
 
 ### Variants
@@ -322,9 +386,10 @@ It is a plain server component. The previous version needed a client half for
 the follow-the-cursor popover and a mobile drawer; a vertical layout has room
 for the description inline, so all of that went.
 
-**Ordering is by `start`, descending.** `Role.start` / `Role.end` are still
-`YYYY-MM` strings, so a string sort is a date sort and no `Date` is constructed
-anywhere. `end: null` means ongoing and is what draws the `Badge accent` "Now"
+**Ordering is by `start`, descending.** `Role.start` / `Role.end` stay in
+`lib/site.ts` as `YYYY-MM` strings, so a string sort is a date sort and no
+`Date` is constructed anywhere. The dates as they _read_ (`from` / `to`) are
+copy and live in the messages file. `end: null` means ongoing and is what draws the `Badge accent` "Now"
 marker — on this CV the ongoing role also has the most recent start, so it
 lands on top without a special case. The order of the array in `lib/site.ts` is
 only for reading the file.
@@ -333,9 +398,10 @@ only for reading the file.
 with `primary`, `other` leaves it on the hairline. There is no legend, because
 with every title spelled out there is nothing left to decode.
 
-**`Role.highlights` marks the featured role**, and eAsistent is the only one
-that carries it. Every other role is a paragraph of `description` and nothing
-else.
+**Highlights mark the featured role**, and eAsistent is the only one that
+carries them. Every other role is a paragraph of `description` and nothing
+else. Both live in `work.roles.<id>` in the messages file, which is why
+`Timeline` reads a role's copy as a `RoleCopy` object rather than key by key.
 
 It is grouped, not flat: `{ label, items }`, rendered as a label column with
 its lines beside it, a spec sheet rather than a bullet list. Nine equal bullets
@@ -399,9 +465,14 @@ deliberate rather than a hole.
 `md` they go into the drawer.
 
 **Projects: the first entry is the headline** and spans the full width of the
-grid; the rest pair up underneath. `Project.source` is optional — where the
-work is not public the card says "Closed source" rather than quietly dropping
-the button, so the absence reads as a fact about the work.
+grid; the rest pair up underneath. `Project.source` is optional, and where the
+work is not public a "Closed source" badge takes the Source button's slot —
+the same position, the leading one — so every card's footer reads the same and
+the absence is a stated fact rather than one button fewer.
+
+**Live is the only primary button outside the hero and the nav.** It is the one
+thing on a card a reader can go and use, so it carries the accent while Source
+stays a ghost beside it.
 
 ## UI components
 

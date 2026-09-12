@@ -1,13 +1,16 @@
 import { MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 
 import Reveal from '@/components/reveal';
 import Section from '@/components/section';
-import { intro, person } from '@/lib/site';
 
-export default function About() {
+export default async function About() {
+    const t = await getTranslations('about');
+    const who = await getTranslations('person');
+
     return (
-        <Section id="about" eyebrow="About">
+        <Section id="about" eyebrow={t('eyebrow')}>
             {/* Portrait over prose, both centred on the page's axis, rather
                 than a portrait-left / text-right split. */}
             <div className="flex flex-col items-center text-center">
@@ -23,7 +26,7 @@ export default function About() {
                             on the page and worth keeping optimised. */}
                         <Image
                             src="/images/portrait.png"
-                            alt="Tim Hrovat"
+                            alt={t('portraitAlt')}
                             width={224}
                             height={224}
                             priority
@@ -34,20 +37,20 @@ export default function About() {
 
                 <Reveal delay={80}>
                     <h2 className="mt-12 max-w-2xl text-3xl text-balance md:text-4xl">
-                        {intro.lead}
+                        {who('tagline')}
                         <span className="text-primary">.</span>
                     </h2>
                 </Reveal>
 
                 <Reveal delay={140}>
                     <p className="text-muted-foreground mt-6 max-w-2xl text-lg text-pretty">
-                        {intro.body}
+                        {t('body')}
                     </p>
                 </Reveal>
 
                 <Reveal delay={200}>
                     <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">
-                        {intro.closing}
+                        {t('closing')}
                     </p>
                 </Reveal>
 
@@ -59,7 +62,7 @@ export default function About() {
                             className="text-highlight size-3.5"
                             aria-hidden
                         />
-                        {person.location}
+                        {who('location')}
                     </p>
                 </Reveal>
             </div>

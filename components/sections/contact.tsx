@@ -1,5 +1,6 @@
 import { ArrowUpRight, Mail } from 'lucide-react';
 import type { ComponentType } from 'react';
+import { getTranslations } from 'next-intl/server';
 
 import {
     DiscordIcon,
@@ -9,7 +10,7 @@ import {
 import Reveal from '@/components/reveal';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { person, socials } from '@/lib/site';
+import { socials } from '@/lib/site';
 
 const icons: Record<string, ComponentType<{ className?: string }>> = {
     github: GithubIcon,
@@ -18,7 +19,11 @@ const icons: Record<string, ComponentType<{ className?: string }>> = {
     mail: Mail,
 };
 
-export default function Contact() {
+export default async function Contact() {
+    const t = await getTranslations('contact');
+    const who = await getTranslations('person');
+    const email = who('email');
+
     return (
         <section
             id="contact"
@@ -37,27 +42,35 @@ export default function Contact() {
                 <Reveal>
                     <p className="eyebrow flex items-center gap-3">
                         <span className="bg-highlight h-px w-8" aria-hidden />
-                        Contact
+                        {t('eyebrow')}
                         <span className="bg-highlight h-px w-8" aria-hidden />
                     </p>
                 </Reveal>
 
                 <Reveal delay={80}>
+                    {/* The emphasis is part of the sentence, so it travels with
+                        it as a tag in the message rather than splitting the
+                        line into fragments here. */}
                     <h2 className="mt-6 max-w-3xl text-[clamp(2.25rem,6vw_+_1.25rem,6rem)] leading-[0.95] text-balance">
-                        Let&rsquo;s build something{' '}
-                        <span className="text-primary italic">together</span>.
+                        {t.rich('title', {
+                            accent: (chunks) => (
+                                <span className="text-primary italic">
+                                    {chunks}
+                                </span>
+                            ),
+                        })}
                     </h2>
                 </Reveal>
 
                 <Reveal delay={140}>
                     <Button
-                        href={`mailto:${person.email}`}
+                        href={`mailto:${email}`}
                         variant="link"
                         size="xl"
                         className="group mt-12 h-auto px-0 text-lg md:text-2xl"
                     >
                         <span className="border-hairline group-hover:border-primary border-b pb-1 transition-colors duration-200">
-                            {person.email}
+                            {email}
                         </span>
                         <ArrowUpRight
                             aria-hidden
@@ -75,23 +88,31 @@ export default function Contact() {
                                 <>
                                     <span className="eyebrow flex items-center justify-center gap-2">
                                         <Icon className="text-highlight size-3.5" />
-                                        {social.label}
+                                        {t(`socials.${social.id}.label`)}
                                     </span>
                                     <span className="mt-1.5 block text-sm break-all">
-                                        {social.handle}
+                                        {/* The email entry's handle is the
+                                            address itself, which lives in
+                                            `person.email` — so every handle is
+                                            read the same way and the address is
+                                            written down once. */}
+                                        {t(`socials.${social.id}.handle`, {
+                                            email,
+                                        })}
                                     </span>
                                 </>
                             );
+                            const href = social.mailto
+                                ? `mailto:${email}`
+                                : social.href;
 
                             return (
-                                <li key={social.label}>
-                                    {social.href ? (
+                                <li key={social.id}>
+                                    {href ? (
                                         <a
-                                            href={social.href}
+                                            href={href}
                                             target={
-                                                social.href.startsWith(
-                                                    'mailto:',
-                                                )
+                                                social.mailto
                                                     ? undefined
                                                     : '_blank'
                                             }

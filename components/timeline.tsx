@@ -1,10 +1,11 @@
 import { ArrowUpRight } from 'lucide-react';
+import { getMessages, getTranslations } from 'next-intl/server';
 
 import OrgMark from '@/components/org-mark';
 import Reveal from '@/components/reveal';
 import RoleHighlights from '@/components/role-highlights';
 import { Badge } from '@/components/ui/badge';
-import type { Role } from '@/lib/site';
+import type { Role, RoleCopy } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 /**
@@ -25,8 +26,16 @@ import { cn } from '@/lib/utils';
  * mark and a larger title, and its detail sits on the house glass material,
  * because weight of material is how this design system says "this one first".
  * No new colour, no badge, no decoration: hierarchy out of the same parts.
+ *
+ * Each role's copy is read as a whole object rather than key by key, because
+ * `highlights` and `stack` are there for some roles and not others — which a
+ * per-key lookup cannot express, and which is exactly what marks the featured
+ * one.
  */
-export default function Timeline({ roles }: { roles: Role[] }) {
+export default async function Timeline({ roles }: { roles: Role[] }) {
+    const t = await getTranslations('work');
+    const messages = await getMessages();
+
     // `start` is `YYYY-MM`, so a string sort is a date sort. Ongoing roles
     // have the most recent start on this CV, so they land on top without a
     // special case.
@@ -35,12 +44,13 @@ export default function Timeline({ roles }: { roles: Role[] }) {
     return (
         <ol className="flex flex-col items-center">
             {ordered.map((role, index) => {
-                const featured = role.highlights !== undefined;
+                const copy: RoleCopy = messages.work.roles[role.id];
+                const featured = copy.highlights !== undefined;
 
                 return (
                     <Reveal
                         as="li"
-                        key={`${role.company}-${role.start}`}
+                        key={role.id}
                         delay={index * 60}
                         className="flex w-full flex-col items-center text-center"
                     >
@@ -52,7 +62,7 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                         )}
 
                         <OrgMark
-                            name={role.company}
+                            name={copy.company}
                             logo={role.logo}
                             className={cn(
                                 'rounded-2xl',
@@ -71,11 +81,11 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                                         : 'text-xl md:text-2xl',
                                 )}
                             >
-                                {role.title}
+                                {copy.title}
                             </h3>
                             {role.end === null ? (
                                 <Badge variant="accent" size="sm">
-                                    Now
+                                    {t('ongoing')}
                                 </Badge>
                             ) : null}
                         </div>
@@ -88,7 +98,7 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                                     rel="noopener noreferrer"
                                     className="group text-foreground/85 hover:text-foreground inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200"
                                 >
-                                    {role.company}
+                                    {copy.company}
                                     <ArrowUpRight
                                         aria-hidden
                                         className="text-muted-foreground size-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
@@ -96,7 +106,7 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                                 </a>
                             ) : (
                                 <span className="text-foreground/85 text-sm font-medium">
-                                    {role.company}
+                                    {copy.company}
                                 </span>
                             )}
                             <span
@@ -104,11 +114,11 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                                 className="bg-hairline hidden h-3 w-px sm:block"
                             />
                             <span className="text-muted-foreground font-mono text-[0.6875rem] tracking-wider">
-                                {role.from} – {role.to}
+                                {copy.from} – {copy.to}
                             </span>
                         </div>
 
-                        {role.description.map((paragraph) => (
+                        {copy.description.map((paragraph) => (
                             <p
                                 key={paragraph}
                                 className="text-muted-foreground mt-4 max-w-2xl text-sm leading-relaxed text-pretty"
@@ -117,13 +127,16 @@ export default function Timeline({ roles }: { roles: Role[] }) {
                             </p>
                         ))}
 
-                        {role.highlights ? (
-                            <RoleHighlights groups={role.highlights} />
+                        {copy.highlights ? (
+                            <RoleHighlights
+                                label={t('highlightsToggle')}
+                                groups={copy.highlights}
+                            />
                         ) : null}
 
-                        {role.stack ? (
+                        {copy.stack ? (
                             <ul className="mt-6 flex flex-wrap justify-center gap-2">
-                                {role.stack.map((item) => (
+                                {copy.stack.map((item) => (
                                     <Badge
                                         as="li"
                                         key={item}

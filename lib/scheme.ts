@@ -12,14 +12,11 @@ export const SCHEME_STORAGE_KEY = 'scheme';
 /** Fired on `window` after the scheme override changes. */
 export const SCHEME_EVENT = 'schemechange';
 
-export const schemes: { id: SchemeOverride; name: string }[] = [
-    { id: 'system', name: 'System' },
-    { id: 'light', name: 'Light' },
-    { id: 'dark', name: 'Dark' },
-];
+/** Keys `dev.schemes` in messages, which is where the labels are. */
+export const schemes: SchemeOverride[] = ['system', 'light', 'dark'];
 
 export function isSchemeOverride(
     value: string | undefined,
 ): value is SchemeOverride {
-    return schemes.some(({ id }) => id === value);
+    return schemes.some((scheme) => scheme === value);
 }

@@ -8,6 +8,10 @@ import { cn } from '@/lib/utils';
  * the page's axis rather than against its left edge — while the body below is
  * left to each section, since a chart or a grid of cards still reads better
  * aligned.
+ *
+ * The title's trailing period is drawn here rather than passed in. It is
+ * punctuation in the accent colour, not part of the sentence, so it has no
+ * business in a translation — see the i18n section of CLAUDE.md.
  */
 export default function Section({
     id,
@@ -19,7 +23,7 @@ export default function Section({
 }: {
     id: string;
     eyebrow: string;
-    title?: ReactNode;
+    title?: string;
     lead?: string;
     children: ReactNode;
     className?: string;
@@ -41,6 +45,7 @@ export default function Section({
                 {title ? (
                     <h2 className="mt-5 max-w-2xl text-4xl text-balance md:text-5xl">
                         {title}
+                        <span className="text-primary">.</span>
                     </h2>
                 ) : null}
                 {lead ? (

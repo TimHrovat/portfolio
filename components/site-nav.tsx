@@ -1,14 +1,17 @@
 'use client';
 
 import { Mail, Menu } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Drawer from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { navigation, person } from '@/lib/site';
+import { navigation } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 export default function SiteNav() {
+    const t = useTranslations('nav');
+    const who = useTranslations('person');
     const [elevated, setElevated] = useState(false);
     const [active, setActive] = useState<string>('');
     const [open, setOpen] = useState(false);
@@ -120,7 +123,7 @@ export default function SiteNav() {
                 Identical on screen either way. */}
             <header className="fixed inset-x-0 top-[calc(1rem+env(safe-area-inset-top))] z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]">
                 <nav
-                    aria-label="Primary"
+                    aria-label={t('label')}
                     data-elevated={elevated ? 'true' : 'false'}
                     className="glass flex w-full max-w-3xl items-center gap-2 rounded-full px-2 py-2"
                 >
@@ -128,7 +131,8 @@ export default function SiteNav() {
                         href="#top"
                         className="ml-2 shrink-0 font-mono text-sm font-medium tracking-tight"
                     >
-                        TH<span className="text-primary">.</span>
+                        {t('wordmark')}
+                        <span className="text-primary">.</span>
                     </a>
 
                     <ul
@@ -136,7 +140,7 @@ export default function SiteNav() {
                         className="relative mx-auto hidden items-center gap-1 md:flex"
                     >
                         <span ref={indicator} className="nav-indicator" />
-                        {navigation.map(({ label, href }) => (
+                        {navigation.map(({ id, href }) => (
                             <li key={href} className="relative">
                                 <Button
                                     href={href}
@@ -159,19 +163,19 @@ export default function SiteNav() {
                                             : 'text-foreground/65 hover:text-foreground',
                                     )}
                                 >
-                                    {label}
+                                    {t(`links.${id}`)}
                                 </Button>
                             </li>
                         ))}
                     </ul>
 
                     <Button
-                        href={`mailto:${person.email}`}
+                        href={`mailto:${who('email')}`}
                         size="sm"
                         className="ml-auto px-4 md:ml-0"
                     >
                         <Mail />
-                        Get in touch
+                        {t('cta')}
                     </Button>
 
                     {/* Below `md` the links collapse into a drawer rather than
@@ -181,7 +185,7 @@ export default function SiteNav() {
                         variant="ghost"
                         size="icon-sm"
                         className="md:hidden"
-                        aria-label="Open menu"
+                        aria-label={t('menu.open')}
                         aria-haspopup="dialog"
                         onClick={() => setOpen(true)}
                     >
@@ -190,9 +194,14 @@ export default function SiteNav() {
                 </nav>
             </header>
 
-            <Drawer open={open} onOpenChange={setOpen} title="Navigation">
+            <Drawer
+                open={open}
+                onOpenChange={setOpen}
+                title={t('menu.title')}
+                closeLabel={t('menu.close')}
+            >
                 <ul className="mt-4 flex flex-col gap-1">
-                    {navigation.map(({ label, href }) => (
+                    {navigation.map(({ id, href }) => (
                         <li key={href}>
                             <Button
                                 href={href}
@@ -201,7 +210,7 @@ export default function SiteNav() {
                                 className="w-full justify-start rounded-xl"
                                 onClick={() => setOpen(false)}
                             >
-                                {label}
+                                {t(`links.${id}`)}
                             </Button>
                         </li>
                     ))}

@@ -25,6 +25,7 @@ export default function Drawer({
     onOpenChange,
     title,
     subtitle,
+    closeLabel,
     side = 'bottom',
     className,
     restoreFocusTo,
@@ -35,6 +36,10 @@ export default function Drawer({
     title: string;
     /** Rendered as the dialog's description, so it is shown and announced once. */
     subtitle?: string;
+    /** Accessible name for the grab handle, which is the close control. Passed
+     *  in because every string a reader or a screen reader meets comes from
+     *  messages, and this primitive has no namespace of its own. */
+    closeLabel: string;
     side?: 'bottom' | 'right';
     className?: string;
     /** Opened from outside rather than via Dialog.Trigger, so there is no
@@ -167,7 +172,7 @@ export default function Drawer({
                     {side === 'bottom' ? (
                         <button
                             type="button"
-                            aria-label="Close"
+                            aria-label={closeLabel}
                             onPointerDown={startDrag}
                             onPointerMove={moveDrag}
                             onPointerUp={endDrag}

@@ -1,6 +1,7 @@
 'use client';
 
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useSyncExternalStore } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -72,6 +73,7 @@ const schemeIcons = { system: Monitor, light: Sun, dark: Moon };
  * is what the System option (the default) does.
  */
 export default function SchemeSwitcher() {
+    const t = useTranslations('dev');
     const scheme = useSyncExternalStore(
         subscribe,
         getSnapshot,
@@ -81,11 +83,11 @@ export default function SchemeSwitcher() {
     return (
         <div
             role="radiogroup"
-            aria-label="Preview scheme"
+            aria-label={t('schemeLabel')}
             data-elevated="true"
             className="glass fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex gap-1 rounded-full p-1 print:hidden"
         >
-            {schemes.map(({ id, name }) => {
+            {schemes.map((id) => {
                 const Icon = schemeIcons[id];
 
                 return (
@@ -95,7 +97,7 @@ export default function SchemeSwitcher() {
                         size="sm"
                         role="radio"
                         aria-checked={scheme === id}
-                        aria-label={name}
+                        aria-label={t(`schemes.${id}`)}
                         onClick={() => applyScheme(id)}
                         className={cn(
                             'rounded-full',

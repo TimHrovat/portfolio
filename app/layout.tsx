@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { Geist, JetBrains_Mono } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 import './globals.css';
 
@@ -19,54 +21,52 @@ const jetBrainsMono = JetBrains_Mono({
     display: 'swap',
 });
 
-export const metadata: Metadata = {
-    metadataBase: new URL('https://timhrovat.com'),
-    title: {
-        default: 'Tim Hrovat · Full Stack Developer',
-        template: '%s · Tim Hrovat',
-    },
-    description:
-        'Full stack developer in Ljubljana, Slovenia. Building efficient, scalable products at eŠola (eAsistent) while finishing a Computer Science degree at FRI UNI Ljubljana.',
-    keywords: [
-        'Tim Hrovat',
-        'full stack developer',
-        'Ljubljana',
-        'Slovenia',
-        'TypeScript',
-        'React',
-        'Vue',
-        'NestJS',
-    ],
-    authors: [{ name: 'Tim Hrovat', url: 'https://timhrovat.com' }],
-    creator: 'Tim Hrovat',
-    openGraph: {
-        title: 'Tim Hrovat · Full Stack Developer',
-        description:
-            'Full stack developer in Ljubljana, Slovenia. Building efficient, scalable products at eŠola (eAsistent).',
-        url: 'https://timhrovat.com',
-        siteName: 'Tim Hrovat',
-        locale: 'en',
-        type: 'website',
-        images: [{ url: '/images/portrait.png', width: 1200, height: 1200 }],
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Tim Hrovat · Full Stack Developer',
-        description: 'Full stack developer in Ljubljana, Slovenia.',
-        images: ['/images/portrait.png'],
-    },
-};
+const SITE_URL = 'https://timhrovat.com';
+
+// Metadata is copy like any other, so it reads from messages too — which is
+// why this is `generateMetadata` rather than a static object.
+export async function generateMetadata(): Promise<Metadata> {
+    const t = await getTranslations();
+    const locale = await getLocale();
+
+    return {
+        metadataBase: new URL(SITE_URL),
+        title: {
+            default: t('meta.title'),
+            template: t('meta.titleTemplate'),
+        },
+        description: t('meta.description'),
+        keywords: t.raw('meta.keywords'),
+        authors: [{ name: t('person.name'), url: SITE_URL }],
+        creator: t('person.name'),
+        openGraph: {
+            title: t('meta.title'),
+            description: t('meta.shareDescription'),
+            url: SITE_URL,
+            siteName: t('meta.siteName'),
+            locale,
+            type: 'website',
+            images: [
+                { url: '/images/portrait.png', width: 1200, height: 1200 },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: t('meta.title'),
+            description: t('meta.shortDescription'),
+            images: ['/images/portrait.png'],
+        },
+    };
+}
 
 // THE ONE COLOUR THAT CANNOT LIVE IN CSS. Next needs a literal here to emit
 // <meta name="theme-color">, and a meta tag cannot read a custom property, so
 // these mirror --background by hand. Change them together.
 export const viewport: Viewport = {
     // The layout viewport covers the whole screen, status bar and Dynamic
-    // Island included. Without it iOS stops the viewport at the safe area, so
-    // the fixed top strip starts below the island while the page still scrolls
-    // behind it — the island's row of content stayed unblurred. It is also
-    // what makes every `env(safe-area-inset-*)` below resolve to anything but
-    // zero, so the two go together.
+    // Island included. It is what makes every `env(safe-area-inset-*)` in
+    // globals.css resolve to anything but zero — see the status bar note in
+    // CLAUDE.md for what iOS does and does not let the page paint up there.
     viewportFit: 'cover',
     themeColor: [
         { media: '(prefers-color-scheme: light)', color: '#f5f5f7' },
@@ -74,10 +74,16 @@ export const viewport: Viewport = {
     ],
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+    const locale = await getLocale();
+    // Only the namespaces the client components actually read: the nav, the
+    // technology chips, the highlights toggle's siblings and the dev switcher.
+    // The CV copy — every role, project and school — stays on the server.
+    const { nav, person, stack, dev } = await getMessages();
+
     return (
         <html
-            lang="en"
+            lang={locale}
             className={`${geist.variable} ${jetBrainsMono.variable}`}
             // The scheme bootstrap writes data-scheme here before hydration,
             // so this element is expected to differ from the server markup.
@@ -98,7 +104,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
                     <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
                 </noscript>
             </head>
-            <body className="grain">{children}</body>
+            <body className="grain">
+                <NextIntlClientProvider messages={{ nav, person, stack, dev }}>
+                    {children}
+                </NextIntlClientProvider>
+            </body>
         </html>
     );
 }

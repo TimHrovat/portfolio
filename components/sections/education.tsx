@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
 import OrgMark from '@/components/org-mark';
 import Reveal from '@/components/reveal';
@@ -16,25 +17,18 @@ import { certifications, education } from '@/lib/site';
  * Each card is one link, stretched over the whole surface with `after:inset-0`
  * rather than an overlay element with no accessible name of its own.
  */
-export default function Education() {
+export default async function Education() {
+    const t = await getTranslations('education');
+
     return (
-        <Section
-            id="education"
-            eyebrow="Education"
-            title={
-                <>
-                    Where I&rsquo;ve studied
-                    <span className="text-primary">.</span>
-                </>
-            }
-        >
+        <Section id="education" eyebrow={t('eyebrow')} title={t('title')}>
             <ul className="grid gap-5 md:grid-cols-2">
                 {education.map((item, index) => (
-                    <Reveal as="li" key={item.school} delay={index * 80}>
+                    <Reveal as="li" key={item.id} delay={index * 80}>
                         <Card glass interactive className="group h-full">
                             <div className="flex items-start gap-4">
                                 <OrgMark
-                                    name={item.school}
+                                    name={t(`schools.${item.id}.school`)}
                                     logo={item.logo}
                                     className="size-12 rounded-2xl"
                                 />
@@ -46,7 +40,7 @@ export default function Education() {
                                             rel="noopener noreferrer"
                                             className="after:absolute after:inset-0"
                                         >
-                                            {item.school}
+                                            {t(`schools.${item.id}.school`)}
                                         </a>
                                         <ArrowUpRight
                                             aria-hidden
@@ -54,22 +48,22 @@ export default function Education() {
                                         />
                                     </h3>
                                     <p className="text-muted-foreground mt-1.5 text-sm">
-                                        {item.programme}
+                                        {t(`schools.${item.id}.programme`)}
                                     </p>
                                 </div>
                             </div>
 
                             <p className="text-muted-foreground mt-5 flex-1 text-sm text-pretty">
-                                {item.detail}
+                                {t(`schools.${item.id}.detail`)}
                             </p>
 
                             <div className="mt-6 flex flex-wrap items-center gap-2">
                                 <Badge variant="meta" size="sm">
-                                    {item.years}
+                                    {t(`schools.${item.id}.years`)}
                                 </Badge>
                                 {item.end === null ? (
                                     <Badge variant="accent" size="sm">
-                                        {item.status}
+                                        {t(`schools.${item.id}.status`)}
                                     </Badge>
                                 ) : null}
                             </div>
@@ -82,14 +76,14 @@ export default function Education() {
                 slimmer row rather than a third card pretending to be a school. */}
             <ul className="mt-5 grid gap-5">
                 {certifications.map((item, index) => (
-                    <Reveal as="li" key={item.name} delay={(index + 2) * 80}>
+                    <Reveal as="li" key={item.id} delay={(index + 2) * 80}>
                         <Card
                             glass
                             interactive
                             className="group flex-row items-center gap-4 py-5"
                         >
                             <OrgMark
-                                name={item.issuer}
+                                name={t(`certifications.${item.id}.issuer`)}
                                 logo={item.logo}
                                 className="size-11 rounded-xl"
                             />
@@ -102,10 +96,12 @@ export default function Education() {
                                             rel="noopener noreferrer"
                                             className="after:absolute after:inset-0"
                                         >
-                                            {item.name}
+                                            {t(
+                                                `certifications.${item.id}.name`,
+                                            )}
                                         </a>
                                     ) : (
-                                        item.name
+                                        t(`certifications.${item.id}.name`)
                                     )}
                                     <ArrowUpRight
                                         aria-hidden
@@ -113,7 +109,8 @@ export default function Education() {
                                     />
                                 </h3>
                                 <p className="text-muted-foreground mt-1 text-sm text-pretty">
-                                    {item.issuer} · {item.detail}
+                                    {t(`certifications.${item.id}.issuer`)} ·{' '}
+                                    {t(`certifications.${item.id}.detail`)}
                                 </p>
                             </div>
                             <Badge
@@ -121,7 +118,7 @@ export default function Education() {
                                 size="sm"
                                 className="hidden shrink-0 sm:inline-flex"
                             >
-                                {item.date}
+                                {t(`certifications.${item.id}.date`)}
                             </Badge>
                         </Card>
                     </Reveal>

@@ -1,0 +1,298 @@
+{
+    "meta": {
+        "title": "Tim Hrovat · Full Stack Developer",
+        "titleTemplate": "%s · Tim Hrovat",
+        "description": "Full stack developer in Ljubljana, Slovenia. Building efficient, scalable products at eŠola (eAsistent) while finishing a Computer Science degree at FRI UNI Ljubljana.",
+        "shareDescription": "Full stack developer in Ljubljana, Slovenia. Building efficient, scalable products at eŠola (eAsistent).",
+        "shortDescription": "Full stack developer in Ljubljana, Slovenia.",
+        "siteName": "Tim Hrovat",
+        "keywords": [
+            "Tim Hrovat",
+            "full stack developer",
+            "Ljubljana",
+            "Slovenia",
+            "TypeScript",
+            "React",
+            "Vue",
+            "NestJS"
+        ]
+    },
+
+    "person": {
+        "name": "Tim Hrovat",
+        "role": "Full Stack Developer",
+        "location": "Ljubljana, Slovenia",
+        "email": "tim.hrovat16@gmail.com",
+        "tagline": "I build the parts people actually touch"
+    },
+
+    "nav": {
+        "label": "Primary",
+        "wordmark": "TH",
+        "cta": "Get in touch",
+        "links": {
+            "about": "About",
+            "work": "Work",
+            "education": "Education",
+            "stack": "Stack",
+            "projects": "Projects"
+        },
+        "menu": {
+            "open": "Open menu",
+            "title": "Navigation",
+            "close": "Close"
+        }
+    },
+
+    "hero": {
+        "firstName": "Tim",
+        "lastName": "Hrovat",
+        "emailCta": "Get in touch",
+        "cvCta": "Download CV",
+        "availability": "Open to opportunities",
+        "scroll": "Scroll",
+        "scrollLabel": "Scroll to about"
+    },
+
+    "about": {
+        "eyebrow": "About",
+        "portraitAlt": "Tim Hrovat",
+        "body": "Full stack developer at eŠola, the team behind eAsistent, a school platform used across Slovenia. I care about interfaces that feel immediate, code that stays readable a year later, and shipping things that hold up under real traffic.",
+        "closing": "Currently finishing my Computer Science degree at FRI UNI Ljubljana. The thesis is all that's left."
+    },
+
+    "work": {
+        "eyebrow": "Experience",
+        "title": "Where I’ve worked",
+        "lead": "Six roles over nine years, most of them alongside school and several alongside each other.",
+        "ongoing": "Now",
+        "highlightsToggle": "What the work involved",
+        "roles": {
+            "easistent": {
+                "title": "Software Developer",
+                "company": "eŠola d.o.o. (eAsistent)",
+                "from": "Dec 2022",
+                "to": "Present",
+                "description": [
+                    "My first engineering job, and the one that taught me the most. Full stack work on eAsistent, the school platform used by schools, teachers, students and parents across Slovenia. A student contract on paper, but effectively full time for three years, and independent enough to take projects end to end."
+                ],
+                "highlights": [
+                    {
+                        "label": "Built alone",
+                        "items": [
+                            "The company UI library. Designed and built on my own, and every new project now starts on it.",
+                            "The public landing page and the sign-in behind it, end to end."
+                        ]
+                    },
+                    {
+                        "label": "Across the stack",
+                        "items": [
+                            "Keeping the legacy code running and integrating with it, then the migrations off it: Laravel 5 to 12, Vue 2 to 3.",
+                            "The CI/CD pipelines, and the infrastructure they deploy onto.",
+                            "Backend, frontend and database. The whole path rather than a slice of it.",
+                            "Prediction models, and the constraint-heavy algorithms behind the timetable generator."
+                        ]
+                    },
+                    {
+                        "label": "Beyond the code",
+                        "items": [
+                            "Mentoring new hires and students on placement.",
+                            "The technical side of our hiring interviews.",
+                            "Planning and leading projects."
+                        ]
+                    }
+                ],
+                "stack": [
+                    "PHP",
+                    "Laravel",
+                    "Vue",
+                    "TypeScript",
+                    "NestJS",
+                    "PostgreSQL"
+                ]
+            },
+            "phosphorland": {
+                "title": "Software Development Intern",
+                "company": "Phosphorland",
+                "from": "May 2022",
+                "to": "Jun 2022",
+                "description": [
+                    "Built the company website front to back during a month-long internship in Portugal: authentication, file storage and realtime data on Firebase, localised end to end with i18next."
+                ],
+                "stack": ["React", "Firebase", "i18next"]
+            },
+            "hella": {
+                "title": "Engineering Intern",
+                "company": "Hella Saturnus Slovenia",
+                "from": "Aug 2021",
+                "to": "Aug 2021",
+                "description": [
+                    "A week on the factory floor building a quality-checking system for car headlight assembly. It automated a step of the build process that had been done by hand."
+                ]
+            },
+            "simpliservers": {
+                "title": "Assistant & Community Support",
+                "company": "Simpliservers",
+                "from": "Jan 2022",
+                "to": "Jul 2022",
+                "description": [
+                    "Front-line support for a game server hosting provider: troubleshooting customer setups, answering the community, and escalating the problems that turned out to be real bugs."
+                ]
+            },
+            "ppIntersearch": {
+                "title": "Data Analyst",
+                "company": "P&P InterSearch Slovenia",
+                "from": "Jun 2019",
+                "to": "Sep 2019",
+                "description": [
+                    "A summer at an executive search firm, cleaning and structuring candidate and company data so it could actually be searched and reported on."
+                ]
+            },
+            "printboutiq": {
+                "title": "Online Store Admin & Digital Print Operator",
+                "company": "Printboutiq",
+                "from": "Apr 2017",
+                "to": "Mar 2022",
+                "description": [
+                    "Five years alongside school running the online store and the digital printing equipment. Product listings and orders on one side, operating and maintaining the machines on the other."
+                ]
+            }
+        }
+    },
+
+    "education": {
+        "eyebrow": "Education",
+        "title": "Where I’ve studied",
+        "schools": {
+            "fri": {
+                "school": "FRI UNI Ljubljana",
+                "programme": "Computer Science, BSc",
+                "detail": "Thesis is the only remaining requirement.",
+                "years": "2023 – Present",
+                "status": "In progress"
+            },
+            "vegova": {
+                "school": "Vegova Ljubljana",
+                "programme": "Software Engineering",
+                "detail": "Four-year technical programme.",
+                "years": "2019 – 2023",
+                "status": "Completed"
+            }
+        },
+        "certifications": {
+            "ccna": {
+                "name": "CCNA: Introduction to Networks",
+                "issuer": "Cisco",
+                "detail": "Networking fundamentals: the model, routing and switching, addressing.",
+                "date": "Issued May 2023"
+            }
+        }
+    },
+
+    "stack": {
+        "eyebrow": "Stack",
+        "title": "Tools I reach for",
+        "listLabel": "Technologies",
+        "technologies": {
+            "typescript": "TypeScript",
+            "javascript": "JavaScript",
+            "react": "React",
+            "vuejs": "Vue",
+            "nextjs": "Next.js",
+            "nuxtjs": "Nuxt",
+            "nestjs": "NestJS",
+            "tailwindcss": "Tailwind CSS",
+            "html5": "HTML",
+            "css3": "CSS",
+            "php": "PHP",
+            "laravel": "Laravel",
+            "wordpress": "WordPress",
+            "java": "Java",
+            "c": "C",
+            "cplusplus": "C++",
+            "postgresql": "PostgreSQL",
+            "mysql": "MySQL",
+            "mariadb": "MariaDB",
+            "mongodb": "MongoDB",
+            "prisma": "Prisma",
+            "redis": "Redis",
+            "apachekafka": "Kafka",
+            "rabbitmq": "RabbitMQ",
+            "kubernetes": "Kubernetes",
+            "argocd": "Argo CD",
+            "rancher": "Rancher",
+            "netlify": "Netlify",
+            "go": "Go",
+            "jest": "Jest",
+            "github": "GitHub",
+            "gitlab": "GitLab",
+            "npm": "npm",
+            "pnpm": "pnpm",
+            "figma": "Figma",
+            "claude": "Claude"
+        }
+    },
+
+    "projects": {
+        "eyebrow": "Projects",
+        "title": "Things I’ve built",
+        "source": "Source",
+        "live": "Live",
+        "closedSource": "Closed source",
+        "items": {
+            "easistentLanding": {
+                "name": "eAsistent landing page",
+                "summary": "The public face of eAsistent, built end to end, and the sign-in behind it: two-factor, YubiKey, QR-code login from a signed-in phone, PIN and CAPTCHA. That is a lot of ways in, for an audience that ranges from teachers to parents to a fourteen-year-old on a school laptop.",
+                "stack": ["PHP", "Laravel", "Vue"]
+            },
+            "phosphorland": {
+                "name": "Phosphorland",
+                "summary": "Company site with authentication, file storage and realtime data on Firebase, localised end to end with i18next.",
+                "stack": ["React", "Firebase", "i18next"]
+            },
+            "saveTheAnimals": {
+                "name": "Save the Animals",
+                "summary": "A game written from scratch against SDL2. An exercise in object-oriented design, and in hunting down memory leaks in C++.",
+                "stack": ["C++", "SDL2"]
+            },
+            "wordleEngine": {
+                "name": "Wordle Engine",
+                "summary": "A solver that plays Wordle against a dictionary, narrowing the candidate set from each guess. Written in Java with its own test harness to score it over every word in the list.",
+                "stack": ["Java"]
+            },
+            "imageEditor": {
+                "name": "Image Editor",
+                "summary": "An in-browser image editor built on the canvas API with no framework and no dependencies. Just plain HTML, CSS and JavaScript.",
+                "stack": ["JavaScript", "Canvas", "CSS"]
+            }
+        }
+    },
+
+    "contact": {
+        "eyebrow": "Contact",
+        "title": "Let’s build something <accent>together</accent>.",
+        "socials": {
+            "github": { "label": "GitHub", "handle": "@TimHrovat" },
+            "linkedin": { "label": "LinkedIn", "handle": "@tim-hrovat" },
+            "email": { "label": "Email", "handle": "{email}" },
+            "discord": {
+                "label": "Discord",
+                "handle": "timhrovat",
+                "note": "Say hi"
+            }
+        }
+    },
+
+    "footer": {
+        "copyright": "© {year} {name}"
+    },
+
+    "dev": {
+        "schemeLabel": "Preview scheme",
+        "schemes": {
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark"
+        }
+    }
+}

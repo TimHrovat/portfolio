@@ -22,8 +22,12 @@ import { cn } from '@/lib/utils';
  * to the content's own height with no measuring at all.
  */
 export default function RoleHighlights({
+    label,
     groups,
 }: {
+    /** The toggle's text. Passed in rather than looked up here, so the CV copy
+     *  never has to reach the client bundle. */
+    label: string;
     groups: { label: string; items: string[] }[];
 }) {
     const [open, setOpen] = useState(false);
@@ -52,7 +56,7 @@ export default function RoleHighlights({
                 onClick={() => setOpen((previous) => !previous)}
                 className="text-foreground/85 hover:text-foreground flex w-full items-center justify-center gap-2 px-6 py-3.5 text-sm font-medium transition-colors duration-200 active:scale-[0.99]"
             >
-                What the work involved
+                {label}
                 <ChevronDown
                     aria-hidden
                     className={cn(

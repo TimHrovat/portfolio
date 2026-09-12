@@ -21,6 +21,12 @@ pnpm dev
 
 The site runs on `http://localhost:3000`.
 
+## Copy
+
+Every displayed string lives in `messages/en.json`, grouped by section, and is
+read through next-intl. `lib/site.ts` holds only the structure around it —
+ids, links, assets and ordering. Edit copy in the messages file.
+
 ## Production
 
 ```bash

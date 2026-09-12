@@ -1,4 +1,5 @@
 import { ExternalLink } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
 import { GithubIcon } from '@/components/brand-icons';
 import Reveal from '@/components/reveal';
@@ -9,23 +10,16 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { projects } from '@/lib/site';
 
-export default function Projects() {
+export default async function Projects() {
+    const t = await getTranslations('projects');
+
     return (
-        <Section
-            id="projects"
-            eyebrow="Projects"
-            title={
-                <>
-                    Things I&rsquo;ve built
-                    <span className="text-primary">.</span>
-                </>
-            }
-        >
+        <Section id="projects" eyebrow={t('eyebrow')} title={t('title')}>
             <ul className="grid gap-5 md:grid-cols-2">
                 {projects.map((project, index) => (
                     <Reveal
                         as="li"
-                        key={project.name}
+                        key={project.id}
                         delay={index * 80}
                         // The headline project takes the full width; the rest
                         // pair up underneath it.
@@ -33,14 +27,18 @@ export default function Projects() {
                     >
                         <Card glass interactive className="h-full gap-0">
                             <h3 className="font-display text-2xl leading-tight font-bold tracking-tight">
-                                {project.name}
+                                {t(`items.${project.id}.name`)}
                             </h3>
                             <p className="text-muted-foreground mt-3 flex-1 text-sm text-pretty">
-                                {project.summary}
+                                {t(`items.${project.id}.summary`)}
                             </p>
 
                             <ul className="mt-6 flex flex-wrap gap-2">
-                                {project.stack.map((item) => (
+                                {(
+                                    t.raw(
+                                        `items.${project.id}.stack`,
+                                    ) as string[]
+                                ).map((item) => (
                                     <Badge
                                         as="li"
                                         key={item}
@@ -53,7 +51,12 @@ export default function Projects() {
                             </ul>
 
                             <Separator className="mt-6" />
-                            <div className="-mb-1 flex items-center gap-1 pt-3">
+                            <div className="-mb-1 flex items-center gap-2 pt-3">
+                                {/* Source and its absence occupy the same slot:
+                                    the row reads the same whether the code is
+                                    public or not, and a closed-source project
+                                    says so rather than quietly showing one
+                                    button fewer. */}
                                 {project.source ? (
                                     <Button
                                         href={project.source}
@@ -63,33 +66,27 @@ export default function Projects() {
                                         size="sm"
                                     >
                                         <GithubIcon className="size-4" />
-                                        Source
+                                        {t('source')}
                                     </Button>
-                                ) : null}
+                                ) : (
+                                    <Badge variant="meta" size="sm">
+                                        {t('closedSource')}
+                                    </Badge>
+                                )}
+                                {/* The one thing on the card a reader can go
+                                    and use, so it carries the accent. */}
                                 {project.live ? (
                                     <Button
                                         href={project.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        variant="ghost"
+                                        variant="primary"
                                         size="sm"
                                     >
                                         <ExternalLink />
-                                        Live
+                                        {t('live')}
                                     </Button>
                                 ) : null}
-                                {/* Said out loud, so a missing Source button
-                                    reads as a fact about the work rather than
-                                    an oversight. */}
-                                {project.source ? null : (
-                                    <Badge
-                                        variant="meta"
-                                        size="sm"
-                                        className="ml-auto"
-                                    >
-                                        Closed source
-                                    </Badge>
-                                )}
                             </div>
                         </Card>
                     </Reveal>
