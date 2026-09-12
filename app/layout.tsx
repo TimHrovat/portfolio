@@ -87,8 +87,8 @@ export const viewport: Viewport = {
     // CLAUDE.md for what iOS does and does not let the page paint up there.
     viewportFit: 'cover',
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#f5f5f7' },
-        { media: '(prefers-color-scheme: dark)', color: '#000000' },
+        { media: '(prefers-color-scheme: light)', color: '#f6f3ed' },
+        { media: '(prefers-color-scheme: dark)', color: '#191512' },
     ],
 };
 
@@ -108,13 +108,13 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
             suppressHydrationWarning
         >
             <head>
-                {/* Applies a stored dev scheme override before first paint,
+                {/* Applies a stored dev scheme and theme before first paint,
                     so switching does not flash the default on reload.
                     next/script with `beforeInteractive` rather than a bare
                     <script>, which React 19 warns about inside a component.
                     Dev-only — see components/scheme-switcher.tsx. */}
                 <Script id="scheme-bootstrap" strategy="beforeInteractive">
-                    {`try{var s=localStorage.getItem('scheme');if(s==='light'||s==='dark')document.documentElement.dataset.scheme=s}catch(e){}`}
+                    {`try{var d=document.documentElement,s=localStorage.getItem('scheme'),t=localStorage.getItem('theme');if(s==='light'||s==='dark')d.dataset.scheme=s;if(['tide','apple','mono'].indexOf(t)>-1)d.dataset.theme=t}catch(e){}`}
                 </Script>
                 {/* Scroll reveals start hidden; without JS they must not stay
                     that way. */}

@@ -85,205 +85,197 @@
  * Two accent roles, not one. `primary` carries action and attention (buttons,
  * the caret, active state, the trailing period). `highlight` is the second
  * colour and carries supporting emphasis (section rules, the "Now" marker,
- * contact icons, the closing wash).
+ * contact icons, the closing wash, the previews' second colour).
  *
- * APPLE — apple.com's own grey/black/white, systemBlue primary, systemIndigo
- * highlight. The brand palette, not an invented one.
+ * THEMES. There are four, each a full palette for both schemes, and SIGNAL
+ * is the one that ships — it sits on bare `:root`, so the site needs no
+ * attribute to have it. The others are `[data-theme]` blocks the switcher in
+ * components/scheme-switcher.tsx can put on <html>:
  *
- * One exception lives outside this file: `themeColor` in app/layout.tsx needs
- * literal hex for the browser-chrome meta tag, since a meta tag cannot read a
- * custom property. It mirrors --background by hand.
+ * - SIGNAL: warm paper and ink, a vermilion that means "look here", and a
+ *   mustard ochre as the second colour. Editorial rather than techy, and loud
+ *   only where it matters.
+ * - TIDE: deep petrol teal against copper and sand.
+ * - APPLE: the palette the site had before, kept as it was — apple.com's
+ *   greys, systemBlue and systemIndigo, true black in dark.
+ * - MONO: no hue at all. Ink on paper, and the accent is simply the strongest
+ *   contrast there is.
+ *
+ * Every colour is written once, as `light-dark(light, dark)`. Which half
+ * applies is decided by `color-scheme`, so the scheme is a single property
+ * rather than a second copy of every block: `light dark` follows the OS, and
+ * `[data-scheme]` pins one for the dev switcher. The selectors are
+ * `[data-theme]` rather than `:root[data-theme]` so that any element can wear
+ * a theme — the switcher's swatches do, to show each theme's own colours
+ * without writing them out a second time.
+ *
+ * Two kinds of value cannot be a `light-dark()` pair, because it only takes
+ * colours: the grain and glow strengths below, which keep a media query.
+ *
+ * The exceptions outside this file are metadata, which cannot read a custom
+ * property: `themeColor` in app/layout.tsx and the colours in app/manifest.ts
+ * mirror SIGNAL's background by hand, and app/icon.svg its vermilion.
  */
 
 :root {
+    color-scheme: light dark;
     --radius: 0.875rem;
-    color-scheme: light;
-    --background: oklch(0.9707 0.0027 286.4);
-    --foreground: oklch(0.2316 0.0038 286.1);
-
-    --surface: oklch(1 0 0);
-    --surface-strong: oklch(0.955 0.003 286.3);
-    --hairline: oklch(0.8652 0.0068 286.3);
-
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.2316 0.0038 286.1);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.2316 0.0038 286.1);
-
-    --primary: oklch(0.6028 0.2177 257.4);
-    --primary-foreground: oklch(1 0 0);
-
-    --highlight: oklch(0.5295 0.191 278.3);
-    --highlight-foreground: oklch(1 0 0);
-
-    --secondary: oklch(0.955 0.003 286.3);
-    --secondary-foreground: oklch(0.2316 0.0038 286.1);
-
-    --muted: oklch(0.96 0.003 286.3);
-    --muted-foreground: oklch(0.5399 0.0077 286.1);
-
-    --accent: oklch(0.93 0.02 278);
-    --accent-foreground: oklch(0.4 0.14 278);
-
-    --destructive: oklch(0.6542 0.2321 28.7);
-    --border: oklch(0.8652 0.0068 286.3);
-    --input: oklch(0.8652 0.0068 286.3);
-    --ring: oklch(0.6028 0.2177 257.4);
 
     --logo-plate: #ffffff;
-    --glass-highlight: oklch(1 0 0 / 55%);
-    --glass-shadow: oklch(0 0 0 / 45%);
+    --destructive: light-dark(oklch(0.58 0.22 27), oklch(0.66 0.22 28));
 
     --grain-opacity: 0.035;
     --glow-strength: 0.1;
 }
 
+/* Dev-only: pins a scheme regardless of the OS. See scheme-switcher.tsx. */
+:root[data-scheme='light'] {
+    color-scheme: light;
+}
+
+:root[data-scheme='dark'] {
+    color-scheme: dark;
+    --grain-opacity: 0.06;
+    --glow-strength: 0.16;
+}
+
 @media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --background: oklch(0 0 0);
-        --foreground: oklch(0.97 0.002 286);
-
-        --surface: oklch(0.2316 0.0038 286.1);
-        --surface-strong: oklch(0.2939 0.0036 286.2);
-        --hairline: oklch(0.3802 0.005 286.2);
-
-        --card: oklch(0.2316 0.0038 286.1);
-        --card-foreground: oklch(0.97 0.002 286);
-        --popover: oklch(0.2316 0.0038 286.1);
-        --popover-foreground: oklch(0.97 0.002 286);
-
-        --primary: oklch(0.669 0.1808 251.8);
-        --primary-foreground: oklch(0.15 0.02 255);
-
-        --highlight: oklch(0.5564 0.2032 278.1);
-        --highlight-foreground: oklch(1 0 0);
-
-        --secondary: oklch(0.2939 0.0036 286.2);
-        --secondary-foreground: oklch(0.97 0.002 286);
-
-        --muted: oklch(0.27 0.004 286);
-        --muted-foreground: oklch(0.6217 0.0074 286.2);
-
-        --accent: oklch(0.3 0.07 278);
-        --accent-foreground: oklch(0.9 0.06 278);
-
-        --destructive: oklch(0.6633 0.2236 28.3);
-        --border: oklch(0.3802 0.005 286.2);
-        --input: oklch(0.3802 0.005 286.2);
-        --ring: oklch(0.669 0.1808 251.8);
-
-        --logo-plate: #ffffff;
-        --glass-highlight: oklch(1 0 0 / 12%);
-        --glass-shadow: oklch(0 0 0 / 80%);
-
+    :root:not([data-scheme='light']) {
         --grain-opacity: 0.06;
         --glow-strength: 0.16;
     }
 }
 
-/*
- * Manual scheme override for the dev-only preview switcher
- * (components/scheme-switcher.tsx). Absent `data-scheme`, everything above
- * still drives light/dark purely from `prefers-color-scheme` — untouched.
- * The switcher writes `data-scheme` ('light' | 'dark') on <html> when set to
- * anything but System; System removes the attribute and control reverts to
- * the OS. A one-attribute selector here still outranks the bare `:root`
- * light block by source order, and outranks the `@media
- * (prefers-color-scheme: dark)` block above by specificity regardless of the
- * real OS setting.
- *
- * Known gap, acceptable because this is dev-only: it does not compose with
- * `prefers-contrast: more` below, which raises --hairline / --muted-foreground
- * at lower specificity and would lose to a forced scheme. Never an issue in
- * the shipped site, which will not carry `data-scheme` at all.
- */
-
-/* Force light, regardless of the OS setting. */
-:root[data-scheme='light'] {
-    --radius: 0.875rem;
-    color-scheme: light;
-    --background: oklch(0.9707 0.0027 286.4);
-    --foreground: oklch(0.2316 0.0038 286.1);
-
-    --surface: oklch(1 0 0);
-    --surface-strong: oklch(0.955 0.003 286.3);
-    --hairline: oklch(0.8652 0.0068 286.3);
-
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.2316 0.0038 286.1);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.2316 0.0038 286.1);
-
-    --primary: oklch(0.6028 0.2177 257.4);
-    --primary-foreground: oklch(1 0 0);
-
-    --highlight: oklch(0.5295 0.191 278.3);
-    --highlight-foreground: oklch(1 0 0);
-
-    --secondary: oklch(0.955 0.003 286.3);
-    --secondary-foreground: oklch(0.2316 0.0038 286.1);
-
-    --muted: oklch(0.96 0.003 286.3);
-    --muted-foreground: oklch(0.5399 0.0077 286.1);
-
-    --accent: oklch(0.95 0.025 130);
-    --accent-foreground: oklch(0.34 0.06 135);
-
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.91 0.01 68);
-    --input: oklch(0.91 0.01 68);
-    --ring: oklch(0.63 0.2 40);
-
-    --logo-plate: #ffffff;
-    --glass-highlight: oklch(1 0 0 / 55%);
-    --glass-shadow: oklch(0 0 0 / 45%);
-
-    --grain-opacity: 0.035;
-    --glow-strength: 0.1;
+/* Roles that are the same in every theme, derived from each theme's own. */
+:root,
+[data-theme] {
+    --card: var(--surface);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface);
+    --popover-foreground: var(--foreground);
+    --secondary: var(--surface-strong);
+    --secondary-foreground: var(--foreground);
+    --muted: var(--surface-strong);
+    --border: var(--hairline);
+    --input: var(--hairline);
+    --ring: var(--primary);
 }
 
-/* Force dark, regardless of the OS setting. */
-:root[data-scheme='dark'] {
-    color-scheme: dark;
-    --background: oklch(0 0 0);
-    --foreground: oklch(0.97 0.002 286);
+/* SIGNAL — the default. */
+:root,
+[data-theme='signal'] {
+    --background: light-dark(oklch(0.965 0.008 85), oklch(0.2 0.008 60));
+    --foreground: light-dark(oklch(0.2 0.012 60), oklch(0.94 0.012 85));
 
-    --surface: oklch(0.2316 0.0038 286.1);
-    --surface-strong: oklch(0.2939 0.0036 286.2);
-    --hairline: oklch(0.3802 0.005 286.2);
+    --surface: light-dark(oklch(0.99 0.005 85), oklch(0.25 0.009 60));
+    --surface-strong: light-dark(oklch(0.925 0.011 80), oklch(0.3 0.01 60));
+    --hairline: light-dark(oklch(0.855 0.013 75), oklch(0.38 0.012 60));
+    --muted-foreground: light-dark(oklch(0.5 0.015 65), oklch(0.72 0.015 75));
 
-    --card: oklch(0.2316 0.0038 286.1);
-    --card-foreground: oklch(0.97 0.002 286);
-    --popover: oklch(0.2316 0.0038 286.1);
-    --popover-foreground: oklch(0.97 0.002 286);
+    --primary: light-dark(oklch(0.57 0.2 33), oklch(0.7 0.19 38));
+    --primary-foreground: light-dark(oklch(0.99 0.005 85), oklch(0.18 0.02 40));
 
-    --primary: oklch(0.669 0.1808 251.8);
-    --primary-foreground: oklch(0.15 0.02 255);
+    --highlight: light-dark(oklch(0.53 0.11 80), oklch(0.82 0.13 86));
+    --highlight-foreground: light-dark(
+        oklch(0.99 0.005 85),
+        oklch(0.22 0.02 80)
+    );
 
-    --highlight: oklch(0.5564 0.2032 278.1);
-    --highlight-foreground: oklch(1 0 0);
+    --accent: light-dark(oklch(0.93 0.035 40), oklch(0.32 0.05 40));
+    --accent-foreground: light-dark(oklch(0.42 0.13 35), oklch(0.9 0.05 45));
 
-    --secondary: oklch(0.2939 0.0036 286.2);
-    --secondary-foreground: oklch(0.97 0.002 286);
+    --glass-highlight: light-dark(oklch(1 0 0 / 60%), oklch(1 0 0 / 10%));
+    --glass-shadow: light-dark(oklch(0.3 0.03 50 / 30%), oklch(0 0 0 / 60%));
+}
 
-    --muted: oklch(0.27 0.004 286);
-    --muted-foreground: oklch(0.6217 0.0074 286.2);
+/* TIDE */
+[data-theme='tide'] {
+    --background: light-dark(oklch(0.96 0.01 200), oklch(0.21 0.025 225));
+    --foreground: light-dark(oklch(0.23 0.03 220), oklch(0.94 0.012 190));
 
-    --accent: oklch(0.3 0.07 278);
-    --accent-foreground: oklch(0.9 0.06 278);
+    --surface: light-dark(oklch(0.99 0.005 200), oklch(0.26 0.028 222));
+    --surface-strong: light-dark(oklch(0.925 0.016 200), oklch(0.31 0.03 220));
+    --hairline: light-dark(oklch(0.85 0.022 205), oklch(0.39 0.032 218));
+    --muted-foreground: light-dark(oklch(0.5 0.025 215), oklch(0.72 0.03 205));
 
-    --destructive: oklch(0.6633 0.2236 28.3);
-    --border: oklch(0.3802 0.005 286.2);
-    --input: oklch(0.3802 0.005 286.2);
-    --ring: oklch(0.669 0.1808 251.8);
+    --primary: light-dark(oklch(0.5 0.1 200), oklch(0.8 0.12 195));
+    --primary-foreground: light-dark(
+        oklch(0.99 0.005 200),
+        oklch(0.19 0.03 220)
+    );
 
-    --logo-plate: #ffffff;
-    --glass-highlight: oklch(1 0 0 / 12%);
-    --glass-shadow: oklch(0 0 0 / 80%);
+    --highlight: light-dark(oklch(0.56 0.12 50), oklch(0.8 0.1 65));
+    --highlight-foreground: light-dark(
+        oklch(0.99 0.005 200),
+        oklch(0.21 0.03 60)
+    );
 
-    --grain-opacity: 0.06;
-    --glow-strength: 0.16;
+    --accent: light-dark(oklch(0.93 0.03 200), oklch(0.33 0.05 210));
+    --accent-foreground: light-dark(oklch(0.38 0.07 210), oklch(0.9 0.05 195));
+
+    --glass-highlight: light-dark(oklch(1 0 0 / 60%), oklch(1 0 0 / 10%));
+    --glass-shadow: light-dark(oklch(0.3 0.04 220 / 30%), oklch(0 0 0 / 60%));
+}
+
+/* APPLE — the palette the site had before the themes. */
+[data-theme='apple'] {
+    --background: light-dark(oklch(0.9707 0.0027 286.4), oklch(0 0 0));
+    --foreground: light-dark(oklch(0.2316 0.0038 286.1), oklch(0.97 0.002 286));
+
+    --surface: light-dark(oklch(1 0 0), oklch(0.2316 0.0038 286.1));
+    --surface-strong: light-dark(
+        oklch(0.955 0.003 286.3),
+        oklch(0.2939 0.0036 286.2)
+    );
+    --hairline: light-dark(
+        oklch(0.8652 0.0068 286.3),
+        oklch(0.3802 0.005 286.2)
+    );
+    --muted-foreground: light-dark(
+        oklch(0.5399 0.0077 286.1),
+        oklch(0.6217 0.0074 286.2)
+    );
+
+    --primary: light-dark(
+        oklch(0.6028 0.2177 257.4),
+        oklch(0.669 0.1808 251.8)
+    );
+    --primary-foreground: light-dark(oklch(1 0 0), oklch(0.15 0.02 255));
+
+    --highlight: light-dark(
+        oklch(0.5295 0.191 278.3),
+        oklch(0.5564 0.2032 278.1)
+    );
+    --highlight-foreground: light-dark(oklch(1 0 0), oklch(1 0 0));
+
+    --accent: light-dark(oklch(0.93 0.02 278), oklch(0.3 0.07 278));
+    --accent-foreground: light-dark(oklch(0.4 0.14 278), oklch(0.9 0.06 278));
+
+    --glass-highlight: light-dark(oklch(1 0 0 / 55%), oklch(1 0 0 / 12%));
+    --glass-shadow: light-dark(oklch(0 0 0 / 45%), oklch(0 0 0 / 80%));
+}
+
+/* MONO */
+[data-theme='mono'] {
+    --background: light-dark(oklch(0.97 0 0), oklch(0.15 0 0));
+    --foreground: light-dark(oklch(0.16 0 0), oklch(0.96 0 0));
+
+    --surface: light-dark(oklch(1 0 0), oklch(0.2 0 0));
+    --surface-strong: light-dark(oklch(0.93 0 0), oklch(0.25 0 0));
+    --hairline: light-dark(oklch(0.86 0 0), oklch(0.33 0 0));
+    --muted-foreground: light-dark(oklch(0.48 0 0), oklch(0.7 0 0));
+
+    --primary: light-dark(oklch(0.16 0 0), oklch(0.96 0 0));
+    --primary-foreground: light-dark(oklch(0.98 0 0), oklch(0.15 0 0));
+
+    --highlight: light-dark(oklch(0.45 0 0), oklch(0.72 0 0));
+    --highlight-foreground: light-dark(oklch(0.98 0 0), oklch(0.15 0 0));
+
+    --accent: light-dark(oklch(0.93 0 0), oklch(0.27 0 0));
+    --accent-foreground: light-dark(oklch(0.25 0 0), oklch(0.92 0 0));
+
+    --glass-highlight: light-dark(oklch(1 0 0 / 60%), oklch(1 0 0 / 10%));
+    --glass-shadow: light-dark(oklch(0 0 0 / 30%), oklch(0 0 0 / 60%));
 }
 
 @layer base {
@@ -1216,9 +1208,8 @@
 @media (prefers-contrast: more) {
     /*
      * Mixed from the palette's own tokens rather than written as literals, so
-     * this stays correct in both schemes. Does not outrank the dev-only
-     * `[data-scheme]` override blocks above (same known gap documented
-     * there) — never an issue in the shipped site.
+     * this stays correct in every theme and both schemes. Declared after the
+     * theme blocks at the same specificity, which is what lets it win.
      */
     :root {
         --hairline: color-mix(

@@ -40,12 +40,12 @@ Perf: consolidate badge mousemove listeners
 
 - Tailwind v4 — the theme lives in `app/globals.css` as `@theme` variables.
   There is no `tailwind.config.js`.
-- **Theme follows the OS and there is no toggle in the shipped site.** Tokens
-  are declared on `:root` and re-declared inside
-  `@media (prefers-color-scheme: dark)`. No `.dark` class, no theme provider.
-  Do not add a `dark:` variant to a component: add the token to both blocks
-  instead. The one piece of JS is the dev-only scheme switcher — see the design
-  system below.
+- **Light and dark follow the OS by default.** Every colour token is a
+  `light-dark()` pair, chosen by `color-scheme`. No `.dark` class, no theme
+  provider. Do not add a `dark:` variant to a component: give the token both
+  values instead. Four colour themes exist, Signal is the default, and the
+  floating switcher can pin a theme and a scheme — see the design system
+  below.
 - **Every displayed string lives in `messages/en.json`**, and `lib/site.ts`
   holds the structure it hangs off — see below. Sections are presentational;
   edit copy in the messages file, not in JSX.
@@ -220,39 +220,72 @@ as single-accent before.
 by them — the subtle hover-background pair — but are tinted from the highlight
 hue so generated components feel like the palette.
 
-**The palette is Apple's**, chosen out of four candidates that were live for a
-while. It uses Apple's own published values rather than invented ones:
-apple.com's page grey and ink for the neutrals (`#F5F5F7` / `#1D1D1F`), true
-black (`#000000`) for the dark background exactly as apple.com's own dark mode
-uses it, `systemBlue` for `primary` and `systemIndigo` for `highlight`. Light
-and dark each use Apple's own light/dark variant of each colour (`#007AFF` →
-`#2997FF`, `#5856D6` → `#5E5CE6`) rather than one value re-lit
-programmatically.
+**Four themes, and Signal ships.** Each is a full palette for both schemes:
 
-It is declared as a full light block on bare `:root` plus a full dark block
-inside `prefers-color-scheme: dark` — every token in both, since a partial
-block would inherit across schemes.
+| Theme    | Character                                                                          |
+| -------- | ---------------------------------------------------------------------------------- |
+| `signal` | warm paper and ink, vermilion `primary`, mustard ochre `highlight` — the default   |
+| `tide`   | deep petrol teal `primary` against copper and sand                                 |
+| `apple`  | the palette the site had before: apple.com's greys, systemBlue, systemIndigo       |
+| `mono`   | no hue: ink on paper, and `primary` is simply the strongest contrast there is      |
 
-**Dev-only: `data-scheme` pins light or dark.** `components/scheme-switcher.tsx`
-is a floating three-way control (System / Light / Dark) that writes
-`data-scheme` on `<html>` and mirrors it to `localStorage`; a `next/script`
-with `strategy="beforeInteractive"` replays it before first paint so there is
-no flash. It has to be `next/script` — React 19 errors on a bare `<script>`
+Signal replaced Apple as the shipped palette because blue and indigo on white
+or true black read as the default of every generated site. Apple stays as a
+theme with its original values untouched. A green terminal theme was tried and
+removed.
+
+**Signal sits on bare `:root`**, so the shipped site needs no attribute to have
+it; the others are `[data-theme='…']` blocks. The selectors are deliberately
+`[data-theme]` rather than `:root[data-theme]`, so any element can wear a
+theme — the switcher's swatches do, which is how they show each theme's own
+background and primary without a colour being written out a second time.
+
+**Every colour is written once, as `light-dark(light, dark)`.** Which half
+applies is decided by `color-scheme`: `light dark` on `:root` follows the OS,
+and `[data-scheme]` pins one. So a theme is one block rather than a light block
+plus a dark block plus a copy of each for the dev override — the four
+duplicated palette blocks that used to exist are gone, and with them the gap
+where a forced scheme outranked `prefers-contrast: more`. Only non-colour
+values (`--grain-opacity`, `--glow-strength`) still need the media query, since
+`light-dark()` takes colours only.
+
+Two things are easy to get wrong here:
+
+- **A theme defines fourteen tokens, not all of them.** `background`,
+  `foreground`, `surface`, `surface-strong`, `hairline`, `muted-foreground`,
+  `primary` / `-foreground`, `highlight` / `-foreground`, `accent` /
+  `-foreground`, `glass-highlight` and `glass-shadow`. The shadcn roles that are
+  the same in every theme (`card`, `popover`, `secondary`, `muted`, `border`,
+  `input`, `ring`) are derived from those in one shared `:root, [data-theme]`
+  rule. Adding a token means adding it to every theme block.
+- **Lightning CSS rewrites `light-dark()`** into a `--lightningcss-light` /
+  `--lightningcss-dark` fallback for older Safari, driven by the `color-scheme`
+  declarations in the same file. That works — but it means `color-scheme` has
+  to stay declared in `globals.css`, not set from a component or inline style,
+  or the fallback never switches.
+
+New theme values were checked for contrast before landing: body text is 15–16:1
+on its background in every theme and scheme, and each accent against its
+foreground is at least 4.3:1. Hold a new theme to the same.
+
+**The switcher: `data-theme` and `data-scheme` on `<html>`.**
+`components/scheme-switcher.tsx` is a floating control with theme swatches and
+a three-way System / Light / Dark group. It writes both attributes on `<html>`
+and mirrors them to `localStorage` (`theme`, `scheme`); a `next/script` with
+`strategy="beforeInteractive"` replays them before first paint so there is no
+flash. It has to be `next/script` — React 19 errors on a bare `<script>`
 rendered inside a component — and `<html>` carries `suppressHydrationWarning`,
-since that attribute is set before React hydrates and legitimately differs from
-the server markup. `<html data-scheme>` is the source of truth and the
-component subscribes to it with `useSyncExternalStore` rather than holding its
-own copy — React Compiler rejects mutating a global from a component body, so
-the DOM write lives in a module-scope function.
+since those attributes are set before React hydrates and legitimately differ
+from the server markup. `<html>` is the source of truth and the component
+subscribes to it with `useSyncExternalStore` rather than holding its own copy —
+React Compiler rejects mutating a global from a component body, so the DOM
+write lives in a module-scope function. The theme ids live in `lib/scheme.ts`,
+and the bootstrap script lists the non-default ones by hand; add a theme in
+both.
 
-**System is what ships**, and it removes the attribute entirely rather than
-pinning the OS's current value — so the shipped site still follows the OS with
-no toggle, which is the rule everything here is built on. The two
-`:root[data-scheme='…']` blocks at the bottom of `globals.css` exist purely so
-a change can be checked in both schemes without touching the OS setting; they
-outrank the `prefers-color-scheme` block by specificity, and they knowingly
-also outrank the `prefers-contrast: more` block, which is fine because they
-never reach production.
+**The defaults remove their attribute.** Signal and System do not write
+`data-theme="signal"` or `data-scheme="system"`; they delete the attribute, so
+choosing them collapses back to exactly what ships — Signal, following the OS.
 
 shadcn's semantic tokens (`background`, `foreground`, `card`, `primary`,
 `muted`, `border`, ...) plus ours: `surface`, `surface-strong`, `hairline`,
@@ -260,11 +293,12 @@ shadcn's semantic tokens (`background`, `foreground`, `card`, `primary`,
 `glass-shadow`. Everything is OKLCH.
 
 **The unavoidable exceptions are metadata**, which is emitted as tags and JSON
-rather than CSS and so cannot read a custom property. Four hex literals mirror
-`--background` by hand and change together: the light and dark pair in
-`themeColor` in `app/layout.tsx`, and `background_color` / `theme_color` in
-`app/manifest.ts` (dark, since that is what a launcher shows behind the icon).
-The brand blue is written out a fifth time in `app/icon.svg` — see the icons
+rather than CSS and so cannot read a custom property — and it follows Signal,
+since that is what ships. Four hex literals mirror Signal's `--background` by
+hand and change together: the light and dark pair in `themeColor` in
+`app/layout.tsx`, and `background_color` / `theme_color` in `app/manifest.ts`
+(dark, since that is what a launcher shows behind the icon). Signal's vermilion
+is written out again in `app/icon.svg` and baked into `og.png` — see the icons
 section below.
 
 **Type.** Three faces, each with one job:
@@ -685,11 +719,16 @@ Everything else is derived from that one file: `rsvg-convert` for the PNGs,
 rounded rect removed, because iOS applies its own mask and would otherwise
 round an already-rounded corner.
 
-`public/images/og.png` is a real 1200×630 landscape card built the same way —
-outlines, not text — reproducing the hero: the eyebrow, the name in Bold with
-the accent caret beside it, the tagline, the domain. It replaced
+`public/images/og.png` is a real 1200×630 landscape card reproducing the hero
+in Signal's dark palette: the eyebrow, the name in Bold with the vermilion caret
+beside it, the tagline, the domain, over a faint vermilion glow. Unlike the
+favicon it can use `<text>`: it is rasterised here with `rsvg-convert` against
+the installed JetBrains Mono, and only the PNG ships. It replaced
 `portrait.png`, which is square, 600px, and was declared in the metadata as
 1200×1200; every platform cropped it.
+
+**All of these follow Signal.** They are images and cannot switch theme, so
+when the shipped theme's vermilion or background changes, regenerate them.
 
 **A logo is not a favicon.** Check any change at 16px before keeping it —
 `magick montage` at 16/32/48 on a light ground is enough. Two letters is

@@ -330,6 +330,13 @@
 
     "dev": {
         "schemeLabel": "Preview scheme",
+        "themeLabel": "Preview theme",
+        "themes": {
+            "signal": "Signal",
+            "tide": "Tide",
+            "apple": "Apple",
+            "mono": "Mono"
+        },
         "schemes": {
             "system": "System",
             "light": "Light",
