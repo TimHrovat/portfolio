@@ -32,11 +32,11 @@ export default function Section({
         <section
             id={id}
             className={cn(
-                'mx-auto w-full max-w-5xl scroll-mt-28 px-6 py-24 md:py-32',
+                'mx-auto w-full max-w-5xl scroll-mt-28 px-6 py-16 md:py-20',
                 className,
             )}
         >
-            <Reveal className="mb-12 flex flex-col items-center text-center md:mb-16">
+            <Reveal className="mb-8 flex flex-col items-center text-center md:mb-12">
                 <p className="eyebrow flex items-center gap-3">
                     <span className="bg-highlight h-px w-8" aria-hidden />
                     {eyebrow}

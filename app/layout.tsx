@@ -94,10 +94,10 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
     const locale = await getLocale();
-    // Only the namespaces the client components actually read: the nav, the
-    // technology chips, the highlights toggle's siblings and the dev switcher.
-    // The CV copy — every role, project and school — stays on the server.
-    const { nav, person, stack, dev } = await getMessages();
+    // Only the namespaces the client components actually read: the nav and
+    // the dev switcher. The CV copy — every role, project and school — stays
+    // on the server.
+    const { nav, person, dev } = await getMessages();
 
     return (
         <html
@@ -123,7 +123,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
                 </noscript>
             </head>
             <body className="grain">
-                <NextIntlClientProvider messages={{ nav, person, stack, dev }}>
+                <NextIntlClientProvider messages={{ nav, person, dev }}>
                     {children}
                 </NextIntlClientProvider>
                 <StructuredData />

@@ -85,7 +85,7 @@
  * Two accent roles, not one. `primary` carries action and attention (buttons,
  * the caret, active state, the trailing period). `highlight` is the second
  * colour and carries supporting emphasis (section rules, the "Now" marker,
- * chip proximity, contact icons, the closing wash).
+ * contact icons, the closing wash).
  *
  * APPLE — apple.com's own grey/black/white, systemBlue primary, systemIndigo
  * highlight. The brand palette, not an invented one.
@@ -644,6 +644,479 @@
         }
     }
 
+    /*
+     * Work switcher (components/work-switcher.tsx). The marker is the nav
+     * indicator's technique in two dimensions: one element, positioned by
+     * `--tab-*`, armed with `data-ready` after its first placement.
+     */
+    .tab-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--tab-w, 0);
+        height: var(--tab-h, 0);
+        border-radius: var(--radius-lg);
+        background-color: var(--secondary);
+        box-shadow: inset 0 0 0 1px
+            color-mix(in oklab, var(--foreground) 8%, transparent);
+        opacity: 0;
+        transform: translate3d(var(--tab-x, 0px), var(--tab-y, 0px), 0);
+        pointer-events: none;
+    }
+
+    .tab-indicator[data-ready='true'] {
+        transition:
+            transform 450ms var(--ease-settle),
+            width 450ms var(--ease-settle),
+            height 450ms var(--ease-settle),
+            opacity 250ms linear;
+    }
+
+    .tab-indicator[data-shown='true'] {
+        opacity: 1;
+    }
+
+    /* Every panel is mounted; only the active one is laid out. */
+    .work-panel[data-state='inactive'] {
+        display: none;
+    }
+
+    /* The container's height is written by the switcher. The padding, pulled
+       back out with negative margins, is room for focus rings and the
+       highlights panel's shadow, which the clip would otherwise cut. */
+    .work-panels {
+        overflow: hidden;
+        margin: -0.75rem -0.75rem -2rem;
+        padding: 0.75rem 0.75rem 2rem;
+    }
+
+    .work-panels[data-ready='true'] {
+        transition: height 450ms var(--ease-settle);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .work-panels[data-ready='true'] .work-panel[data-state='active'] {
+            animation: panel-in 450ms var(--ease-settle) both;
+        }
+
+        .work-panels[data-ready='true'][data-direction='back']
+            .work-panel[data-state='active'] {
+            animation-name: panel-in-back;
+        }
+    }
+
+    @keyframes panel-in {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 0.75rem, 0);
+        }
+    }
+
+    @keyframes panel-in-back {
+        from {
+            opacity: 0;
+            transform: translate3d(0, -0.75rem, 0);
+        }
+    }
+
+    /*
+     * Stack strip (components/stack-strip.tsx). The track holds the list and
+     * a copy of it, so moving by half its width lands the copy exactly where
+     * the original started.
+     */
+    .marquee {
+        overflow: hidden;
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 3rem,
+            #000 calc(100% - 3rem),
+            transparent
+        );
+    }
+
+    .marquee-track {
+        display: flex;
+        width: max-content;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .marquee-track {
+            animation: marquee var(--marquee-duration, 60s) linear infinite
+                var(--marquee-direction, normal);
+        }
+
+        .marquee:hover .marquee-track {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes marquee {
+        to {
+            transform: translate3d(-50%, 0, 0);
+        }
+    }
+
+    /*
+     * The projects row on phones. The bar under it is a scroll-driven
+     * animation on the row's own horizontal scroll, so it needs no listener.
+     * `timeline-scope` lifts the row's named timeline to the wrapper, since a
+     * named timeline is otherwise only visible inside the element that
+     * scrolls. Engines without scroll timelines do not show the bar at all.
+     */
+    .projects-carousel {
+        timeline-scope: --projects;
+    }
+
+    .projects-carousel > ul {
+        scroll-timeline: --projects inline;
+    }
+
+    .projects-progress {
+        display: none;
+        height: 3px;
+        overflow: hidden;
+        border-radius: 9999px;
+        background-color: var(--hairline);
+    }
+
+    .projects-progress > span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background-color: var(--primary);
+        transform-origin: left;
+    }
+
+    @supports (animation-timeline: scroll()) {
+        .projects-progress {
+            display: block;
+        }
+
+        .projects-progress > span {
+            animation: progress-fill linear both;
+            animation-timeline: --projects;
+        }
+    }
+
+    @keyframes progress-fill {
+        from {
+            transform: scaleX(0.2);
+        }
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /*
+     * Project previews (components/project-preview.tsx). Every base style
+     * below is the scene's finished frame; the keyframes are attached only
+     * when motion is welcome. Each loop staggers its pieces with `--step` and
+     * leaves enough idle time at the end of its period that the stagger never
+     * overlaps the next pass.
+     */
+    .wordle-tile {
+        display: grid;
+        place-items: center;
+        width: 1.625rem;
+        height: 1.625rem;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+        background-color: var(--surface-strong);
+        color: var(--muted-foreground);
+    }
+
+    .wordle-tile[data-state='present'] {
+        background-color: var(--highlight);
+        color: var(--highlight-foreground);
+    }
+
+    .wordle-tile[data-state='correct'] {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .attention-peak {
+        position: absolute;
+        width: 0.5rem;
+        height: 0.5rem;
+        margin: -0.25rem 0 0 -0.25rem;
+        border-radius: 9999px;
+        background-color: var(--highlight);
+        box-shadow: 0 0 0 4px
+            color-mix(in oklab, var(--highlight) 25%, transparent);
+    }
+
+    .timetable-lesson {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-color: color-mix(in oklab, var(--primary) 55%, transparent);
+    }
+
+    .timetable-lesson[data-subject='2'] {
+        background-color: color-mix(
+            in oklab,
+            var(--highlight) 60%,
+            transparent
+        );
+    }
+
+    .timetable-lesson[data-subject='3'] {
+        background-color: color-mix(in oklab, var(--primary) 22%, transparent);
+    }
+
+    /* Both strips are one period wider than the scene and slide back by
+       exactly that period, so the pattern repeats without a seam. */
+    .scroller-ground {
+        left: 0;
+        width: calc(100% + 1.5rem);
+        border-top: 2px solid
+            color-mix(in oklab, var(--primary) 60%, transparent);
+        background-image: repeating-linear-gradient(
+            90deg,
+            var(--surface-strong) 0 1.375rem,
+            var(--hairline) 1.375rem 1.5rem
+        );
+    }
+
+    .scroller-coins {
+        left: 0;
+        width: calc(100% + 3rem);
+        background-image: radial-gradient(
+            circle at 0.375rem 50%,
+            var(--highlight) 0.25rem,
+            transparent 0.3rem
+        );
+        background-size: 3rem 100%;
+    }
+
+    .scroller-sprite {
+        transform: translate3d(0, -1.5rem, 0);
+    }
+
+    .signin-button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in oklab, var(--primary-foreground) 35%, transparent),
+            transparent
+        );
+        transform: translate3d(-100%, 0, 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .wordle-tile {
+            animation: wordle-flip 9s var(--ease-settle)
+                calc(var(--step) * 150ms) infinite both;
+        }
+
+        /* Uncovered left to right with a clip rather than a stroke dash:
+           the plot is stretched to the scene's width, and a clip does not
+           care how long the line turns out to be. */
+        .attention-plot {
+            animation: attention-draw 6s cubic-bezier(0.45, 0, 0.55, 1) infinite
+                both;
+        }
+
+        .attention-area {
+            animation: attention-fill 6s linear infinite both;
+        }
+
+        .attention-peak {
+            animation: attention-peak 6s var(--ease-settle)
+                calc(var(--step) * 250ms) infinite both;
+        }
+
+        .timetable-lesson {
+            animation: timetable-fill 6s var(--ease-settle)
+                calc(var(--step) * 110ms) infinite both;
+        }
+
+        .scroller-ground {
+            animation: scroll-by-tile 300ms linear infinite;
+        }
+
+        .scroller-coins {
+            animation: scroll-by-coin 600ms linear infinite;
+        }
+
+        .scroller-sprite {
+            animation: scroller-jump 1.4s infinite both;
+        }
+
+        .signin-methods {
+            animation: signin-cycle 7.5s var(--ease-settle) infinite both;
+        }
+
+        .signin-button::after {
+            animation: signin-sheen 1.5s var(--ease-settle) infinite both;
+        }
+
+        /* Declared last and one class more specific than every rule above,
+           so it wins over their `animation` shorthands. */
+        .scene[data-playing='false'] *,
+        .scene[data-playing='false'] *::after {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes wordle-flip {
+        0% {
+            opacity: 0;
+            transform: perspective(12rem) rotateX(90deg);
+        }
+        6%,
+        80% {
+            opacity: 1;
+            transform: perspective(12rem) rotateX(0);
+        }
+        86%,
+        100% {
+            opacity: 0;
+            transform: perspective(12rem) rotateX(-90deg);
+        }
+    }
+
+    @keyframes attention-draw {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+        }
+        40%,
+        85% {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+        }
+        95%,
+        100% {
+            clip-path: inset(0 0 0 0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes attention-fill {
+        0%,
+        30% {
+            opacity: 0;
+        }
+        50%,
+        85% {
+            opacity: 1;
+        }
+        95%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes attention-peak {
+        0%,
+        42% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        50%,
+        85% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        95%,
+        100% {
+            opacity: 0;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes timetable-fill {
+        0% {
+            opacity: 0;
+            transform: scale(0.4);
+        }
+        8%,
+        78% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        86%,
+        100% {
+            opacity: 0;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes scroll-by-tile {
+        to {
+            transform: translate3d(-1.5rem, 0, 0);
+        }
+    }
+
+    @keyframes scroll-by-coin {
+        to {
+            transform: translate3d(-3rem, 0, 0);
+        }
+    }
+
+    /* Up fast and easing out, down accelerating: a jump, not a bounce. */
+    @keyframes scroller-jump {
+        0%,
+        40% {
+            transform: translate3d(0, 0, 0);
+            animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+        }
+        70% {
+            transform: translate3d(0, -2.5rem, 0);
+            animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.3);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    /* Six rows — five methods and the first again — so each stop is a sixth
+       of the list's own height, and the last stop looks exactly like the
+       first one the loop jumps back to. */
+    @keyframes signin-cycle {
+        0%,
+        16% {
+            transform: translate3d(0, 0, 0);
+        }
+        20%,
+        36% {
+            transform: translate3d(0, calc(-100% / 6), 0);
+        }
+        40%,
+        56% {
+            transform: translate3d(0, calc(-200% / 6), 0);
+        }
+        60%,
+        76% {
+            transform: translate3d(0, calc(-300% / 6), 0);
+        }
+        80%,
+        96% {
+            transform: translate3d(0, calc(-400% / 6), 0);
+        }
+        100% {
+            transform: translate3d(0, calc(-500% / 6), 0);
+        }
+    }
+
+    @keyframes signin-sheen {
+        0%,
+        50% {
+            transform: translate3d(-100%, 0, 0);
+        }
+        100% {
+            transform: translate3d(100%, 0, 0);
+        }
+    }
+
     /* Scroll reveal. Starts hidden only once JS has claimed the element, so
        the content stays visible if the script never runs. */
     .reveal {
@@ -687,8 +1160,29 @@
 
     /* The nav indicator is the one element whose whole job is to travel. With
        reduced motion it cross-fades in place instead. */
-    .nav-indicator {
+    .nav-indicator,
+    .tab-indicator[data-ready='true'] {
         transition: opacity 0.2s ease;
+    }
+
+    /* The strip stops, so its copy goes and the chips wrap in place rather
+       than being cut off at the tile's edge. */
+    .marquee {
+        mask-image: none;
+        padding-inline: 1.75rem;
+    }
+
+    .marquee-track {
+        width: auto;
+    }
+
+    .marquee-track > ul {
+        flex-wrap: wrap;
+        padding-right: 0;
+    }
+
+    .marquee-copy {
+        display: none;
     }
 
     *,

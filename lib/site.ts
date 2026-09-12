@@ -77,6 +77,9 @@ export type Role = {
 export type RoleCopy = {
     title: string;
     company: string;
+    /** The employer in a word, for the Work tabs on a phone, where the full
+     *  legal name does not fit a half-width tab. */
+    short: string;
     /** Display labels. The machine-readable dates are `start` / `end` above. */
     from: string;
     to: string;
@@ -274,7 +277,5 @@ export type NavigationItem = {
 export const navigation: NavigationItem[] = [
     { id: 'about', href: '#about' },
     { id: 'work', href: '#work' },
-    { id: 'education', href: '#education' },
-    { id: 'stack', href: '#stack' },
     { id: 'projects', href: '#projects' },
 ];

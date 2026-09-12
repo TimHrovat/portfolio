@@ -33,8 +33,6 @@
         "links": {
             "about": "About",
             "work": "Work",
-            "education": "Education",
-            "stack": "Stack",
             "projects": "Projects"
         },
         "menu": {
@@ -63,6 +61,7 @@
 
     "work": {
         "eyebrow": "Experience",
+        "switcherLabel": "Roles",
         "title": "Where I’ve worked",
         "ongoing": "Now",
         "highlightsExpand": "Show {count} more",
@@ -71,6 +70,7 @@
             "easistent": {
                 "title": "Software Developer",
                 "company": "eŠola d.o.o. (eAsistent)",
+                "short": "eAsistent",
                 "from": "Dec 2022",
                 "to": "Present",
                 "description": [
@@ -161,6 +161,7 @@
             "phosphorland": {
                 "title": "Software Development Intern",
                 "company": "Phosphorland",
+                "short": "Phosphorland",
                 "from": "May 2022",
                 "to": "Jun 2022",
                 "description": [
@@ -171,6 +172,7 @@
             "hella": {
                 "title": "Engineering Intern",
                 "company": "Hella Saturnus Slovenia",
+                "short": "Hella",
                 "from": "Aug 2021",
                 "to": "Aug 2021",
                 "description": [
@@ -206,7 +208,6 @@
 
     "education": {
         "eyebrow": "Education",
-        "title": "Where I’ve studied",
         "schools": {
             "fri": {
                 "school": "FRI UNI Ljubljana",
@@ -235,9 +236,7 @@
 
     "stack": {
         "eyebrow": "Stack",
-        "title": "Tools I reach for",
         "listLabel": "Technologies",
-        "more": "and more…",
         "technologies": {
             "typescript": "TypeScript",
             "javascript": "JavaScript",
@@ -281,7 +280,8 @@
             "easistentLanding": {
                 "name": "eAsistent landing page",
                 "summary": "The public face of eAsistent, built end to end, and the sign-in behind it: two-factor, YubiKey, QR-code login from a signed-in phone, PIN and CAPTCHA. That is a lot of ways in, for an audience that ranges from teachers to parents to a fourteen-year-old on a school laptop.",
-                "stack": ["PHP", "Laravel", "Vue"]
+                "stack": ["PHP", "Laravel", "Vue"],
+                "demo": ["Password", "Two-factor", "YubiKey", "QR code", "PIN"]
             },
             "mediaAttention": {
                 "name": "Media Attention Analyzer",
@@ -296,7 +296,8 @@
             "wordleEngine": {
                 "name": "Wordle Engine",
                 "summary": "A solver that plays Wordle against a 15,964-word dictionary, averaging 4.1 guesses and solving every word in the list. Written in Java with its own test harness to score it over the whole dictionary.",
-                "stack": ["Java"]
+                "stack": ["Java"],
+                "demo": ["CRANE", "SLOTH", "SHORT"]
             },
             "uplearn": {
                 "name": "UpLearn",

@@ -92,7 +92,7 @@ therefore two edits: the copy in `en.json`, the links and assets in `site.ts`.
 client ones, `t.raw` for the arrays (a role's paragraphs, a project's stack).
 Three habits are worth keeping:
 
-- **Read a whole object when its fields are optional.** `Timeline` takes each
+- **Read a whole object when its fields are optional.** `Experience` takes each
   role's copy from `getMessages()` as a `RoleCopy` (and `OtherRoles` its own
   `OtherRoleCopy`), because `highlights` and `stack` are there for some roles
   and not others — and a per-key lookup cannot
@@ -102,7 +102,7 @@ Three habits are worth keeping:
   sentence, or use a colon where it introduces a list, the way Phosphorland's
   entry does. Comments and this file are prose for whoever is working on the
   site and are not covered. An en dash stays where it is a range, which is
-  what `{copy.from} – {copy.to}` is in `Timeline` and `OtherRoles`.
+  what `{copy.from} – {copy.to}` is in `Experience` and `OtherRoles`.
 - **Markup inside a sentence is a tag, not a split string.** Contact's heading
   is `"Let’s build something <accent>together</accent>."` and `t.rich` supplies
   the span. Never cut a sentence into fragments around JSX.
@@ -112,15 +112,15 @@ Three habits are worth keeping:
   punctuation.
 
 **What stays on the client.** `app/layout.tsx` hands `NextIntlClientProvider`
-only the namespaces the client components read — `nav`, `person`, `stack`,
-`dev`. The CV copy never reaches the browser as messages. That is also why
-`RoleHighlights` takes its toggle label as a prop and `Drawer` takes a
-`closeLabel`: both are client components, and a prop keeps a whole namespace
-out of the bundle.
+only the namespaces the client components read — `nav`, `person`, `dev`. The CV
+copy never reaches the browser as messages. That is also why `RoleHighlights`
+takes its toggle label as a prop, `Drawer` takes a `closeLabel`, and
+`WorkSwitcher` takes its tabs and panels as rendered markup: all are client
+components, and a prop keeps a whole namespace out of the bundle.
 
 ## Technology icons
 
-The badges in `components/sections/technologies.tsx` are driven by SVGs
+The chips in `components/stack-strip.tsx` are driven by SVGs
 in `public/images/technology-icons/`. Those files are **generated** — they are
 byte-for-byte copies of the `devicon` package and are overwritten on every sync,
 so never edit them by hand or drop a file in manually.
@@ -213,7 +213,7 @@ as single-accent before.
 | Role        | Used for                                                                                                                 |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `primary`   | buttons, hero caret, trailing periods, active nav, card hover, availability dot, hero glow                               |
-| `highlight` | section eyebrow rules, the `Badge accent` "Now" marker, chip proximity, contact icons and closing wash, project numerals |
+| `highlight` | section eyebrow rules, the `Badge accent` "Now" marker, contact icons and closing wash, preview accents |
 
 `--highlight` / `--highlight-foreground` are ours, alongside `surface` and
 `hairline`. shadcn's `--accent` / `--accent-foreground` stay what shadcn means
@@ -310,9 +310,8 @@ layers stay separate. `SiteNav` sets the attribute from `scrollY`.
 **Every card-like surface is that same material.** `Card glass`, which the
 project and education cards use, and `Badge variant="tech"` for the technology
 chips. Cards pin `data-elevated` on, since there is always something passing
-behind them; the chips turn `--glass-blur` down to 12px, because there are
-twenty-seven of them and a 20px blur on a 36px pill costs the same as one on a
-card without looking any different.
+behind them. The chips in the stack strip switch their blur off entirely —
+see About below.
 
 Two traps when putting `.glass` on a component. Its `border` lives in the
 components layer, so any `border-transparent` in a utility class beats it —
@@ -374,64 +373,119 @@ layer already handles globally.
 `prefers-contrast` all have handling in `globals.css`. Anything new that blurs,
 translates or animates has to work under all three.
 
-## Work and Education
+## Page structure
 
-`components/timeline.tsx` is the Work section: a vertical timeline, newest role
-at the top, one rail down the page's **centre** with the organisation's mark as
-each node and every entry centred on the same axis as the section headers and
-the About prose. A left-hand rail put the whole section off-axis against a page
-that is centred everywhere else.
+Five sections: the hero, About, Work, Projects and Contact. Education and Stack
+used to be sections of their own; they are tiles inside About now. The page was
+9.7 screens tall on a 1024×768 desktop and 12.1 on a phone, most of it one
+centred column after another, and it is about 6.7 and 7 now. Keep an eye on
+that number when adding anything: the easy way to make this page worse is to
+make it longer.
 
-The rail is a segment rendered above each node rather than one line behind the
-list, so it spans whatever height the entry above it needs without anything
-being measured.
+Section padding is `py-16 md:py-20` in `Section` (and a little more on
+Contact). It used to be twice that.
 
-**The job title leads.** It is the `h3`, in the display face; the employer is
-the smaller line under it, and the dates are mono metadata beside that. What
-the work was is the thing worth reading — who paid for it is context. The lane
-chart this replaced had that the other way round, and hid every description
-behind a hover popover.
+## About
 
-It is a plain server component. The previous version needed a client half for
-the follow-the-cursor popover and a mobile drawer; a vertical layout has room
-for the description inline, so all of that went.
+`components/sections/about.tsx` is one grid of glass tiles, six columns from
+`md` and one below: the portrait (full bleed, with the location on a glass pill
+over it) beside the intro, then Education across the full width, then Stack.
+`#education` and `#stack` stay on their tiles, so old links still land.
+
+The grid is `grid-cols-1` below `md`, **not** an implicit column. An implicit
+column is `auto`, and the stack strip's track is `max-content` wide — the
+column grows to fit it and the whole page scrolls sideways on a phone.
+`grid-cols-*` is `minmax(0, 1fr)`, which is what keeps the tiles to the screen.
+
+**Education** is three rows in one tile — the two schools and the certificate —
+side by side from `md`. Each row is **one link stretched over the whole row**
+with `after:absolute after:inset-0` on the name's anchor, rather than an
+overlay element with no accessible name of its own.
+
+**Stack** is `components/stack-strip.tsx`, a server component: the
+technologies alternated into two rows that drift in opposite directions. Each
+row is its list followed by an `aria-hidden` copy, and the track moves by
+exactly half its width, so the copy lands where the original started and the
+loop has no seam; each list carries a trailing padding equal to the gap, so the
+join is the same width as every other gap. It pauses on hover. Under reduced
+motion the copies go and the rows wrap in place.
+
+The chips there switch their own backdrop blur off (`backdrop-filter-none`).
+They sit on a tile that is already blurring, and a backdrop filter on a moving
+element is recomputed every frame — fifty-eight of them for no visible
+difference. This replaced a wall of chips with a daily shuffle and a
+pointer-proximity lift, neither of which suits chips that are moving.
+
+## Work
+
+`components/sections/experience.tsx` renders the section and
+`components/work-switcher.tsx` switches it: **one role at a time**, as Radix
+`Tabs`. The tabs are a column on the left from `md` up and a two-by-two grid
+of outlined cells above the panel below that, each a mark and the employer in a
+word (`short` in `RoleCopy`). **Not a row that scrolls sideways**: that was
+tried, and the other workplaces sat off the edge of the screen with nothing to
+say they were there. Four tabs fit a grid, so every one is visible and tappable
+without a gesture anyone has to discover. It replaced a vertical
+timeline down the page's centre that was nearly three screens on its own, most
+of it one role's detail.
+
+**The server renders everything; the client only switches.** Each tab and each
+panel arrives at `WorkSwitcher` as already-rendered markup in `items`, so the
+CV copy reaches the browser as HTML and never as messages. That is the same
+reason `RoleHighlights` takes its labels as props.
+
+Three details in the switcher are easy to break:
+
+- **Every panel is `forceMount`ed** and the inactive ones are hidden by
+  `.work-panel[data-state='inactive']`, so every role is in the HTML for
+  anything that reads the page. Radix would otherwise unmount them.
+- **The active marker is one element** (`.tab-indicator`), moved with
+  `transform` from offsets written as `--tab-*` — the nav indicator's
+  technique in two dimensions. Offsets inside the list rather than rects, so
+  it does not care where the page has been scrolled to. It is
+  armed with `data-ready` after its first placement so it does not slide in on
+  load.
+- **The panels' container animates its height, and it is the one measured
+  height on the page.** The eAsistent panel is several times taller than the
+  rest, so without it the section below jumps. A `ResizeObserver` on the active
+  panel writes the height, which also follows the highlights folding open. The
+  container carries padding pulled back with negative margins, room for focus
+  rings and the spec sheet's shadow that the clip would otherwise cut — and the
+  measured height adds that padding back (`+ 2.75rem`). Change one and change
+  the other.
+
+The incoming panel settles in from the direction of travel (`data-direction`),
+only after the first user choice, and only when motion is welcome. Radix gives
+arrow keys between tabs; the list is `orientation="vertical"` from `md`.
+
+**The job title leads**, in the tab and in the panel's `h3`; the employer is
+the line under it and the dates are mono metadata. What the work was is the
+thing worth reading — who paid for it is context.
 
 **Ordering is by `start`, descending.** `Role.start` / `Role.end` stay in
 `lib/site.ts` as `YYYY-MM` strings, so a string sort is a date sort and no
 `Date` is constructed anywhere. The dates as they _read_ (`from` / `to`) are
-copy and live in the messages file. `end: null` means ongoing and is what draws the `Badge accent` "Now"
-marker — on this CV the ongoing role also has the most recent start, so it
-lands on top without a special case. The order of the array in `lib/site.ts` is
-only for reading the file.
+copy. `end: null` means ongoing and is what draws the `Badge accent` "Now"
+marker — on this CV the ongoing role also has the most recent start, so it is
+the first tab and the one open on load without a special case.
 
-**Only engineering roles are on the rail.** `roles` and `otherRoles` in
-`lib/site.ts` are two lists rather than one list with a `kind` on it — the
-split is the whole distinction, so there is nothing left to decode and no
-legend to read. Every node's ring is accented now that they are all the same
-kind of thing.
-
-**The rest are a line each**, in `components/other-roles.tsx`: a hairline, the
-"Other work" eyebrow, then the title, the employer and the dates per row.
-Newest first, on the timeline's own `start` rule. No mark, no card and no
-description — a print shop and a support desk are part of the record, but a
-node each gave three side jobs the weight of three years of engineering.
-
-Their messages live under `work.other.roles` and carry four fields, not six:
-`OtherRoleCopy` has no `description`, because none is shown. The section lead
-still counts all six roles, which is what the section holds between the two.
+**Side jobs share the last tab.** `roles` and `otherRoles` in `lib/site.ts` are
+two lists rather than one with a `kind` on it. The rest are a line each in
+`components/other-roles.tsx` — title, then employer and dates — under an
+"Other work" tab. A print shop and a support desk are part of the record, but a
+tab each would give them the weight of three years of engineering. Their
+messages carry four fields, not six: `OtherRoleCopy` has no `description`.
 
 **Highlights mark the featured role**, and eAsistent is the only one that
 carries them. Every other role is a paragraph of `description` and nothing
 else. Both live in `work.roles.<id>` in the messages file, which is why
-`Timeline` reads a role's copy as a `RoleCopy` object rather than key by key.
+`Experience` reads a role's copy as a `RoleCopy` object rather than key by key.
 
 It is grouped, not flat: `{ label, items }`, rendered as a label column with
 its lines beside it, a spec sheet rather than a bullet list. Nine equal bullets
 are something to skim past; three named groups (_Built alone_, _Across the
 stack_, _Beyond the code_) are three things to remember. The labels use the
-`.eyebrow` style, and the lines sit left-aligned inside the centred panel,
-since they are too long to centre without the ragged edges reading as a
-mistake. Below `sm` the label stacks above its items.
+`.eyebrow` style. Below `sm` the label stacks above its items.
 
 **Every group is named from the start, and most of it is folded away.**
 `components/role-highlights.tsx` is the one client component here. It shows the
@@ -443,7 +497,7 @@ fourteen behind a shut pill meant nobody saw the best of it. Three details
 carry it.
 
 - **The preview count lives in `lib/highlights.ts`, not in the component.**
-  `Timeline` needs it too — the expand label carries how many entries are still
+  `Experience` needs it too — the expand label carries how many entries are still
   folded away, and that string is built on the server so the CV copy stays out
   of the client bundle. A `'use client'` module cannot supply it: the server
   gets a client reference in place of every export, so the constant arrives as
@@ -465,46 +519,62 @@ stacking a second translucent surface on the first muddies both, which the
 material rules above already warn about. The button is a footer row on the
 panel's own glass, separated by a hairline.
 
-**The featured role is scaled up in the dimensions that already exist** — a
-`size-14` mark instead of `size-12`, a `text-3xl` title instead of `text-2xl`,
-and its detail on the house glass material via `Card glass`. Weight of material
-is how this design system says "this one first", so there is no new colour, no
-ribbon and no badge beyond the "Now" marker every ongoing role gets. If a
+**The featured role carries no special styling of its own.** Its panel is
+simply the one with a glass spec sheet in it, which is weight enough. If a
 second role ever earns the treatment, it inherits all of it by gaining
-`highlights` — nothing here is keyed to the array position.
+`highlights` — nothing is keyed to the array position.
 
 Keep each line to a sentence or two. The moment one needs a paragraph it
 belongs in `description`, or in Projects as its own card — which is where the
 landing page went.
 
-**Education is its own section**, `components/sections/education.tsx`, between
-Work and Stack: the two schools as glass cards in a two-column grid, the
-certificate as a slimmer row underneath — a certificate is a point in time, not
-a programme, and should not be a third card pretending to be a school. School
-used to share the Work section's time axis, which made the point that most of
-the jobs ran alongside it, at the cost of a chart nobody needed to read that
-precisely.
-
-Each of those cards is **one link stretched over the whole surface** with
-`after:absolute after:inset-0` on the heading's anchor, rather than an overlay
-element with no accessible name of its own.
-
-**Logos.** `components/org-mark.tsx` renders the mark — the timeline's rail
-nodes and the education cards both use it — on a `--logo-plate` ground, because
-the logos are arbitrary colours and several are dark-on-transparent. It falls
-back to initials when an organisation has no usable logo — Simpliservers is the
-case that forced it, its site is gone — so a missing file degrades to something
+**Logos.** `components/org-mark.tsx` renders the mark — the Work tabs and the
+Education rows both use it — on a `--logo-plate` ground, because the logos are
+arbitrary colours and several are dark-on-transparent. It falls back to
+initials when an organisation has no usable logo — Simpliservers is the case
+that forced it, its site is gone — so a missing file degrades to something
 deliberate rather than a hole.
 
-**The nav collapses at `md`, not `sm`.** Five links plus the wordmark and the
-"Get in touch" button stopped fitting at `sm` when Education was added; below
-`md` they go into the drawer.
+**The nav has three links** — About, Work, Projects — and still collapses into
+the drawer below `md`.
 
-**Projects: the first entry is the headline** and spans the full width of the
-grid; the rest pair up underneath. `Project.source` is optional, and where the
-work is not public a "Closed source" badge takes the Source button's slot —
-the same position, the leading one — so every card's footer reads the same and
-the absence is a stated fact rather than one button fewer.
+## Projects
+
+**The first entry is the headline** and spans the full width of the grid, with
+its preview beside the copy so it gains no height; the rest pair up underneath
+with the preview on top. `Project.source` is optional, and where the work is not
+public a "Closed source" badge takes the Source button's slot — the same
+position, the leading one — so every card's footer reads the same and the
+absence is a stated fact rather than one button fewer.
+
+**Below `md` the cards are a swipeable row**, not a stack: `snap-x` with each
+card at 85% of the width so the next one peeks in, which is what says the row
+scrolls. Five stacked cards were more than three screens on a phone. The bar
+under the row is a scroll-driven animation on the row's own horizontal scroll
+(`scroll-timeline: --projects inline`); a named timeline is only visible inside
+the element that scrolls, so the wrapper lifts it with `timeline-scope`.
+Engines without scroll timelines do not show the bar.
+
+**Every card has a preview**, `components/project-preview.tsx`: a small loop of
+what the project does, drawn in markup and animated in CSS — Wordle tiles
+flipping, an attention line drawing with its peaks marked, a timetable filling
+in, a side-scroller running, the sign-in form cycling through its methods. No
+screenshots to keep current, and every colour is a token. The Wordle guesses and
+the sign-in methods are copy, under `projects.items.<id>.demo`.
+
+Three rules keep them honest:
+
+- **The base styles are the finished frame.** The keyframes are attached only
+  inside `prefers-reduced-motion: no-preference`, so with motion reduced every
+  scene is a meaningful still — the solved board, the drawn line — rather than
+  an empty box.
+- **They pause off screen.** `components/in-view.tsx` writes `data-playing` from
+  an observer that never disconnects, and one rule — declared last and one
+  class more specific than every scene's `animation` — pauses everything inside
+  a scene that is not playing.
+- **Loops stagger inside their own period.** Each piece is delayed by
+  `--step`, and every loop leaves enough idle time at the end that the stagger
+  never runs into the next pass.
 
 ## UI components
 

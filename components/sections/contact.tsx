@@ -27,7 +27,7 @@ export default async function Contact() {
     return (
         <section
             id="contact"
-            className="relative scroll-mt-28 overflow-hidden px-6 py-28 md:py-40"
+            className="relative scroll-mt-28 overflow-hidden px-6 py-20 md:py-28"
         >
             <div
                 aria-hidden

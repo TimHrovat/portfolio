@@ -7,7 +7,7 @@
  * to patch.
  *
  * It lives here rather than in components/role-highlights.tsx, which is the
- * only thing that renders against it, because components/timeline.tsx needs it
+ * only thing that renders against it, because components/sections/experience.tsx needs it
  * too — the expand label carries the number of entries still folded away, and
  * that string is built on the server so the CV copy stays out of the client
  * bundle. A `'use client'` module cannot supply it: the server sees a client
