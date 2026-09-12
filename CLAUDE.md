@@ -251,17 +251,33 @@ Paired with it is `.scroll-edge`, a masked strip at the top of the viewport that
 blurs and fades content out under the floating nav instead of meeting it at a
 hard divider. It only fades in once there is content up there to separate from.
 
-**`viewport-fit: cover`, so the top strip reaches the notch.** `app/layout.tsx`
-sets it in the `viewport` export. Without it iOS ends the layout viewport at the
-safe area while the page still scrolls behind the status bar, so on a Dynamic
-Island phone the blur stopped in a hard line below the island and that row of
-content stayed sharp. It is also the switch that makes every
-`env(safe-area-inset-*)` resolve to anything but zero, which is why the two
-always travel together: `.scroll-edge` adds the top inset to its height, the
-nav and the hero add it to their top padding, `body` takes the left and right
-insets for landscape, and the drawer and the dev switcher take the bottom one.
-On anything without insets every one of those resolves to the value it had
-before.
+**The status bar is Safari's to paint, not ours.** On iOS 26 the page scrolls
+edge to edge under the Dynamic Island, but every fixed layer is clipped to the
+inner viewport — negative offsets and extra height do not get out of it — so
+`.scroll-edge` cannot blur that band however it is sized. What Safari paints
+there is a tint it samples off the topmost fixed element, reading exactly two
+properties: `background-color` and `backdrop-filter`. Three rules follow, and
+breaking any one of them brings back the row of sharp content beside the
+island:
+
+- **The strip's fill is a flat `background-color`.** A gradient is a
+  `background-image`, which samples as transparent — no tint, sharp content.
+  The fade is the mask's job; Safari does not read masks.
+- **Only one fixed element may touch the top edge.** Safari samples within
+  about 4px of it and picks wrongly when several compete — `opacity: 0` does
+  not take an element out of the running, only `display: none` does. So the
+  nav is offset down with `top` instead of padded from `top-0`, and
+  `.pointer-glow` is `display: none` on coarse pointers.
+- **`viewport-fit: cover` stays** (`app/layout.tsx`), because it is what makes
+  every `env(safe-area-inset-*)` resolve to anything but zero: `.scroll-edge`
+  adds the top inset to its height for the clipped part, the hero adds it to
+  its top padding, `body` takes the side insets for landscape and the bottom
+  one for the floating toolbar, and the drawer and dev switcher take the bottom
+  one too. On anything without insets every one of those is the value it had
+  before.
+
+Website tinting is a setting on the device (Settings › Apps › Safari › Tabs),
+so a phone with it off shows the untinted band whatever the page does.
 
 **The nav's active marker travels.** `.nav-indicator` is one element positioned
 by `SiteNav` writing `--indicator-x` / `--indicator-w`, rather than a highlight

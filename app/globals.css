@@ -312,6 +312,7 @@
            landscape, under the notch. Fixed layers carry their own insets. */
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
         font-synthesis-weight: none;
         text-rendering: optimizeLegibility;
     }
@@ -388,6 +389,18 @@
             ),
             transparent 70%
         );
+    }
+
+    /*
+     * There is no cursor to follow on touch, and the layer is a rival for the
+     * fixed element iOS 26 samples for the status bar tint — it spans the top
+     * edge, and a transparent one wins just as readily as an opaque one.
+     * `display: none`, since opacity alone does not take it out of the running.
+     */
+    @media (pointer: coarse) {
+        .pointer-glow {
+            display: none;
+        }
     }
 
     /* Terminal caret after the hero name. */
@@ -514,29 +527,50 @@
      * Scroll edge effect. Where the floating nav overlaps content, the top
      * strip of the viewport blurs and fades out instead of being cut off by a
      * hard divider — and only once there is content up there to separate.
+     *
+     * IOS 26 CANNOT PAINT THIS BEHIND THE STATUS BAR. Safari clips every fixed
+     * layer to the inner viewport — a negative offset or extra height does not
+     * get out of it — while the page itself still scrolls edge to edge, which
+     * is what left a band of sharp content beside the Dynamic Island with the
+     * blur starting in a hard line underneath it.
+     *
+     * What Safari paints up there is its own tint, sampled off the topmost
+     * fixed element, and it reads exactly two properties: `background-color`
+     * and `backdrop-filter`. A gradient is a `background-image` and samples as
+     * transparent — hence no tint and sharp content. So the fill below is a
+     * flat `background-color` and the fade is left entirely to the mask, which
+     * Safari does not read. Do not move the fill back into the gradient.
+     *
+     * Safari also samples elements it cannot see (`opacity: 0` does not
+     * disqualify one, `display: none` does) and picks wrongly when several
+     * fixed elements sit at the top edge, so this is deliberately the only one
+     * there: the nav is offset down to clear the sampling band, and the
+     * pointer glow is removed outright on touch.
      */
     .scroll-edge {
         position: fixed;
         inset: 0 0 auto 0;
-        /* Under `viewport-fit: cover` the top of the viewport is the top of
-           the screen, so the strip has to take the status bar's height on top
-           of its own to separate the same amount of content as elsewhere. */
+        /* `viewport-fit: cover` lays this out from the top of the screen and
+           iOS then clips away everything above the status bar, so the inset is
+           the part that never shows — carry it on top of the 7rem that does. */
         height: calc(7rem + env(safe-area-inset-top));
         z-index: 40;
         pointer-events: none;
         opacity: 0;
         transition: opacity 450ms var(--ease-settle);
         backdrop-filter: blur(6px);
+        background-color: color-mix(
+            in oklab,
+            var(--background) 72%,
+            transparent
+        );
+        /* Carries the fade the fill used to carry as well as its own, so the
+           strip still thins out with depth rather than ending as a flat band. */
         mask-image: linear-gradient(
             to bottom,
             #000 0%,
-            #000 40%,
+            rgb(0 0 0 / 60%) 40%,
             transparent 100%
-        );
-        background: linear-gradient(
-            to bottom,
-            color-mix(in oklab, var(--background) 72%, transparent),
-            transparent
         );
     }
 

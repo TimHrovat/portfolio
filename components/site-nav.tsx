@@ -113,7 +113,12 @@ export default function SiteNav() {
                 data-shown={elevated ? 'true' : 'false'}
             />
 
-            <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] pt-[calc(1rem+env(safe-area-inset-top))]">
+            {/* Offset with `top` rather than padded down from `top-0`: a
+                fixed element within 4px of the top edge is what iOS 26 samples
+                for the status bar tint, and this one is transparent — it would
+                win the sample off .scroll-edge and tint the bar with nothing.
+                Identical on screen either way. */}
+            <header className="fixed inset-x-0 top-[calc(1rem+env(safe-area-inset-top))] z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]">
                 <nav
                     aria-label="Primary"
                     data-elevated={elevated ? 'true' : 'false'}
