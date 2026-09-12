@@ -29,8 +29,6 @@ export default async function Hero() {
                     style={{ animationDelay: '80ms' }}
                 >
                     <span>{who('role')}</span>
-                    <span className="bg-hairline h-1 w-1 rounded-full" />
-                    <span>{who('location')}</span>
                 </p>
 
                 {/* Two lines rather than one wrapped string: the break is
@@ -70,15 +68,15 @@ export default async function Hero() {
                         <ArrowDownToLine />
                         {t('cvCta')}
                     </Button>
-                    {person.available ? (
-                        <span className="text-muted-foreground ml-1 flex items-center gap-2 font-mono text-xs">
-                            <span className="relative flex h-2 w-2">
-                                <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" />
-                                <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" />
-                            </span>
-                            {t('availability')}
-                        </span>
-                    ) : null}
+                    {/* {person.available ? ( */}
+                    {/*     <span className="text-muted-foreground ml-1 flex items-center gap-2 font-mono text-xs"> */}
+                    {/*         <span className="relative flex h-2 w-2"> */}
+                    {/*             <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" /> */}
+                    {/*             <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" /> */}
+                    {/*         </span> */}
+                    {/*         {t('availability')} */}
+                    {/*     </span> */}
+                    {/* ) : null} */}
                 </div>
             </div>
 

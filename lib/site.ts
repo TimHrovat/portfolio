@@ -59,8 +59,10 @@ export type Role = {
  * and an inferred union cannot be read uniformly:
  *
  * - `highlights` is the featured role's spec sheet, and carrying it is what
- *   marks a role as featured. Grouped rather than flat: nine equal bullets are
- *   a list to skim past, three named groups are three things to remember.
+ *   marks a role as featured. Grouped rather than flat, and each entry is a
+ *   `title` plus a `detail` rather than one sentence: fourteen equal bullets
+ *   are a list to skim past, three named groups of named things are something
+ *   the eye can land on.
  * - `stack` is omitted where the tools are not the point of the entry.
  */
 export type RoleCopy = {
@@ -71,7 +73,10 @@ export type RoleCopy = {
     to: string;
     /** One paragraph per entry. Most roles need one. */
     description: string[];
-    highlights?: { label: string; items: string[] }[];
+    highlights?: {
+        label: string;
+        items: { title: string; detail: string }[];
+    }[];
     stack?: string[];
 };
 
@@ -194,16 +199,18 @@ export type Project = {
 export const projects: Project[] = [
     { id: 'easistentLanding', live: 'https://www.easistent.com/' },
     {
-        id: 'phosphorland',
-        source: 'https://github.com/TimHrovat/phosphorland-website',
-        live: 'https://www.phosphorland.pt/',
+        id: 'mediaAttention',
+        source: 'https://github.com/TimHrovat/media-attention-analyzer',
     },
-    { id: 'saveTheAnimals', source: 'https://github.com/TimHrovat/sdl-game' },
+    {
+        id: 'sideScrollerEngine',
+        source: 'https://github.com/TimHrovat/sdl-game',
+    },
     {
         id: 'wordleEngine',
         source: 'https://github.com/TimHrovat/wordle-engine',
     },
-    { id: 'imageEditor', source: 'https://github.com/TimHrovat/image-editor' },
+    { id: 'uplearn', source: 'https://github.com/UpLearnOrg' },
 ];
 
 export type Technology = {
@@ -254,6 +261,11 @@ export const technologies: Technology[] = [
     { id: 'pnpm' },
     { id: 'figma' },
     { id: 'claude' },
+    // devicon ships the SSH mark as a single near-black, same as
+    // GitHub's — it needs the plate to survive dark mode.
+    { id: 'ssh', plate: true },
+    { id: 'vim' },
+    { id: 'neovim' },
 ];
 
 export type NavigationItem = {

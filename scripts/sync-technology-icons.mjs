@@ -52,6 +52,9 @@ const icons = [
     { icon: 'pnpm' },
     // devicon only ships `plain` for Jest.
     { icon: 'jest', variant: 'plain' },
+    { icon: 'ssh' },
+    { icon: 'vim' },
+    { icon: 'neovim' },
 ];
 
 /**

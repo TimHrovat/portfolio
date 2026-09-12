@@ -57,15 +57,13 @@
     "about": {
         "eyebrow": "About",
         "portraitAlt": "Tim Hrovat",
-        "body": "I care about how software feels to use. It has never been easier to produce something that works, and most of what gets made now stops there, at the first version that runs. What interests me is the version after it: the interaction that lands where you expected, the detail nobody is asked to notice, the code that still reads clearly a year later.",
-        "craft": "That matters more now, not less. Software has never been faster to generate, and generation pulls everything toward the average of what came before. Refinement is the part still left to choose, and people feel it even when they can’t say why.",
-        "closing": "Currently a full stack developer at eŠola, the team behind eAsistent, a school platform used across Slovenia. Alongside it I’m finishing a Computer Science degree at FRI UNI Ljubljana. The thesis is all that’s left."
+        "body": "I care about how software feels to use and how it holds up underneath. Most of what gets made now stops at the first version that works, and what interests me is the one after it: the interaction that lands where you expected, the schema that still fits the problem a year later, the request that isn’t trusted just because it arrived. Generation is cheap now and pulls everything toward the average. Going past average is still a choice, and people feel the difference even when they can’t say why.",
+        "closing": "Currently a full stack developer at eŠola d.o.o., the team behind eAsistent, a school platform used across Slovenia. Alongside it I’m finishing a Computer and Information Science degree at FRI UNI Ljubljana. The thesis is all that’s left."
     },
 
     "work": {
         "eyebrow": "Experience",
         "title": "Where I’ve worked",
-        "lead": "Six roles over nine years, most of them alongside school and several alongside each other.",
         "ongoing": "Now",
         "highlightsToggle": "What the work involved",
         "roles": {
@@ -75,31 +73,78 @@
                 "from": "Dec 2022",
                 "to": "Present",
                 "description": [
-                    "My first engineering job, and the one that taught me the most. Full stack work on eAsistent, the school platform used by schools, teachers, students and parents across Slovenia. A student contract on paper, but effectively full time for three years, and independent enough to take projects end to end."
+                    "My first engineering job, and the one that taught me the most. Full stack work on eAsistent, the school platform used by schools, teachers, students and parents across Slovenia. Trusted to maintain what was already there, and to plan, architect and build what came next."
                 ],
                 "highlights": [
                     {
-                        "label": "Built alone",
+                        "label": "What I built",
                         "items": [
-                            "The company UI library. Designed and built on my own, and every new project now starts on it.",
-                            "The public landing page and the sign-in behind it, end to end."
+                            {
+                                "title": "Company UI library",
+                                "detail": "Designed and built from scratch. It is now the foundation every new project across the company starts on."
+                            },
+                            {
+                                "title": "Public-facing experience",
+                                "detail": "The public landing page and the authentication flow behind it, end to end, from the UI through to the backend."
+                            },
+                            {
+                                "title": "Document management and signing",
+                                "detail": "A system the company uses to generate, issue, track and electronically sign contracts and contract annexes for kindergartens across Slovenia."
+                            },
+                            {
+                                "title": "School systemisation",
+                                "detail": "Part of the team building a system for planning and managing a school’s organisational structure, staff, subjects, classes and the workflows around them."
+                            },
+                            {
+                                "title": "Teacher payroll",
+                                "detail": "Part of the team behind the calculation engine, carrying the rules and requirements of Slovenian legislation."
+                            },
+                            {
+                                "title": "Timetable generator",
+                                "detail": "The constraint-based algorithms underneath it, balancing a large set of school-specific rules against each other."
+                            },
+                            {
+                                "title": "AI chat layer",
+                                "detail": "Part of the team integrating an AI conversational layer into the school management platform, bringing LLM capabilities into existing workflows."
+                            }
                         ]
                     },
                     {
                         "label": "Across the stack",
                         "items": [
-                            "Keeping the legacy code running and integrating with it, then the migrations off it: Laravel 5 to 12, Vue 2 to 3.",
-                            "The CI/CD pipelines, and the infrastructure they deploy onto.",
-                            "Backend, frontend and database. The whole path rather than a slice of it.",
-                            "Prediction models, and the constraint-heavy algorithms behind the timetable generator."
+                            {
+                                "title": "Legacy systems and migrations",
+                                "detail": "Maintaining and extending the existing platform while leading the major migrations off it: Laravel 5 to 12, Vue 2 to 3."
+                            },
+                            {
+                                "title": "Backend, frontend and database",
+                                "detail": "The whole path through the application rather than a single layer of it."
+                            },
+                            {
+                                "title": "CI/CD and infrastructure",
+                                "detail": "Designing and maintaining the deployment pipelines and the infrastructure they run on."
+                            },
+                            {
+                                "title": "Algorithms and prediction",
+                                "detail": "Prediction models, and the constraint-heavy algorithms powering the timetable generator."
+                            }
                         ]
                     },
                     {
                         "label": "Beyond the code",
                         "items": [
-                            "Mentoring new hires and students on placement.",
-                            "The technical side of our hiring interviews.",
-                            "Planning and leading projects."
+                            {
+                                "title": "Project leadership",
+                                "detail": "Planning and leading projects from the initial requirements and architecture through to implementation and delivery."
+                            },
+                            {
+                                "title": "Mentoring",
+                                "detail": "New hires and students on placement, to the point where they are productive and independent."
+                            },
+                            {
+                                "title": "Hiring",
+                                "detail": "The technical side of engineering interviews, from interview design through to evaluating candidates."
+                            }
                         ]
                     }
                 ],
@@ -165,7 +210,7 @@
             "fri": {
                 "school": "FRI UNI Ljubljana",
                 "programme": "Computer Science, BSc",
-                "detail": "Thesis is the only remaining requirement.",
+                "detail": "Finished 3/3 years. Thesis is the only remaining requirement.",
                 "years": "2023 – Present",
                 "status": "In progress"
             },
@@ -227,7 +272,10 @@
             "npm": "npm",
             "pnpm": "pnpm",
             "figma": "Figma",
-            "claude": "Claude"
+            "claude": "Claude",
+            "ssh": "SSH",
+            "vim": "Vim",
+            "neovim": "Neovim"
         }
     },
 
@@ -243,25 +291,25 @@
                 "summary": "The public face of eAsistent, built end to end, and the sign-in behind it: two-factor, YubiKey, QR-code login from a signed-in phone, PIN and CAPTCHA. That is a lot of ways in, for an audience that ranges from teachers to parents to a fourteen-year-old on a school laptop.",
                 "stack": ["PHP", "Laravel", "Vue"]
             },
-            "phosphorland": {
-                "name": "Phosphorland",
-                "summary": "Company site with authentication, file storage and realtime data on Firebase, localised end to end with i18next.",
-                "stack": ["React", "Firebase", "i18next"]
+            "mediaAttention": {
+                "name": "Media Attention Analyzer",
+                "summary": "An interactive tool for exploring what Slovenian media covered and when, across 73,461 RTV articles from 2017 to 2026. It draws an attention timeline for any topic, finds the peaks on its own, and breaks each one down with TF-IDF, UMAP and k-means. FastAPI and scikit-learn behind a React and ECharts front end.",
+                "stack": ["Python", "scikit-learn", "React"]
             },
-            "saveTheAnimals": {
-                "name": "Save the Animals",
-                "summary": "A game written from scratch against SDL2. An exercise in object-oriented design, and in hunting down memory leaks in C++.",
+            "sideScrollerEngine": {
+                "name": "Side-Scroller Engine",
+                "summary": "A side-scrolling platformer written from scratch against SDL2: an entity-component system, tilemaps, collision and animation, with levels, a scoreboard and saved runs. An exercise in object-oriented design, and in hunting down memory leaks in C++.",
                 "stack": ["C++", "SDL2"]
             },
             "wordleEngine": {
                 "name": "Wordle Engine",
-                "summary": "A solver that plays Wordle against a dictionary, narrowing the candidate set from each guess. Written in Java with its own test harness to score it over every word in the list.",
+                "summary": "A solver that plays Wordle against a 15,964-word dictionary, averaging 4.1 guesses and solving every word in the list. Written in Java with its own test harness to score it over the whole dictionary.",
                 "stack": ["Java"]
             },
-            "imageEditor": {
-                "name": "Image Editor",
-                "summary": "An in-browser image editor built on the canvas API with no framework and no dependencies. Just plain HTML, CSS and JavaScript.",
-                "stack": ["JavaScript", "Canvas", "CSS"]
+            "uplearn": {
+                "name": "UpLearn",
+                "summary": "A school management system built end to end as my graduation project at Vegova: timetables, lessons, absences, grading, staff and events across nineteen related models. NestJS and Prisma on PostgreSQL behind a React front end, with JWT auth, mail and Excel export.",
+                "stack": ["NestJS", "React", "PostgreSQL"]
             }
         }
     },

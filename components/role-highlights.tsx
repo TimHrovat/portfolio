@@ -28,7 +28,7 @@ export default function RoleHighlights({
     /** The toggle's text. Passed in rather than looked up here, so the CV copy
      *  never has to reach the client bundle. */
     label: string;
-    groups: { label: string; items: string[] }[];
+    groups: { label: string; items: { title: string; detail: string }[] }[];
 }) {
     const [open, setOpen] = useState(false);
     const region = useId();
@@ -46,7 +46,7 @@ export default function RoleHighlights({
                 // snap at the end.
                 'glass mt-8 w-full overflow-hidden rounded-3xl text-left',
                 'transition-[max-width] duration-500 ease-[var(--ease-settle)]',
-                open ? 'max-w-3xl' : 'max-w-[19rem]',
+                open ? 'max-w-4xl' : 'max-w-[19rem]',
             )}
         >
             <button
@@ -74,35 +74,39 @@ export default function RoleHighlights({
                 )}
             >
                 <div className="overflow-hidden">
-                    {/* A label column rather than one flat list: the groups are
-                        the point, and the eye can take three of those where it
-                        would skim nine bullets. Left-aligned inside the centred
-                        panel, since these lines are too long to centre without
-                        the ragged edges reading as a mistake. */}
-                    <dl className="flex flex-col gap-7 px-6 pt-2 pb-7 sm:px-8 sm:pb-8">
+                    {/* A group header spanning the full width, then its
+                        entries in two columns, rather than the label sitting
+                        in a column of its own. The groups are seven, four and
+                        three entries long, and a side label against seven
+                        rows reads as orphaned. */}
+                    <dl className="flex flex-col gap-8 px-6 pt-2 pb-7 sm:px-8 sm:pb-8">
                         {groups.map((group) => (
-                            <div
-                                key={group.label}
-                                className="grid gap-x-8 gap-y-3 sm:grid-cols-[11rem_1fr]"
-                            >
-                                <dt className="eyebrow sm:pt-1">
-                                    {group.label}
-                                </dt>
-                                <dd>
-                                    <ul className="flex flex-col gap-2.5">
-                                        {group.items.map((item) => (
-                                            <li
-                                                key={item}
-                                                className="text-muted-foreground flex gap-2.5 text-sm leading-relaxed text-pretty"
-                                            >
-                                                <span
-                                                    aria-hidden
-                                                    className="bg-highlight mt-2 size-1.5 shrink-0 rounded-full"
-                                                />
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <div key={group.label}>
+                                <div className="flex items-center gap-4">
+                                    <dt className="eyebrow shrink-0">
+                                        {group.label}
+                                    </dt>
+                                    {/* Runs to the edge so the header reads as
+                                        a divider, not a caption. */}
+                                    <span
+                                        aria-hidden
+                                        className="bg-highlight/30 h-px flex-1"
+                                    />
+                                </div>
+                                <dd className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+                                    {group.items.map((item) => (
+                                        <div key={item.title}>
+                                            {/* The title carries the weight;
+                                                with fourteen of these a bullet
+                                                in front of each is noise. */}
+                                            <p className="text-foreground text-sm font-semibold">
+                                                {item.title}
+                                            </p>
+                                            <p className="text-muted-foreground mt-1 text-sm leading-relaxed text-pretty">
+                                                {item.detail}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </dd>
                             </div>
                         ))}

@@ -14,8 +14,11 @@ const badgeVariants = cva(
                 // one on a card without looking any different. The border is
                 // restated because the base `border-transparent` above sits
                 // in the utilities layer and would otherwise win over the
-                // one `.glass` sets.
-                tech: 'glass border-foreground/10 text-foreground [--glass-blur:12px]',
+                // one `.glass` sets. `select-none` because the chips answer to
+                // pointer proximity and invite a sweep across them, and a
+                // sweep with the button down would otherwise leave the row
+                // highlighted.
+                tech: 'glass border-foreground/10 text-foreground select-none [--glass-blur:12px]',
                 // Soft tint of the palette's second colour, for "current".
                 accent: 'bg-highlight/15 text-highlight',
                 // Mono metadata: statuses, stack labels.

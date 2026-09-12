@@ -9,12 +9,7 @@ export default async function Experience() {
     const t = await getTranslations('work');
 
     return (
-        <Section
-            id="work"
-            eyebrow={t('eyebrow')}
-            title={t('title')}
-            lead={t('lead')}
-        >
+        <Section id="work" eyebrow={t('eyebrow')} title={t('title')}>
             <Timeline roles={roles} />
             <OtherRoles roles={otherRoles} />
         </Section>
