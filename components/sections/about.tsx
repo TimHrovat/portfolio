@@ -1,12 +1,12 @@
 import { MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
+import type { ReactNode } from 'react';
 
 import OrgMark from '@/components/org-mark';
 import Reveal from '@/components/reveal';
 import Section from '@/components/section';
 import StackStrip from '@/components/stack-strip';
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { certifications, education } from '@/lib/site';
 
@@ -88,13 +88,29 @@ export default async function About() {
                                     href={item.href}
                                     logo={item.logo}
                                     name={school(`schools.${item.id}.school`)}
-                                    detail={`${school(`schools.${item.id}.programme`)} · ${school(`schools.${item.id}.years`)}`}
-                                    status={
-                                        item.end === null
-                                            ? school(
-                                                  `schools.${item.id}.status`,
-                                              )
-                                            : undefined
+                                    detail={school(
+                                        `schools.${item.id}.programme`,
+                                    )}
+                                    dates={
+                                        <>
+                                            {school(`schools.${item.id}.from`)}{' '}
+                                            –{' '}
+                                            {/* A school still running reads
+                                                the way the current job does:
+                                                "Present" in the accent, and no
+                                                separate badge saying so. */}
+                                            <span
+                                                className={
+                                                    item.end === null
+                                                        ? 'text-primary font-semibold'
+                                                        : undefined
+                                                }
+                                            >
+                                                {school(
+                                                    `schools.${item.id}.to`,
+                                                )}
+                                            </span>
+                                        </>
                                     }
                                 />
                             ))}
@@ -106,7 +122,12 @@ export default async function About() {
                                     name={school(
                                         `certifications.${item.id}.name`,
                                     )}
-                                    detail={`${school(`certifications.${item.id}.issuer`)} · ${school(`certifications.${item.id}.date`)}`}
+                                    detail={school(
+                                        `certifications.${item.id}.issuer`,
+                                    )}
+                                    dates={school(
+                                        `certifications.${item.id}.date`,
+                                    )}
                                 />
                             ))}
                         </ul>
@@ -131,24 +152,26 @@ export default async function About() {
 }
 
 /**
- * One school or certificate: a single link stretched over the row, so the
- * whole line is the target without an overlay that has no name of its own.
+ * One school or certificate: the name, then what it was, then when — three
+ * lines, each its own thing, rather than a programme and a date run together
+ * on one. A single link is stretched over the row, so the whole of it is the
+ * target without an overlay that has no name of its own.
  */
 function EducationRow({
     href,
     logo,
     name,
     detail,
-    status,
+    dates,
 }: {
     href?: string;
     logo: string;
     name: string;
     detail: string;
-    status?: string;
+    dates: ReactNode;
 }) {
     return (
-        <li className="hover:bg-foreground/[0.03] relative -mx-3 flex items-center gap-3.5 rounded-xl px-3 py-2.5 transition-colors duration-200">
+        <li className="hover:bg-foreground/[0.03] relative -mx-3 flex items-start gap-3.5 rounded-xl px-3 py-2.5 transition-colors duration-200">
             <OrgMark name={name} logo={logo} />
             <div className="min-w-0 flex-1">
                 <p className="text-sm leading-snug font-semibold">
@@ -165,15 +188,11 @@ function EducationRow({
                         name
                     )}
                 </p>
+                <p className="text-foreground/80 mt-0.5 text-sm">{detail}</p>
                 <p className="text-muted-foreground mt-0.5 font-mono text-[0.6875rem] tracking-wider">
-                    {detail}
+                    {dates}
                 </p>
             </div>
-            {status ? (
-                <Badge variant="accent" size="sm">
-                    {status}
-                </Badge>
-            ) : null}
         </li>
     );
 }

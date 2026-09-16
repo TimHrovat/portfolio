@@ -326,13 +326,24 @@ track tighter than they would for a sans.
 **Radii.** `--radius-xs` (0.375rem) through `--radius-3xl` (3rem), defined
 explicitly rather than derived from one base.
 
-**Pointer glow.** `components/pointer-glow.tsx` publishes the cursor position
-as `--pointer-x` / `--pointer-y` on `<html>`; the `.pointer-glow` layer reads
-them. It is mounted once in `app/page.tsx` and covers the whole site. It sits at
-`z-index: -1`, which is why the page background lives on `html` rather than
-`body` — the layer has to paint between the ground and the content. Opaque
-surfaces occlude it; the glass ones blur it, which is most of what gives them
-something to refract. Skipped on coarse pointers and under reduced motion.
+**Pointer glow.** `components/pointer-glow.tsx` moves a soft halo behind the
+page to follow the cursor. It is mounted once in `app/page.tsx` and covers the
+whole site. It sits at `z-index: -1`, which is why the page background lives on
+`html` rather than `body` — the layer has to paint between the ground and the
+content. Opaque surfaces occlude it; the glass ones blur it, which is most of
+what gives them something to refract. Skipped on coarse pointers and under
+reduced motion.
+
+**Never write a per-frame value on `<html>`.** The glow writes `--glow-x` /
+`--glow-y` on its own element. Custom properties inherit, so one changed on the root marks every
+element on the page for a style recalculation — once per pointer frame, that
+was most of what made the page feel heavy while the cursor moved. The same
+goes for attributes: a rule like `:root[data-x] *` makes every change to
+`data-x` restyle the whole tree.
+
+**There is no custom cursor.** One was built — an iPad-style pointer that
+morphed into a highlight over clickable elements, after a trailing ring and a
+bracket viewfinder before it — and removed. The system cursor stays.
 
 The layer is a fixed 60rem square whose gradient is painted **once** and then
 moved with `translate3d`. Driving the gradient's own position instead would
@@ -436,7 +447,10 @@ column grows to fit it and the whole page scrolls sideways on a phone.
 `grid-cols-*` is `minmax(0, 1fr)`, which is what keeps the tiles to the screen.
 
 **Education** is three rows in one tile — the two schools and the certificate —
-side by side from `md`. Each row is **one link stretched over the whole row**
+side by side from `md`. Each is three lines: the name, what it was, and the
+dates, with a school still running reading "Present" in `primary`, the way the
+current job does. There is no "In progress" badge; the coloured "Present" is
+the marker. Each row is **one link stretched over the whole row**
 with `after:absolute after:inset-0` on the name's anchor, rather than an
 overlay element with no accessible name of its own.
 

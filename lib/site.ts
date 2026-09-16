@@ -162,8 +162,8 @@ export type Education = {
     /** Keys `education.schools` in messages. */
     id: keyof Messages['education']['schools'];
     href: string;
-    /** `YYYY-MM`, `null` while it is still running — which is what promotes
-     *  `status` to a marked badge on the card. */
+    /** `YYYY-MM`, `null` while it is still running — which is what sets its
+     *  "Present" in the accent, as the current job's is. */
     end: string | null;
     logo: string;
 };

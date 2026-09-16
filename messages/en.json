@@ -212,15 +212,15 @@
                 "school": "FRI UNI Ljubljana",
                 "programme": "Computer Science, BSc",
                 "detail": "Finished 3/3 years. Thesis is the only remaining requirement.",
-                "years": "2023 – Present",
-                "status": "In progress"
+                "from": "2023",
+                "to": "Present"
             },
             "vegova": {
                 "school": "Vegova Ljubljana",
                 "programme": "Software Engineering",
                 "detail": "Four-year technical programme.",
-                "years": "2019 – 2023",
-                "status": "Completed"
+                "from": "2019",
+                "to": "2023"
             }
         },
         "certifications": {

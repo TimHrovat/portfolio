@@ -1,25 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
- * Tracks the cursor and publishes its position as CSS variables on <html>,
- * which the .pointer-glow layer reads. Writing variables rather than state
- * keeps the pointer entirely out of React's render path.
+ * A soft halo that follows the cursor behind the page.
+ *
+ * The position is written as `--glow-x` / `--glow-y` on the glow element
+ * itself, never on <html>. Custom properties inherit, so a variable changed on
+ * the root marks every element on the page for a style recalculation — once
+ * per pointer frame, that is most of what made the page feel heavy while the
+ * cursor moved. On a leaf element it costs that element alone.
  *
  * Skipped on coarse pointers (there is no cursor to follow) and under reduced
  * motion, where a viewport-sized moving background is exactly the kind of
  * effect that setting exists to suppress.
  */
 export default function PointerGlow() {
+    const element = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        const root = document.documentElement;
+        const glow = element.current;
 
         const interactive =
             window.matchMedia('(pointer: fine)').matches &&
             !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (!interactive) {
+        if (!glow || !interactive) {
             return;
         }
 
@@ -33,9 +39,9 @@ export default function PointerGlow() {
                 return;
             }
 
-            root.style.setProperty('--pointer-x', `${pointer.x}px`);
-            root.style.setProperty('--pointer-y', `${pointer.y}px`);
-            root.style.setProperty('--pointer-active', '1');
+            glow!.style.setProperty('--glow-x', `${pointer.x}px`);
+            glow!.style.setProperty('--glow-y', `${pointer.y}px`);
+            glow!.dataset.active = 'true';
         }
 
         function onMove(event: PointerEvent): void {
@@ -47,7 +53,7 @@ export default function PointerGlow() {
         }
 
         function onLeave(): void {
-            root.style.setProperty('--pointer-active', '0');
+            delete glow!.dataset.active;
         }
 
         window.addEventListener('pointermove', onMove, { passive: true });
@@ -60,10 +66,8 @@ export default function PointerGlow() {
             if (frame) {
                 cancelAnimationFrame(frame);
             }
-
-            root.style.removeProperty('--pointer-active');
         };
     }, []);
 
-    return <div aria-hidden className="pointer-glow" />;
+    return <div ref={element} aria-hidden className="pointer-glow" />;
 }

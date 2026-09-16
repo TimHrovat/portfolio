@@ -398,11 +398,11 @@
         z-index: -1;
         pointer-events: none;
         will-change: transform, opacity;
-        opacity: var(--pointer-active, 0);
+        opacity: 0;
         transition: opacity 600ms var(--ease-out-soft);
         transform: translate3d(
-            calc(var(--pointer-x, 50vw) - 30rem),
-            calc(var(--pointer-y, 50vh) - 30rem),
+            calc(var(--glow-x, 50vw) - 30rem),
+            calc(var(--glow-y, 50vh) - 30rem),
             0
         );
         background: radial-gradient(
@@ -422,6 +422,10 @@
      * edge, and a transparent one wins just as readily as an opaque one.
      * `display: none`, since opacity alone does not take it out of the running.
      */
+    .pointer-glow[data-active='true'] {
+        opacity: 1;
+    }
+
     @media (pointer: coarse) {
         .pointer-glow {
             display: none;
@@ -763,6 +767,7 @@
     .marquee-track {
         display: flex;
         width: max-content;
+        will-change: transform;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -920,6 +925,14 @@
 
     .scroller-sprite {
         transform: translate3d(0, -1.5rem, 0);
+    }
+
+    /* Always moving, so kept on their own layers rather than repainted. */
+    .scroller-ground,
+    .scroller-coins,
+    .scroller-sprite,
+    .signin-methods {
+        will-change: transform;
     }
 
     .signin-button::after {
